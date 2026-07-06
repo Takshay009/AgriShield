@@ -51,3 +51,14 @@ This document outlines the final engineering and UI polish tasks required to mak
   - Launch FastAPI backend (`uvicorn main:app --port 8000`) and Next.js frontend (`npm run dev`).
 - [x] **Verification: Autonomous Browser Audit**
   - Run browser subagent across all upgraded pages (`/dashboard`, `/dashboard/recommended-crops`, `/dashboard/advisory`, `/dashboard/report-issue`, `/admin/rsk-queue`) to capture screenshots and verify zero build/runtime errors.
+
+
+# PHASE 3F — Water Risk Score Engine (Feature A)
+*Stateless calculation engine.*
+
+- [x] **Build water risk calculation logic**
+  File: `backend/services/water_risk_service.py`
+  Logic: Vectorized calculations (using `pandas` or `numpy`) for fast risk scoring based on location, crop type, and weather.
+- [x] **Add FastAPI route & Pydantic Schemas**
+  File: `backend/routers/water_risk.py`
+  Endpoint: `POST /api/v1/water-risk` (Note versioning for Gov APIs).

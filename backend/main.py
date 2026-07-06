@@ -19,10 +19,12 @@ from advisory_schemas import AdvisoryResponse, SensorDataRequest
 from advisory_engine import analyze_forecast
 from weather_service import fetch_weather_forecast
 from dry_spell_scheduler import start_scheduler
+from routers.water_risk import router as water_risk_router
 
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="CropGuard MVP")
+app.include_router(water_risk_router)
 start_scheduler()
 
 app.add_middleware(
