@@ -1,0 +1,50 @@
+state,district,primary_soil,secondary_soil,ph_avg
+Andhra Pradesh,Anantapur,red,sandy loam,6.5
+Andhra Pradesh,Guntur,black,clay loam,7.2
+Andhra Pradesh,Krishna,alluvial,clay,7.0
+Andhra Pradesh,Kurnool,black,red,7.5
+Assam,Kamrup,alluvial,loamy,5.5
+Assam,Nagaon,alluvial,clay,5.8
+Bihar,Patna,alluvial,loamy,7.0
+Bihar,Muzaffarpur,alluvial,clay loam,6.8
+Gujarat,Ahmedabad,sandy loam,loamy,7.5
+Gujarat,Rajkot,black,clay loam,7.8
+Gujarat,Surat,black,alluvial,7.2
+Gujarat,Bhavnagar,black,clay,7.6
+Haryana,Hisar,sandy loam,loamy,7.5
+Haryana,Karnal,alluvial,loamy,7.0
+Haryana,Ambala,loamy,alluvial,6.8
+Karnataka,Bengaluru,red,loamy,6.2
+Karnataka,Belgaum,black,clay loam,7.0
+Karnataka,Dharwad,black,loamy,7.2
+Karnataka,Mysuru,red,sandy loam,6.5
+Madhya Pradesh,Indore,black,clay loam,7.5
+Madhya Pradesh,Bhopal,black,loamy,7.2
+Madhya Pradesh,Jabalpur,alluvial,loamy,6.8
+Maharashtra,Pune,red,loamy,6.5
+Maharashtra,Nagpur,black,clay loam,7.5
+Maharashtra,Nashik,black,loamy,7.0
+Maharashtra,Aurangabad,black,clay,7.8
+Odisha,Cuttack,alluvial,clay,6.5
+Odisha,Puri,alluvial,sandy loam,6.2
+Punjab,Ludhiana,alluvial,loamy,7.0
+Punjab,Amritsar,alluvial,clay loam,7.2
+Punjab,Patiala,loamy,alluvial,7.0
+Rajasthan,Jaipur,sandy,sandy loam,7.8
+Rajasthan,Jodhpur,sandy,sandy loam,8.0
+Rajasthan,Kota,alluvial,loamy,7.5
+Rajasthan,Udaipur,red,loamy,7.0
+Tamil Nadu,Chennai,alluvial,sandy,7.0
+Tamil Nadu,Coimbatore,red,loamy,6.5
+Tamil Nadu,Madurai,black,red,7.2
+Tamil Nadu,Thanjavur,alluvial,clay,6.8
+Telangana,Hyderabad,red,loamy,6.5
+Telangana,Warangal,red,black,6.8
+Telangana,Nizamabad,black,clay loam,7.0
+Uttar Pradesh,Lucknow,alluvial,loamy,7.0
+Uttar Pradesh,Agra,alluvial,sandy loam,7.5
+Uttar Pradesh,Varanasi,alluvial,clay,6.8
+Uttar Pradesh,Kanpur,alluvial,loamy,7.2
+West Bengal,Kolkata,alluvial,clay,6.5
+West Bengal,Burdwan,alluvial,loamy,6.2
+West Bengal,Malda,alluvial,sandy loam,6.0

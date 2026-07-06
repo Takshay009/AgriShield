@@ -1,0 +1,23 @@
+# Env files
+.env
+*.env
+backend/.env
+frontend/.env
+*.env.local
+*.env.*.local
+
+# Dependencies
+node_modules/
+__pycache__/
+*.pyc
+venv/
+env/
+.venv/
+.gemini/
+
+# Build outputs
+dist/
+build/
+.next/
+out/
+*.log

@@ -4,9 +4,14 @@ CropGuard is a decentralized, data-driven agricultural insurance platform. This 
 
 ## Current State
 
-Currently, the project has implemented Phase 1 through Phase 4:
+Currently, the project has implemented Phase 1 through Phase 8 along with Phase 2 extensions:
 - **Phase 0 & 1**: Authentication and Farm management. You can register, log in, and draw farm boundaries on a Leaflet map.
-- **Phase 2**: Metrics. Real-time weather data is fetched from Open-Meteo, while NDVI is mocked. The backend computes a risk score and updates a trend chart.
+- **Phase 2 (Core & Extensions)**:
+  - **Real-Time Metrics & Risk**: Real-time weather data is fetched from Open-Meteo, while NDVI is mocked. The backend computes a risk score and updates a trend chart.
+  - **Phase 2A (Smart Crop Recommendation Engine)**: AI-scored crop recommendations based on soil type, NPK ratios, pH, rainfall, and temperature (`/dashboard/recommended-crops`).
+  - **Phase 2B (Advisory & Dry-Spell Alert Engine)**: Real-time weather analysis and rule-based farming advisories for drought, flood, and heatwaves (`/dashboard/advisory`).
+  - **Phase 2C (Conversation Gateway - Voice & SMS)**: Multi-lingual (Hindi, Telugu, Marathi) SMS and IVR voice call webhooks for offline/low-literacy farmers.
+  - **Phase 2D & 2E (Crop Health + AI Diagnosis + RSK Queue)**: Photo/voice crop disease diagnosis using ResNet-18/mock models, automated escalation to Remote Support Kisan (RSK) expert queue (`/admin/rsk-queue`), and direct integration of disease severity into ZKP insurance risk scoring (`/dashboard/report-issue`).
 - **Phase 3**: Claims. Farmers can submit a claim against their farm if the risk probability exceeds the 60% threshold.
 - **Phase 4**: Zero Knowledge Proofs. The platform generates a real Groth16 ZK proof using `circom` and `snarkjs` to prove eligibility without revealing the exact metrics on-chain.
 - **Phase 5**: Blockchain Integration. Currently using a mock implementation (`USE_MOCK_CHAIN=True` in `services.py`) to log the claim to the blockchain.

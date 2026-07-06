@@ -1,17 +1,29 @@
-from fastapi import FastAPI, Depends, HTTPException, status
+from typing import Optional
+from fastapi import FastAPI, Depends, HTTPException, status, APIRouter, Request, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from datetime import datetime, date, timedelta
 import os
+import sys
+
+# Ensure backend dir is on path
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from fastapi.staticfiles import StaticFiles
 import models, schemas, auth, services, nft_service
 from database import engine, get_db
+from crop_recommendation_schemas import CropRecommendationRequest, CropRecommendationResponse
+from crop_recommendation_service import get_recommendations
+from advisory_schemas import AdvisoryResponse, SensorDataRequest
+from advisory_engine import analyze_forecast
+from weather_service import fetch_weather_forecast
+from dry_spell_scheduler import start_scheduler
 
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="CropGuard MVP")
+start_scheduler()
 
 app.add_middleware(
     CORSMiddleware,
@@ -26,6 +38,224 @@ base_dir = os.path.dirname(os.path.abspath(__file__))
 nfts_dir = os.path.join(base_dir, "nfts")
 os.makedirs(nfts_dir, exist_ok=True)
 app.mount("/nfts", StaticFiles(directory=nfts_dir), name="nfts")
+
+# Phase 2: Crop Recommendation endpoint
+@app.post("/api/recommend-crop", response_model=CropRecommendationResponse, tags=["Crop Recommendation"])
+def recommend_crop(req: CropRecommendationRequest):
+    """Get crop recommendations based on location, soil type, pH, and season."""
+    result = get_recommendations(
+        lat=float(req.lat),
+        lng=float(req.lng),
+        soil_type=req.soil_type,
+        ph=req.ph,
+        month=req.month,
+        top_n=req.top_n or 5,
+        groundwater_depth_m=req.groundwater_depth_m or 10.0,
+    )
+    return result
+
+# Phase 2B: Advisory & Alert endpoints
+@app.get("/api/advisory/{farm_id}", response_model=AdvisoryResponse, tags=["Advisory"])
+def get_advisory(farm_id: int, db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_user)):
+    """Get weather forecast and advisory alerts for a farm."""
+    db_farm = db.query(models.Farm).filter(models.Farm.id == farm_id, models.Farm.user_id == current_user.id).first()
+    if not db_farm:
+        raise HTTPException(status_code=404, detail="Farm not found")
+    
+    forecast = fetch_weather_forecast(float(db_farm.lat), float(db_farm.lng), days=7)
+    alerts = analyze_forecast(forecast, farm_id)
+    
+    from datetime import datetime as dt
+    return {
+        "farm_id": farm_id,
+        "farm_name": db_farm.name,
+        "lat": db_farm.lat,
+        "lng": db_farm.lng,
+        "forecast": forecast,
+        "alerts": alerts,
+        "generated_at": dt.utcnow().isoformat(),
+    }
+
+@app.post("/api/sensor-data", tags=["Advisory"])
+def post_sensor_data(data: SensorDataRequest, db: Session = Depends(get_db)):
+    """Ingest sensor readings from IoT devices or manual input."""
+    # For now, just acknowledge receipt. Full storage in Phase 2B model expansion.
+    return {
+        "status": "received",
+        "farm_id": data.farm_id,
+        "moisture_pct": data.moisture_pct,
+        "temperature_c": data.temperature_c,
+    }
+
+# Phase 2C: Gateway Webhook endpoints
+from sms_service import send_sms, parse_inbound_sms
+from ivr_service import generate_welcome_twiml, generate_menu_response_twiml
+from language_router import detect_language, get_language_name
+from fastapi.responses import Response
+
+@app.post("/webhooks/sms-inbound", tags=["Gateway"])
+async def sms_inbound(request: Request):
+    """Handle inbound SMS from Twilio webhook."""
+    form = await request.form()
+    form_dict = dict(form)
+    parsed = parse_inbound_sms(form_dict)
+    
+    # Detect language from message body
+    lang = detect_language(parsed["body"])
+    
+    # Load i18n message
+    import json
+    i18n_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "i18n", f"{lang}.json")
+    try:
+        with open(i18n_path, "r", encoding="utf-8") as f:
+            messages = json.load(f)
+    except FileNotFoundError:
+        messages = {"welcome": "Welcome to AgriShield!"}
+    
+    # Simple reply with welcome message
+    reply_body = messages.get("welcome", "Welcome to AgriShield!")
+    reply = send_sms(parsed["from_number"], reply_body)
+    
+    return {
+        "inbound": parsed,
+        "language_detected": lang,
+        "language_name": get_language_name(lang),
+        "reply": reply,
+    }
+
+@app.post("/webhooks/voice-inbound", tags=["Gateway"])
+async def voice_inbound(request: Request):
+    """Handle inbound voice call — returns TwiML for IVR menu."""
+    form = await request.form()
+    form_dict = dict(form)
+    
+    # Default to Hindi for voice
+    language = form_dict.get("language", "hi")
+    twiml = generate_welcome_twiml(language)
+    
+    return Response(content=twiml, media_type="application/xml")
+
+@app.post("/webhooks/voice-menu", tags=["Gateway"])
+async def voice_menu(request: Request):
+    """Handle IVR menu selection."""
+    form = await request.form()
+    form_dict = dict(form)
+    
+    digit = form_dict.get("Digits", "0")
+    language = form_dict.get("language", "hi")
+    twiml = generate_menu_response_twiml(digit, language)
+    
+    return Response(content=twiml, media_type="application/xml")
+
+# Phase 2D: Health Report + Diagnosis + RSK Escalation
+from diagnosis_service import classify_image, extract_symptoms_from_text, get_latest_farm_severity
+from rsk_escalation_service import (
+    should_escalate, create_escalation_ticket, add_ticket,
+    get_open_tickets, get_all_tickets, respond_to_ticket,
+)
+
+# Ensure upload directory exists
+UPLOAD_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "media_storage", "uploads")
+os.makedirs(UPLOAD_DIR, exist_ok=True)
+
+@app.post("/api/health-report", tags=["Health Report"])
+async def create_health_report(
+    farm_id: int = Form(...),
+    description: str = Form(""),
+    photo: Optional[UploadFile] = File(None),
+    audio: Optional[UploadFile] = File(None),
+    current_user: models.User = Depends(auth.get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Submit a crop health report with optional photo and voice recording."""
+    from typing import Optional as Opt
+    import uuid as _uuid
+
+    db_farm = db.query(models.Farm).filter(
+        models.Farm.id == farm_id, models.Farm.user_id == current_user.id
+    ).first()
+    if not db_farm:
+        raise HTTPException(status_code=404, detail="Farm not found")
+
+    report_id = f"HR-{_uuid.uuid4().hex[:8].upper()}"
+    image_path = None
+    audio_path = None
+
+    # Save photo
+    if photo and photo.filename:
+        ext = os.path.splitext(photo.filename)[1] or ".jpg"
+        image_filename = f"{report_id}_photo{ext}"
+        image_path = os.path.join(UPLOAD_DIR, image_filename)
+        content = await photo.read()
+        with open(image_path, "wb") as f:
+            f.write(content)
+
+    # Save audio
+    if audio and audio.filename:
+        ext = os.path.splitext(audio.filename)[1] or ".webm"
+        audio_filename = f"{report_id}_audio{ext}"
+        audio_path = os.path.join(UPLOAD_DIR, audio_filename)
+        content = await audio.read()
+        with open(audio_path, "wb") as f:
+            f.write(content)
+
+    # Run diagnosis
+    diagnosis = None
+    if image_path:
+        diagnosis = classify_image(image_path, farm_id=farm_id)
+
+    # Extract symptoms from text description
+    symptoms = extract_symptoms_from_text(description) if description else []
+
+    # Check if RSK escalation needed
+    escalation_ticket = None
+    if diagnosis and should_escalate(diagnosis["confidence"], diagnosis["severity"]):
+        ticket = create_escalation_ticket(
+            farm_id=farm_id,
+            health_report_id=report_id,
+            disease_name=diagnosis["disease_name"],
+            confidence=diagnosis["confidence"],
+            severity=diagnosis["severity"],
+            symptoms=symptoms,
+            image_path=image_path,
+            audio_path=audio_path,
+            farmer_description=description,
+        )
+        escalation_ticket = add_ticket(ticket)
+
+    return {
+        "report_id": report_id,
+        "farm_id": farm_id,
+        "diagnosis": diagnosis,
+        "symptoms_detected": symptoms,
+        "has_photo": image_path is not None,
+        "has_audio": audio_path is not None,
+        "escalated": escalation_ticket is not None,
+        "escalation_ticket": escalation_ticket,
+        "created_at": datetime.utcnow().isoformat(),
+    }
+
+
+@app.get("/api/rsk/queue", tags=["RSK"])
+def rsk_queue():
+    """Get all open RSK escalation tickets (admin/RSK expert view)."""
+    return get_open_tickets()
+
+
+@app.get("/api/rsk/all", tags=["RSK"])
+def rsk_all():
+    """Get all RSK tickets including resolved."""
+    return get_all_tickets()
+
+
+@app.post("/api/rsk/respond", tags=["RSK"])
+def rsk_respond(ticket_id: str = Form(...), response: str = Form(...), expert_name: str = Form("RSK Expert")):
+    """RSK expert responds to an escalation ticket."""
+    result = respond_to_ticket(ticket_id, response, expert_name)
+    if not result:
+        raise HTTPException(status_code=404, detail="Ticket not found")
+    return result
+
 
 @app.post("/auth/register", response_model=schemas.UserResponse)
 def register(user: schemas.UserCreate, db: Session = Depends(get_db)):
@@ -119,8 +349,8 @@ def refresh_metrics(id: int, db: Session = Depends(get_db), current_user: models
         ndvi_change = ndvi - float(prev_metric.ndvi_avg)
     
     weather = services.fetch_weather(float(db_farm.lat), float(db_farm.lng))
-    
-    risk_level, risk_prob = services.compute_risk(ndvi, ndvi_change, weather['rainfall_mm'], weather['temp_c'], weather['humidity'])
+    disease_severity = get_latest_farm_severity(id)
+    risk_level, risk_prob = services.compute_risk(ndvi, ndvi_change, weather['rainfall_mm'], weather['temp_c'], weather['humidity'], disease_severity)
     
     new_metric = models.FarmMetric(
         farm_id=id,
@@ -274,3 +504,36 @@ def mint_farm_nft(id: int, db: Session = Depends(get_db), current_user: models.U
     db.commit()
     db.refresh(db_farm)
     return db_farm
+
+
+# ========== Phase 3D: WhatsApp Business Webhook & Message Log ==========
+
+from sms_service import handle_whatsapp_inbound, get_whatsapp_conversations, get_message_log
+
+@app.post("/webhooks/whatsapp-inbound")
+def whatsapp_inbound_webhook(
+    From: str = Form("whatsapp:+919876543210"),
+    Body: str = Form("help"),
+    NumMedia: int = Form(0),
+):
+    """
+    Simulate WhatsApp Business inbound webhook.
+    In production, Twilio WhatsApp Business API posts here.
+    """
+    # Strip 'whatsapp:' prefix if present
+    phone = From.replace("whatsapp:", "")
+    result = handle_whatsapp_inbound(from_number=phone, body=Body, num_media=NumMedia)
+    return result
+
+
+@app.get("/api/whatsapp/conversations")
+def get_wa_conversations():
+    """Get all WhatsApp conversation messages."""
+    return get_whatsapp_conversations()
+
+
+@app.get("/api/messages/log")
+def get_all_messages():
+    """Get full message log (SMS + WhatsApp, inbound + outbound)."""
+    return get_message_log()
+

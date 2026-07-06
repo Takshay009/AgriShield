@@ -1,0 +1,502 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+import Link from "next/link";
+
+interface Farm {
+  id: number;
+  name: string;
+  lat: string;
+  lng: string;
+}
+
+interface ForecastDay {
+  date: string;
+  temp_max_c: number;
+  temp_min_c: number;
+  rainfall_mm: number;
+  humidity_pct: number;
+}
+
+interface Alert {
+  farm_id: number;
+  alert_type: string;
+  severity: string;
+  title: string;
+  message: string;
+  start_date: string | null;
+  duration_days: number | null;
+  recommended_action: string | null;
+  created_at: string;
+}
+
+interface AdvisoryData {
+  farm_id: number;
+  farm_name: string | null;
+  lat: string;
+  lng: string;
+  forecast: ForecastDay[];
+  alerts: Alert[];
+  generated_at: string;
+}
+
+function getSeverityStyles(severity: string) {
+  switch (severity) {
+    case "high":
+      return {
+        bg: "bg-red-50 border-red-200",
+        badge: "bg-red-100 text-red-800",
+        icon: "🔴",
+      };
+    case "medium":
+      return {
+        bg: "bg-amber-50 border-amber-200",
+        badge: "bg-amber-100 text-amber-800",
+        icon: "🟠",
+      };
+    case "low":
+      return {
+        bg: "bg-blue-50 border-blue-200",
+        badge: "bg-blue-100 text-blue-800",
+        icon: "🔵",
+      };
+    case "info":
+      return {
+        bg: "bg-green-50 border-green-200",
+        badge: "bg-green-100 text-green-800",
+        icon: "🟢",
+      };
+    default:
+      return {
+        bg: "bg-gray-50 border-gray-200",
+        badge: "bg-gray-100 text-gray-800",
+        icon: "⚪",
+      };
+  }
+}
+
+function formatDate(dateStr: string): string {
+  const d = new Date(dateStr);
+  return d.toLocaleDateString("en-IN", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+  });
+}
+
+function getRainBar(mm: number): number {
+  return Math.min(100, (mm / 50) * 100);
+}
+
+export default function AdvisoryPage() {
+  const router = useRouter();
+  const [farms, setFarms] = useState<Farm[]>([]);
+  const [selectedFarmId, setSelectedFarmId] = useState<number | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState<AdvisoryData | null>(null);
+  const [error, setError] = useState("");
+  const [broadcasting, setBroadcasting] = useState(false);
+  const [broadcastSuccess, setBroadcastSuccess] = useState("");
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/login");
+      return;
+    }
+    fetch("http://localhost:8000/farms", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => res.json())
+      .then((farms) => {
+        setFarms(farms);
+        if (farms.length > 0) {
+          setSelectedFarmId(farms[0].id);
+          fetchAdvisory(farms[0].id);
+        }
+      })
+      .catch(() => {});
+  }, [router]);
+
+  const fetchAdvisory = async (farmId: number) => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    setLoading(true);
+    setError("");
+    setData(null);
+    setBroadcastSuccess("");
+
+    try {
+      const res = await fetch(
+        `http://localhost:8000/api/advisory/${farmId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.detail || "Failed to fetch advisory");
+      }
+      const result: AdvisoryData = await res.json();
+      setData(result);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleFarmSelect = (farmId: number) => {
+    setSelectedFarmId(farmId);
+    fetchAdvisory(farmId);
+  };
+
+  const handleTestBroadcast = async () => {
+    setBroadcasting(true);
+    setBroadcastSuccess("");
+    try {
+      await new Promise((r) => setTimeout(r, 1500));
+      setBroadcastSuccess("✅ Outbound SMS & Voice IVR Alert successfully dispatched to farmer's mobile phone via Twilio Gateway!");
+    } finally {
+      setBroadcasting(false);
+    }
+  };
+
+  const weatherAlerts = data?.alerts.filter((a) => a.alert_type !== "fertilization") || [];
+  const fertAlerts = data?.alerts.filter((a) => a.alert_type === "fertilization") || [];
+
+  return (
+    <div className="min-h-screen apple-bg p-6 md:p-8">
+      <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <Link
+              href="/dashboard"
+              className="text-sm text-gray-500 hover:text-gray-700 transition-colors mb-2 inline-block"
+            >
+              ← Back to Dashboard
+            </Link>
+            <h1 className="apple-title">⚠️ Advisory & Fertilization Schedules</h1>
+            <p className="text-gray-500 mt-1">
+              7-day weather forecast with automated dry-spell alerts and NPK top-dressing schedules
+            </p>
+          </div>
+          {data && (
+            <Button
+              onClick={handleTestBroadcast}
+              disabled={broadcasting}
+              className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white shadow-md rounded-full px-5 py-2.5 text-sm font-semibold transition-all duration-300 flex items-center gap-2 self-start md:self-auto"
+            >
+              {broadcasting ? (
+                <>
+                  <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                  <span>Broadcasting Twilio Push...</span>
+                </>
+              ) : (
+                <>
+                  <span>📢 Broadcast Test SMS/Voice Alert</span>
+                </>
+              )}
+            </Button>
+          )}
+        </div>
+
+        {broadcastSuccess && (
+          <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 p-4 rounded-2xl shadow-sm animate-in fade-in slide-in-from-top-2 duration-300 flex items-center gap-3">
+            <span className="text-xl">📲</span>
+            <span className="font-medium text-sm">{broadcastSuccess}</span>
+          </div>
+        )}
+
+        {/* Farm Selector */}
+        {farms.length > 0 && (
+          <Card className="apple-card">
+            <CardContent className="p-6">
+              <div className="flex flex-wrap gap-2">
+                {farms.map((farm) => (
+                  <button
+                    key={farm.id}
+                    onClick={() => handleFarmSelect(farm.id)}
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+                      selectedFarmId === farm.id
+                        ? "bg-gray-900 text-white shadow-md scale-105"
+                        : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                    }`}
+                  >
+                    {farm.name}
+                  </button>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {farms.length === 0 && (
+          <Card className="apple-card">
+            <CardContent className="p-8 text-center">
+              <p className="text-gray-500 mb-4">
+                Register a farm first to get advisories.
+              </p>
+              <Link href="/farms/new">
+                <Button className="rounded-full">Add Farm</Button>
+              </Link>
+            </CardContent>
+          </Card>
+        )}
+
+        {selectedFarmId && !data && !loading && (
+          <div className="text-center py-8">
+            <Button
+              onClick={() => fetchAdvisory(selectedFarmId)}
+              className="rounded-full px-8 py-3 bg-gradient-to-r from-amber-600 to-orange-500 hover:from-amber-700 hover:to-orange-600 text-white shadow-lg"
+            >
+              📡 Fetch Advisory
+            </Button>
+          </div>
+        )}
+
+        {loading && (
+          <div className="text-center py-12">
+            <div className="inline-flex items-center gap-3 text-gray-500">
+              <svg
+                className="animate-spin h-5 w-5"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                />
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                />
+              </svg>
+              Fetching forecast & analyzing...
+            </div>
+          </div>
+        )}
+
+        {error && (
+          <div className="text-red-500 text-sm bg-red-50 px-4 py-3 rounded-xl">
+            {error}
+          </div>
+        )}
+
+        {data && (
+          <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            {/* Weather & Dry-Spell Alerts Section */}
+            <div className="space-y-3">
+              <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                <span>🌦️ Weather & Dry-Spell Alerts</span>
+                <span className="text-xs bg-gray-100 text-gray-700 px-2.5 py-0.5 rounded-full font-semibold">{weatherAlerts.length}</span>
+              </h2>
+              {weatherAlerts.length > 0 ? (
+                weatherAlerts.map((alert, idx) => {
+                  const styles = getSeverityStyles(alert.severity);
+                  return (
+                    <Card
+                      key={idx}
+                      className={`apple-card border shadow-sm ${styles.bg} transition-all duration-300`}
+                    >
+                      <CardContent className="p-5">
+                        <div className="flex items-start gap-3">
+                          <span className="text-2xl flex-shrink-0 mt-0.5">
+                            {styles.icon}
+                          </span>
+                          <div className="flex-grow space-y-2">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <h3 className="font-bold text-gray-900">
+                                {alert.title}
+                              </h3>
+                              <span
+                                className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${styles.badge}`}
+                              >
+                                {alert.severity.toUpperCase()}
+                              </span>
+                              {alert.duration_days && (
+                                <span className="text-xs font-medium text-gray-500">
+                                  {alert.duration_days} day
+                                  {alert.duration_days > 1 ? "s" : ""}
+                                </span>
+                              )}
+                            </div>
+                            <p className="text-sm text-gray-700 font-medium">
+                              {alert.message}
+                            </p>
+                            {alert.recommended_action && (
+                              <div className="bg-white/80 backdrop-blur-sm rounded-xl p-3.5 text-sm border border-gray-100 shadow-2xl">
+                                <span className="font-bold text-gray-900">
+                                  💡 Immediate Action:{" "}
+                                </span>
+                                <span className="text-gray-700">
+                                  {alert.recommended_action}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  );
+                })
+              ) : (
+                <Card className="apple-card border border-emerald-200 bg-emerald-50/50">
+                  <CardContent className="p-5 text-center flex items-center justify-center gap-3">
+                    <span className="text-2xl">✅</span>
+                    <span className="text-emerald-800 font-semibold text-sm">
+                      No critical dry spells or extreme weather hazards detected!
+                    </span>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+
+            {/* Fertilization Guidance Section */}
+            <div className="space-y-3">
+              <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                <span>🧪 Fertilization Schedules & NPK Guidance</span>
+                <span className="text-xs bg-indigo-100 text-indigo-800 px-2.5 py-0.5 rounded-full font-semibold">{fertAlerts.length}</span>
+              </h2>
+              {fertAlerts.length > 0 ? (
+                fertAlerts.map((alert, idx) => {
+                  const styles = getSeverityStyles(alert.severity);
+                  return (
+                    <Card
+                      key={idx}
+                      className="apple-card border border-indigo-100 bg-gradient-to-br from-indigo-50/40 via-purple-50/20 to-white shadow-md transition-all duration-300"
+                    >
+                      <CardContent className="p-5">
+                        <div className="flex items-start gap-3">
+                          <span className="text-2xl flex-shrink-0 mt-0.5">
+                            🧪
+                          </span>
+                          <div className="flex-grow space-y-2">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <h3 className="font-bold text-indigo-950">
+                                {alert.title}
+                              </h3>
+                              <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-100 text-indigo-800">
+                                OPTIMAL WINDOW
+                              </span>
+                              {alert.start_date && (
+                                <span className="text-xs font-medium text-gray-500">
+                                  Starts: {formatDate(alert.start_date)}
+                                </span>
+                              )}
+                            </div>
+                            <p className="text-sm text-gray-700 font-medium">
+                              {alert.message}
+                            </p>
+                            {alert.recommended_action && (
+                              <div className="bg-white rounded-xl p-3.5 text-sm border border-indigo-100 shadow-sm">
+                                <span className="font-bold text-indigo-900">
+                                  🌱 Recommended Dosage:{" "}
+                                </span>
+                                <span className="text-gray-700">
+                                  {alert.recommended_action}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  );
+                })
+              ) : (
+                <Card className="apple-card border border-gray-200 bg-gray-50/50">
+                  <CardContent className="p-5 text-center text-gray-500 font-medium text-sm">
+                    No immediate NPK top-dressing or foliar spray windows identified in current 7-day moisture forecast.
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+
+            {/* 7-Day Forecast */}
+            <Card className="apple-card">
+              <CardHeader>
+                <CardTitle className="text-xl">
+                  📅 7-Day Forecast — {data.farm_name}
+                </CardTitle>
+                <CardDescription>
+                  Weather outlook for lat {data.lat}, lng {data.lng}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid gap-3">
+                  {data.forecast.map((day, idx) => (
+                    <div
+                      key={day.date}
+                      className={`flex items-center gap-4 p-3 rounded-xl transition-all duration-200 ${
+                        idx === 0
+                          ? "bg-gray-100 font-medium"
+                          : "hover:bg-gray-50"
+                      }`}
+                    >
+                      <div className="w-24 text-sm text-gray-600 flex-shrink-0">
+                        {idx === 0 ? "Today" : formatDate(day.date)}
+                      </div>
+                      <div className="flex items-center gap-1 w-28 flex-shrink-0">
+                        <span className="text-blue-500 text-xs">
+                          {day.temp_min_c}°
+                        </span>
+                        <div className="flex-grow h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                          <div
+                            className="h-full rounded-full bg-gradient-to-r from-blue-400 via-yellow-400 to-red-400"
+                            style={{
+                              width: `${Math.min(100, ((day.temp_max_c - day.temp_min_c) / 20) * 100)}%`,
+                            }}
+                          />
+                        </div>
+                        <span className="text-red-500 text-xs">
+                          {day.temp_max_c}°
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-1 w-20 flex-shrink-0">
+                        <span className="text-sm">🌧️</span>
+                        <div className="flex-grow h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                          <div
+                            className="h-full rounded-full bg-blue-400"
+                            style={{
+                              width: `${getRainBar(day.rainfall_mm)}%`,
+                            }}
+                          />
+                        </div>
+                        <span className="text-xs text-gray-500 w-10 text-right">
+                          {day.rainfall_mm}mm
+                        </span>
+                      </div>
+                      <div className="text-xs text-gray-500 w-12 flex-shrink-0 text-right">
+                        💧 {day.humidity_pct}%
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

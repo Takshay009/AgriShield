@@ -55,16 +55,16 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen apple-bg p-8">
-      <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
         <div className="flex justify-between items-center">
-          <h1 className="apple-title">CropGuard Dashboard</h1>
+          <h1 className="apple-title">🌾 AgriShield Dashboard</h1>
           <Button variant="outline" className="rounded-full" onClick={handleLogout}>Log out</Button>
         </div>
         
         <Card className="apple-card">
           <CardHeader>
             <CardTitle>Welcome, {user.name}</CardTitle>
-            <CardDescription>Manage your registered farms and view insights.</CardDescription>
+            <CardDescription>Manage your registered farms, get AI crop advisories, and file ZKP insurance claims.</CardDescription>
           </CardHeader>
           <CardContent>
             {farms.length === 0 ? (
@@ -96,6 +96,99 @@ export default function DashboardPage() {
             )}
           </CardContent>
         </Card>
+
+        {/* Core Feature Grid */}
+        <div className="grid gap-6 md:grid-cols-2">
+          <Card className="apple-card card-hover cursor-pointer border border-gray-100 group">
+            <Link href="/dashboard/recommended-crops" className="block h-full">
+              <CardHeader className="p-6 pb-2">
+                <div className="flex items-center gap-3">
+                  <span className="text-3xl group-hover:scale-110 transition-transform duration-300">🌾</span>
+                  <CardTitle className="text-xl font-semibold text-gray-900">Crop Recommendations</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent className="p-6 pt-2 text-sm text-gray-500">
+                AI-powered crop suggestions based on your soil, climate, and location
+              </CardContent>
+            </Link>
+          </Card>
+          <Card className="apple-card card-hover cursor-pointer border border-gray-100 group">
+            <Link href="/dashboard/advisory" className="block h-full">
+              <CardHeader className="p-6 pb-2">
+                <div className="flex items-center gap-3">
+                  <span className="text-3xl group-hover:scale-110 transition-transform duration-300">⚠️</span>
+                  <CardTitle className="text-xl font-semibold text-gray-900">Advisory & Alerts</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent className="p-6 pt-2 text-sm text-gray-500">
+                Dry-spell warnings, weather alerts, and farming advisories
+              </CardContent>
+            </Link>
+          </Card>
+          <Card className="apple-card card-hover cursor-pointer border border-gray-100 group">
+            <Link href="/dashboard/report-issue" className="block h-full">
+              <CardHeader className="p-6 pb-2">
+                <div className="flex items-center gap-3">
+                  <span className="text-3xl group-hover:scale-110 transition-transform duration-300">🔬</span>
+                  <CardTitle className="text-xl font-semibold text-gray-900">Report Crop Issue</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent className="p-6 pt-2 text-sm text-gray-500">
+                Upload photos or record voice notes for AI-powered disease diagnosis
+              </CardContent>
+            </Link>
+          </Card>
+          <Card className="apple-card card-hover cursor-pointer border border-gray-100 group">
+            <Link href="/dashboard/whatsapp-ivr" className="block h-full">
+              <CardHeader className="p-6 pb-2">
+                <div className="flex items-center gap-3">
+                  <span className="text-3xl group-hover:scale-110 transition-transform duration-300">💬</span>
+                  <CardTitle className="text-xl font-semibold text-gray-900">WhatsApp & IVR Hub</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent className="p-6 pt-2 text-sm text-gray-500">
+                Indic voice IVR hotline & WhatsApp Business AI chatbot for SMS-first farmers
+              </CardContent>
+            </Link>
+          </Card>
+        </div>
+
+        {/* Admin Links */}
+        <div className="grid gap-4 md:grid-cols-3">
+          <Card className="apple-card card-hover cursor-pointer border border-gray-100 group">
+            <Link href="/admin/rsk-queue" className="block h-full">
+              <CardContent className="p-5 flex items-center gap-3">
+                <span className="text-2xl group-hover:scale-110 transition-transform duration-300">🆘</span>
+                <div>
+                  <p className="font-semibold text-gray-900 text-sm">RSK Expert Queue</p>
+                  <p className="text-xs text-gray-500">Review escalated crop health tickets</p>
+                </div>
+              </CardContent>
+            </Link>
+          </Card>
+          <Card className="apple-card card-hover cursor-pointer border border-gray-100 group">
+            <Link href="/admin/claims" className="block h-full">
+              <CardContent className="p-5 flex items-center gap-3">
+                <span className="text-2xl group-hover:scale-110 transition-transform duration-300">🛡️</span>
+                <div>
+                  <p className="font-semibold text-gray-900 text-sm">Insurance Claims</p>
+                  <p className="text-xs text-gray-500">ZKP-verified claim management</p>
+                </div>
+              </CardContent>
+            </Link>
+          </Card>
+          <Card className="apple-card card-hover cursor-pointer border border-gray-100 group">
+            <Link href="/admin/rsk-queue" className="block h-full">
+              <CardContent className="p-5 flex items-center gap-3">
+                <span className="text-2xl group-hover:scale-110 transition-transform duration-300">📊</span>
+                <div>
+                  <p className="font-semibold text-gray-900 text-sm">Admin Panel</p>
+                  <p className="text-xs text-gray-500">System overview & monitoring</p>
+                </div>
+              </CardContent>
+            </Link>
+          </Card>
+        </div>
       </div>
     </div>
   );

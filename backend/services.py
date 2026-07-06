@@ -6,7 +6,7 @@ import os
 
 USE_MOCK_ZKP = False
 
-def compute_risk(ndvi_avg: float, ndvi_change: float, rainfall_mm: float, temp_c: float, humidity: float):
+def compute_risk(ndvi_avg: float, ndvi_change: float, rainfall_mm: float, temp_c: float, humidity: float, disease_severity: str = "none"):
     score = 0
     if ndvi_avg < 0.4: score += 40
     elif ndvi_avg < 0.6: score += 20
@@ -14,6 +14,9 @@ def compute_risk(ndvi_avg: float, ndvi_change: float, rainfall_mm: float, temp_c
     if rainfall_mm < 5 and temp_c > 32: score += 25   # drought signal
     if rainfall_mm > 80: score += 25                   # flood signal
     if humidity < 20: score += 10
+    if disease_severity == "high": score += 35
+    elif disease_severity == "medium": score += 20
+    elif disease_severity == "low": score += 10
 
     risk_probability = min(score, 100) / 100
     risk_level = (
