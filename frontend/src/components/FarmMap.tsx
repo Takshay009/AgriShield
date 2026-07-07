@@ -105,7 +105,7 @@ export default function FarmMap({ onPolygonChange, initialPolygon = [], readOnly
   };
 
   return (
-    <div className="space-y-2 flex flex-col h-full">
+    <div className="space-y-2 w-full">
       {!readOnly && (
         <div className="flex gap-2">
           <input
@@ -128,7 +128,7 @@ export default function FarmMap({ onPolygonChange, initialPolygon = [], readOnly
       )}
       {searchError && <p className="text-red-500 text-xs">{searchError}</p>}
       
-      <div className={`relative w-full ${heightClassName} rounded-md overflow-hidden border shadow-inner flex-1`}>
+      <div className={`relative w-full ${heightClassName} min-h-[450px] rounded-md overflow-hidden border shadow-inner`}>
         {!readOnly && (
           <div className="absolute top-2 right-2 z-[1000] bg-white/95 backdrop-blur p-3 rounded-lg shadow-md border border-gray-200 max-w-xs">
             <div className="flex items-center justify-between gap-3 mb-1">
@@ -150,7 +150,7 @@ export default function FarmMap({ onPolygonChange, initialPolygon = [], readOnly
             </p>
           </div>
         )}
-        <MapContainer center={mapCenter} zoom={mapZoom} style={{ height: "100%", width: "100%" }}>
+        <MapContainer center={mapCenter} zoom={mapZoom} style={{ height: "450px", width: "100%", minHeight: "450px" }}>
           <MapController center={mapCenter} zoom={mapZoom} />
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
