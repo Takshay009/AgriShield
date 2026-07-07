@@ -4,6 +4,7 @@ sqlalchemy
 pydantic
 pydantic-settings
 pydantic[email]
+email-validator
 PyJWT
 passlib[bcrypt]
 python-multipart

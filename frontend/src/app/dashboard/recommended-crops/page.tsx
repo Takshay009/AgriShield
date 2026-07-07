@@ -71,8 +71,17 @@ const CROP_ICONS: Record<string, string> = {
   "Millet (Bajra)": "🌾",
   "Jowar (Sorghum)": "🌿",
   Jute: "🧵",
-  Turmeric: "🟡",
   Sunflower: "🌻",
+};
+
+const FRIENDLY_KEYS: Record<string, string> = {
+  soil: "🪨 Perfect Soil Match",
+  ph: "⚗️ Good Soil Taste (pH)",
+  temperature: "🌡️ Perfect Weather",
+  water: "💧 Enough Rain & Water",
+  season: "📅 Right Month to Plant",
+  state_bonus: "📍 Popular in your State",
+  groundwater_penalty: "⚠️ Water Table Too Deep",
 };
 
 function getSuitabilityColor(pct: number): string {
@@ -207,9 +216,9 @@ export default function RecommendedCropsPage() {
             >
               ← Back to Dashboard
             </Link>
-            <h1 className="apple-title">🌾 Crop Recommendations</h1>
+            <h1 className="apple-title">🌾 Best Crop Suggestions for Your Land</h1>
             <p className="text-gray-500 mt-1">
-              AI-powered crop suggestions using ISRO Bhuvan satellite telemetry, soil health, and groundwater depth
+              Simple AI suggestions using live satellite weather, soil health, and underground water depth
             </p>
           </div>
         </div>
@@ -219,9 +228,9 @@ export default function RecommendedCropsPage() {
           <CardHeader className="pb-4">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div>
-                <CardTitle className="text-xl font-bold text-gray-900">Farm & Environmental Telemetry</CardTitle>
+                <CardTitle className="text-xl font-bold text-gray-900">🌱 Check Your Farm Soil & Water</CardTitle>
                 <CardDescription>
-                  Select a farm or sync real-time satellite telemetry for groundwater table analysis
+                  Select your farm or click the button below to check live satellite water and soil data
                 </CardDescription>
               </div>
               <Button
@@ -240,7 +249,7 @@ export default function RecommendedCropsPage() {
                   </>
                 ) : (
                   <>
-                    <span>🛰️ Sync ISRO / NASA POWER Satellite</span>
+                    <span>🛰️ Check Live Satellite Data</span>
                   </>
                 )}
               </Button>
@@ -351,7 +360,7 @@ export default function RecommendedCropsPage() {
               <div className="bg-amber-50 border border-amber-200 rounded-xl p-3.5 flex items-start gap-3 text-sm text-amber-800 animate-in fade-in duration-300">
                 <span className="text-lg">⚠️</span>
                 <div>
-                  <span className="font-bold">Deep Water Table Alert ({groundwaterDepth}m):</span> ISRO telemetry indicates depleted groundwater in this zone. The AI scoring engine will automatically penalize water-heavy crops (like Sugarcane & Paddy) and boost drought-resistant millets and pulses!
+                  <span className="font-bold">Deep Water Table Alert ({groundwaterDepth}m):</span> Underground water is very deep! We will avoid thirsty crops (like Sugarcane & Paddy) and suggest low-water crops (like Millets & Pulses) so your crop doesn't dry out!
                 </div>
               </div>
             )}
@@ -406,27 +415,27 @@ export default function RecommendedCropsPage() {
                 <div className="flex flex-wrap items-center gap-3 text-sm">
                   {result.state_detected && (
                     <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-blue-50 text-blue-700 font-semibold border border-blue-100">
-                      📍 {result.state_detected}
+                      📍 State: {result.state_detected} (Region Match)
                     </span>
                   )}
                   {result.soil_type_used && (
                     <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-amber-50 text-amber-800 font-semibold border border-amber-100">
-                      🪨 {result.soil_type_used}
+                      🪨 Soil: {result.soil_type_used} (Good for roots)
                     </span>
                   )}
                   {result.hyperlocal_api_used && (
                     <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-emerald-50 text-emerald-700 font-bold border border-emerald-200">
-                      🛰️ ISRIC SoilGrids 250m Hyper-Local API Active
+                      🛰️ Live Satellite Soil Check Active (ISRIC 250m)
                     </span>
                   )}
                   {result.ph_used !== null && (
                     <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-purple-50 text-purple-700 font-semibold border border-purple-100">
-                      ⚗️ pH {result.ph_used}
+                      ⚗️ Soil pH: {result.ph_used} (Normal Sweet Earth)
                     </span>
                   )}
                   {result.annual_rainfall_mm !== null && (
                     <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-cyan-50 text-cyan-800 font-semibold border border-cyan-100">
-                      🌧️ {result.annual_rainfall_mm}mm/yr
+                      🌧️ Yearly Rain: {result.annual_rainfall_mm} mm/yr (Area Average)
                     </span>
                   )}
                   {result.groundwater_depth_m_used !== null && result.groundwater_depth_m_used !== undefined && (
@@ -435,16 +444,16 @@ export default function RecommendedCropsPage() {
                         ? "bg-red-50 text-red-700 border-red-200 animate-pulse" 
                         : "bg-blue-50 text-blue-800 border-blue-200"
                     }`}>
-                      💧 Water Table: {result.groundwater_depth_m_used}m {result.groundwater_depth_m_used > 15 ? "(Depleted Zone)" : "(Optimal)"}
+                      💧 Underground Water: {result.groundwater_depth_m_used}m deep {result.groundwater_depth_m_used > 15 ? "(Low Water!)" : "(Good Supply)"}
                     </span>
                   )}
                   {result.current_temp_c !== null && (
                     <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-orange-50 text-orange-800 font-semibold border border-orange-100">
-                      🌡️ {result.current_temp_c}°C
+                      🌡️ Weather Temp: {result.current_temp_c}°C (Pleasant Warmth)
                     </span>
                   )}
                   <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-green-50 text-green-800 font-semibold border border-green-100">
-                    📅 {result.month}
+                    📅 Planting Season: {result.month} (Current Month)
                   </span>
                 </div>
               </CardContent>
@@ -484,7 +493,7 @@ export default function RecommendedCropsPage() {
                           </h3>
                           {crop.breakdown.groundwater_penalty && crop.breakdown.groundwater_penalty < 0 ? (
                             <span className="bg-red-100 text-red-700 text-[10px] font-bold px-2 py-0.5 rounded-full">
-                              ⚠️ Deep Root Penalty
+                              ⚠️ Thirsty Crop Warning
                             </span>
                           ) : null}
                         </div>
@@ -503,7 +512,7 @@ export default function RecommendedCropsPage() {
                         >
                           {crop.suitability_pct}%
                         </div>
-                        <div className="text-xs text-gray-400 font-semibold uppercase tracking-wider">suitability</div>
+                        <div className="text-xs text-gray-400 font-semibold uppercase tracking-wider">Match Score</div>
                       </div>
 
                       {/* Progress bar */}
@@ -525,34 +534,46 @@ export default function RecommendedCropsPage() {
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm bg-white/60 p-4 rounded-2xl border border-gray-100">
                           <div className="space-y-1">
                             <div className="text-gray-400 text-xs uppercase font-bold tracking-wider">
-                              Water Requirement
+                              💧 Water Needed
                             </div>
                             <div className="font-bold text-gray-900 text-base">
                               {crop.water_need_mm} mm/yr
                             </div>
+                            <div className="text-[11px] font-semibold text-emerald-700">
+                              {crop.water_need_mm < 600 ? "(Low Water / Easy to grow)" : crop.water_need_mm <= 1000 ? "(Medium Water / Normal rain)" : "(High Water / Needs irrigation)"}
+                            </div>
                           </div>
                           <div className="space-y-1">
                             <div className="text-gray-400 text-xs uppercase font-bold tracking-wider">
-                              Optimal Soil Types
+                              🪨 Best Soil Types
                             </div>
                             <div className="font-bold text-gray-900 text-base">
                               {crop.soil_types.join(", ")}
                             </div>
+                            <div className="text-[11px] font-semibold text-amber-700">
+                              (Good root support)
+                            </div>
                           </div>
                           <div className="space-y-1">
                             <div className="text-gray-400 text-xs uppercase font-bold tracking-wider">
-                              pH Range
+                              ⚗️ Soil Taste (pH)
                             </div>
                             <div className="font-bold text-gray-900 text-base">
                               {crop.ph_range}
                             </div>
+                            <div className="text-[11px] font-semibold text-purple-700">
+                              (Normal Sweet Earth)
+                            </div>
                           </div>
                           <div className="space-y-1">
                             <div className="text-gray-400 text-xs uppercase font-bold tracking-wider">
-                              Temp Range
+                              🌡️ Weather Needed
                             </div>
                             <div className="font-bold text-gray-900 text-base">
                               {crop.temp_range}
+                            </div>
+                            <div className="text-[11px] font-semibold text-orange-700">
+                              (Pleasant Warm Season)
                             </div>
                           </div>
                         </div>
@@ -560,7 +581,7 @@ export default function RecommendedCropsPage() {
                         {/* Score breakdown */}
                         <div className="mt-4 space-y-2">
                           <div className="text-xs text-gray-400 uppercase font-bold tracking-wider">
-                            Scoring Engine Breakdown
+                            💡 Why this crop is recommended for your land:
                           </div>
                           <div className="flex flex-wrap gap-2">
                             {Object.entries(crop.breakdown).map(
@@ -576,7 +597,7 @@ export default function RecommendedCropsPage() {
                                         : "bg-white text-gray-800 border-gray-200"
                                     }`}
                                   >
-                                    <span className="capitalize">{key.replace("_", " ")}</span>:{" "}
+                                    <span className="font-bold">{FRIENDLY_KEYS[key] || key.replace("_", " ")}</span>:{" "}
                                     <span className={`font-extrabold ${isPenalty ? "text-red-700" : "text-emerald-700"}`}>{val > 0 ? `+${val}` : val}</span>
                                   </span>
                                 );

@@ -39,11 +39,11 @@ def analyze_forecast(forecast: list[dict], farm_id: int, crop_name: Optional[str
                     "farm_id": farm_id,
                     "alert_type": "dry_spell",
                     "severity": "high" if dry_streak >= 5 else "medium",
-                    "title": "🔥 Dry Spell Warning",
-                    "message": f"Dry spell detected: {dry_streak} consecutive days with minimal rain and high temperatures starting {dry_start}. Consider irrigation planning.",
+                    "title": "🔥 Hot & Dry Weather Alert",
+                    "message": f"Very hot and no rain expected for {dry_streak} days starting {dry_start}. Your crops will get thirsty and dry out!",
                     "start_date": dry_start,
                     "duration_days": dry_streak,
-                    "recommended_action": "Activate irrigation systems. Consider mulching to retain soil moisture. Monitor crop stress signs.",
+                    "recommended_action": "👉 Give full water to your fields immediately! Cover the soil around plant roots with dry straw or leaves to stop water from drying up.",
                     "created_at": datetime.utcnow().isoformat(),
                 })
             dry_streak = 0
@@ -54,11 +54,11 @@ def analyze_forecast(forecast: list[dict], farm_id: int, crop_name: Optional[str
             "farm_id": farm_id,
             "alert_type": "dry_spell",
             "severity": "high" if dry_streak >= 5 else "medium",
-            "title": "🔥 Dry Spell Warning",
-            "message": f"Dry spell detected: {dry_streak}+ consecutive days with minimal rain and high temperatures starting {dry_start}. May extend beyond forecast window.",
+            "title": "🔥 Hot & Dry Weather Alert",
+            "message": f"Very hot and no rain expected for {dry_streak}+ days starting {dry_start}. This hot weather may continue for long!",
             "start_date": dry_start,
             "duration_days": dry_streak,
-            "recommended_action": "Activate irrigation systems. Consider mulching to retain soil moisture. Monitor crop stress signs.",
+            "recommended_action": "👉 Give full water to your fields immediately! Cover the soil around plant roots with dry straw or leaves to stop water from drying up.",
             "created_at": datetime.utcnow().isoformat(),
         })
     
@@ -69,11 +69,11 @@ def analyze_forecast(forecast: list[dict], farm_id: int, crop_name: Optional[str
                 "farm_id": farm_id,
                 "alert_type": "flood_risk",
                 "severity": "high" if day["rainfall_mm"] > 100 else "medium",
-                "title": "🌊 Heavy Rainfall Alert",
-                "message": f"Heavy rainfall of {day['rainfall_mm']}mm expected on {day['date']}. Risk of waterlogging and crop damage.",
+                "title": "🌊 Heavy Rain & Flood Alert",
+                "message": f"Very heavy rain ({day['rainfall_mm']} mm) coming on {day['date']}! Water may collect and drown your crop roots.",
                 "start_date": day["date"],
                 "duration_days": 1,
-                "recommended_action": "Ensure drainage channels are clear. Avoid field operations. Protect harvested crops from moisture.",
+                "recommended_action": "👉 Clean and open all water drains in your field right now! Do not spray any chemicals or fertilizer today. Move harvested crops to a dry shed.",
                 "created_at": datetime.utcnow().isoformat(),
             })
     
@@ -84,11 +84,11 @@ def analyze_forecast(forecast: list[dict], farm_id: int, crop_name: Optional[str
                 "farm_id": farm_id,
                 "alert_type": "frost",
                 "severity": "high" if day["temp_min_c"] < 0 else "medium",
-                "title": "❄️ Frost Alert",
-                "message": f"Temperature dropping to {day['temp_min_c']}°C on {day['date']}. Frost damage risk for sensitive crops.",
+                "title": "❄️ Extreme Cold & Frost Warning",
+                "message": f"Very cold night ({day['temp_min_c']}°C) coming on {day['date']}! Ice can form on leaves and burn your crops.",
                 "start_date": day["date"],
                 "duration_days": 1,
-                "recommended_action": "Cover sensitive crops with frost cloth. Irrigate before sunset to release heat. Avoid pruning.",
+                "recommended_action": "👉 Give light water to your field in the evening (wet soil stays warmer at night). Cover young plants with plastic sheets or cloth before sunset.",
                 "created_at": datetime.utcnow().isoformat(),
             })
     
@@ -106,11 +106,11 @@ def analyze_forecast(forecast: list[dict], farm_id: int, crop_name: Optional[str
                     "farm_id": farm_id,
                     "alert_type": "heat_wave",
                     "severity": "high",
-                    "title": "🌡️ Heat Wave Warning",
-                    "message": f"Extreme heat: {heat_streak} consecutive days above 42°C starting {heat_start}.",
+                    "title": "🌡️ Extreme Heat Wave Warning",
+                    "message": f"Dangerous heat (above 42°C) coming for {heat_streak} days starting {heat_start}. Crops will burn without extra care!",
                     "start_date": heat_start,
                     "duration_days": heat_streak,
-                    "recommended_action": "Increase irrigation frequency. Provide shade for livestock. Avoid midday field work.",
+                    "recommended_action": "👉 Give water to your crops in early morning or evening (never at afternoon noon). Keep farm animals in shade with plenty of drinking water.",
                     "created_at": datetime.utcnow().isoformat(),
                 })
             heat_streak = 0
@@ -119,11 +119,11 @@ def analyze_forecast(forecast: list[dict], farm_id: int, crop_name: Optional[str
             "farm_id": farm_id,
             "alert_type": "heat_wave",
             "severity": "high",
-            "title": "🌡️ Heat Wave Warning",
-            "message": f"Extreme heat: {heat_streak}+ consecutive days above 42°C starting {heat_start}.",
+            "title": "🌡️ Extreme Heat Wave Warning",
+            "message": f"Dangerous heat (above 42°C) coming for {heat_streak}+ days starting {heat_start}. Crops will burn without extra care!",
             "start_date": heat_start,
             "duration_days": heat_streak,
-            "recommended_action": "Increase irrigation frequency. Provide shade for livestock. Avoid midday field work.",
+            "recommended_action": "👉 Give water to your crops in early morning or evening (never at afternoon noon). Keep farm animals in shade with plenty of drinking water.",
             "created_at": datetime.utcnow().isoformat(),
         })
     
@@ -134,11 +134,11 @@ def analyze_forecast(forecast: list[dict], farm_id: int, crop_name: Optional[str
             "farm_id": farm_id,
             "alert_type": "low_humidity",
             "severity": "low",
-            "title": "🐛 Low Humidity — Pest Risk",
-            "message": f"Low humidity ({len(low_humid_days)} days below 20%) increases risk of spider mites and other pests.",
+            "title": "🐛 Dry Air — Bug & Pest Warning",
+            "message": f"Air will be very dry for {len(low_humid_days)} days starting {low_humid_days[0]['date']}. Red bugs and mites love dry air and may attack leaves!",
             "start_date": low_humid_days[0]["date"],
             "duration_days": len(low_humid_days),
-            "recommended_action": "Scout fields for pest activity. Consider preventive spraying if pest pressure builds.",
+            "recommended_action": "👉 Check the underside of leaves for small bugs or webs. If you see bugs, spray neem oil (10 spoons per bucket of water) in the evening.",
             "created_at": datetime.utcnow().isoformat(),
         })
     
@@ -149,11 +149,11 @@ def analyze_forecast(forecast: list[dict], farm_id: int, crop_name: Optional[str
             "farm_id": farm_id,
             "alert_type": "fertilization",
             "severity": "info",
-            "title": "🧪 Fertilization Window: Nitrogen / Urea Top-Dressing",
-            "message": f"Optimal soil moisture forecast on {mod_rain_days[0]['date']} ({mod_rain_days[0]['rainfall_mm']}mm rain). Ideal conditions for top-dressing Nitrogen/Urea fertilizer without nutrient leaching or runoff.",
+            "title": "🌱 Best Time to Put Urea / Nitrogen Fertilizer",
+            "message": f"Good light rain ({mod_rain_days[0]['rainfall_mm']} mm) expected on {mod_rain_days[0]['date']}! Soil will be damp and perfect for feeding crops so fertilizer won't wash away.",
             "start_date": mod_rain_days[0]["date"],
             "duration_days": 2,
-            "recommended_action": "Apply Urea (45 kg/acre) or NPK (20:20:20) into damp soil. Do not apply if heavy storms (>50mm) are predicted.",
+            "recommended_action": "👉 Put 1 bag (approx 45 kg) of Urea per acre near crop roots while soil is damp. Do not throw fertilizer if heavy storms or floods are coming!",
             "created_at": datetime.utcnow().isoformat(),
         })
 
@@ -164,11 +164,11 @@ def analyze_forecast(forecast: list[dict], farm_id: int, crop_name: Optional[str
             "farm_id": farm_id,
             "alert_type": "fertilization",
             "severity": "medium",
-            "title": "🧪 Fertilization Alert: Potassium Drought-Armor",
-            "message": f"High temperatures (>36°C) and evaporation stress predicted starting {high_temp_days[0]['date']}. Potassium foliar spray will boost crop heat tolerance and stomatal water regulation.",
+            "title": "🛡️ Heat Protection Spray (Potash Fertilizer)",
+            "message": f"Very hot weather coming from {high_temp_days[0]['date']}. Spraying Potash on leaves acts like a shield to keep crops green and save water inside plants!",
             "start_date": high_temp_days[0]["date"],
             "duration_days": len(high_temp_days),
-            "recommended_action": "Spray Potassium Nitrate (13-0-45) or Sulphate of Potash at 10g/liter water during cool morning/evening hours.",
+            "recommended_action": "👉 Mix 2 spoons (approx 100g) of Potash powder in 1 bucket (10 liters) of water. Spray on crop leaves during cool early morning or evening.",
             "created_at": datetime.utcnow().isoformat(),
         })
 
@@ -186,11 +186,11 @@ def analyze_forecast(forecast: list[dict], farm_id: int, crop_name: Optional[str
                     "farm_id": farm_id,
                     "alert_type": "sowing_window",
                     "severity": "info",
-                    "title": "🌱 Good Sowing Window",
-                    "message": f"Favorable conditions for sowing: {good_days} days of moderate rain and mild temperatures from {good_start}.",
+                    "title": "🌱 Best Time to Sow Seeds",
+                    "message": f"Perfect weather for planting seeds! {good_days} days of gentle rain and pleasant weather starting {good_start}.",
                     "start_date": good_start,
                     "duration_days": good_days,
-                    "recommended_action": "Ideal time for sowing. Prepare seedbeds and ensure seed availability.",
+                    "recommended_action": "👉 Plough your field and plant your seeds now! Seeds will sprout quickly and healthy in this weather.",
                     "created_at": datetime.utcnow().isoformat(),
                 })
             good_days = 0
@@ -199,11 +199,11 @@ def analyze_forecast(forecast: list[dict], farm_id: int, crop_name: Optional[str
             "farm_id": farm_id,
             "alert_type": "sowing_window",
             "severity": "info",
-            "title": "🌱 Good Sowing Window",
-            "message": f"Favorable conditions for sowing: {good_days} days of moderate rain and mild temperatures from {good_start}.",
+            "title": "🌱 Best Time to Sow Seeds",
+            "message": f"Perfect weather for planting seeds! {good_days} days of gentle rain and pleasant weather starting {good_start}.",
             "start_date": good_start,
             "duration_days": good_days,
-            "recommended_action": "Ideal time for sowing. Prepare seedbeds and ensure seed availability.",
+            "recommended_action": "👉 Plough your field and plant your seeds now! Seeds will sprout quickly and healthy in this weather.",
             "created_at": datetime.utcnow().isoformat(),
         })
     

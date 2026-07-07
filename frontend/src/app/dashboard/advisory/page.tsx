@@ -97,6 +97,19 @@ function getRainBar(mm: number): number {
   return Math.min(100, (mm / 50) * 100);
 }
 
+function getRainExplanation(mm: number): string {
+  if (mm === 0) return "No Rain (Dry Day)";
+  if (mm <= 5) return "Light Rain (Gentle Drizzle)";
+  if (mm <= 35) return "Good Rain (Great for Crops)";
+  return "Heavy Rain (Watch Drains!)";
+}
+
+function getHumidityExplanation(pct: number): string {
+  if (pct < 30) return "Dry Air (Watch for bugs)";
+  if (pct <= 70) return "Normal Air (Comfortable)";
+  return "Sticky Air (High Moisture)";
+}
+
 export default function AdvisoryPage() {
   const router = useRouter();
   const [farms, setFarms] = useState<Farm[]>([]);
@@ -187,9 +200,9 @@ export default function AdvisoryPage() {
             >
               ← Back to Dashboard
             </Link>
-            <h1 className="apple-title">⚠️ Advisory & Fertilization Schedules</h1>
+            <h1 className="apple-title">🌾 Simple Weather Warnings & Fertilizer Guide</h1>
             <p className="text-gray-500 mt-1">
-              7-day weather forecast with automated dry-spell alerts and NPK top-dressing schedules
+              Easy-to-understand weather alerts and simple fertilizer advice (in bags, buckets, and spoons) for your farm
             </p>
           </div>
           {data && (
@@ -307,7 +320,7 @@ export default function AdvisoryPage() {
             {/* Weather & Dry-Spell Alerts Section */}
             <div className="space-y-3">
               <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                <span>🌦️ Weather & Dry-Spell Alerts</span>
+                <span>🌦️ Important Weather Warnings</span>
                 <span className="text-xs bg-gray-100 text-gray-700 px-2.5 py-0.5 rounded-full font-semibold">{weatherAlerts.length}</span>
               </h2>
               {weatherAlerts.length > 0 ? (
@@ -346,7 +359,7 @@ export default function AdvisoryPage() {
                             {alert.recommended_action && (
                               <div className="bg-white/80 backdrop-blur-sm rounded-xl p-3.5 text-sm border border-gray-100 shadow-2xl">
                                 <span className="font-bold text-gray-900">
-                                  💡 Immediate Action:{" "}
+                                  💡 What to do today:{" "}
                                 </span>
                                 <span className="text-gray-700">
                                   {alert.recommended_action}
@@ -374,7 +387,7 @@ export default function AdvisoryPage() {
             {/* Fertilization Guidance Section */}
             <div className="space-y-3">
               <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                <span>🧪 Fertilization Schedules & NPK Guidance</span>
+                <span>🌱 Simple Fertilizer Guide (When & How Much to Put)</span>
                 <span className="text-xs bg-indigo-100 text-indigo-800 px-2.5 py-0.5 rounded-full font-semibold">{fertAlerts.length}</span>
               </h2>
               {fertAlerts.length > 0 ? (
@@ -396,7 +409,7 @@ export default function AdvisoryPage() {
                                 {alert.title}
                               </h3>
                               <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-100 text-indigo-800">
-                                OPTIMAL WINDOW
+                                BEST TIME TO DO THIS
                               </span>
                               {alert.start_date && (
                                 <span className="text-xs font-medium text-gray-500">
@@ -410,7 +423,7 @@ export default function AdvisoryPage() {
                             {alert.recommended_action && (
                               <div className="bg-white rounded-xl p-3.5 text-sm border border-indigo-100 shadow-sm">
                                 <span className="font-bold text-indigo-900">
-                                  🌱 Recommended Dosage:{" "}
+                                  🌱 How Much & How to Apply:{" "}
                                 </span>
                                 <span className="text-gray-700">
                                   {alert.recommended_action}
@@ -426,7 +439,7 @@ export default function AdvisoryPage() {
               ) : (
                 <Card className="apple-card border border-gray-200 bg-gray-50/50">
                   <CardContent className="p-5 text-center text-gray-500 font-medium text-sm">
-                    No immediate NPK top-dressing or foliar spray windows identified in current 7-day moisture forecast.
+                    No fertilizer needed right now! Soil and weather are good. Check back after rain.
                   </CardContent>
                 </Card>
               )}
@@ -436,10 +449,10 @@ export default function AdvisoryPage() {
             <Card className="apple-card">
               <CardHeader>
                 <CardTitle className="text-xl">
-                  📅 7-Day Forecast — {data.farm_name}
+                  📅 7-Day Weather Forecast — {data.farm_name}
                 </CardTitle>
                 <CardDescription>
-                  Weather outlook for lat {data.lat}, lng {data.lng}
+                  Expected temperature and rain for your farm field
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -447,47 +460,54 @@ export default function AdvisoryPage() {
                   {data.forecast.map((day, idx) => (
                     <div
                       key={day.date}
-                      className={`flex items-center gap-4 p-3 rounded-xl transition-all duration-200 ${
+                      className={`flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 p-3.5 rounded-xl transition-all duration-200 border border-gray-100 ${
                         idx === 0
-                          ? "bg-gray-100 font-medium"
-                          : "hover:bg-gray-50"
+                          ? "bg-blue-50/50 font-medium border-blue-100 shadow-sm"
+                          : "hover:bg-gray-50 bg-white"
                       }`}
                     >
-                      <div className="w-24 text-sm text-gray-600 flex-shrink-0">
+                      <div className="w-28 text-sm font-bold text-gray-800 flex-shrink-0">
                         {idx === 0 ? "Today" : formatDate(day.date)}
                       </div>
-                      <div className="flex items-center gap-1 w-28 flex-shrink-0">
-                        <span className="text-blue-500 text-xs">
-                          {day.temp_min_c}°
-                        </span>
-                        <div className="flex-grow h-1.5 bg-gray-200 rounded-full overflow-hidden">
+
+                      {/* Temperature with explanation */}
+                      <div className="flex flex-col flex-grow min-w-[180px]">
+                        <div className="flex items-center justify-between text-xs font-semibold">
+                          <span className="text-blue-600" title="Night/Morning Cool Temperature">
+                            🌙 {day.temp_min_c}°C <span className="text-[10px] text-gray-500 font-normal">(Night Cool)</span>
+                          </span>
+                          <span className="text-red-600" title="Afternoon Peak Heat">
+                            ☀️ {day.temp_max_c}°C <span className="text-[10px] text-gray-500 font-normal">(Day Heat)</span>
+                          </span>
+                        </div>
+                        <div className="h-2 bg-gray-200 rounded-full overflow-hidden mt-1 shadow-inner">
                           <div
-                            className="h-full rounded-full bg-gradient-to-r from-blue-400 via-yellow-400 to-red-400"
+                            className="h-full rounded-full bg-gradient-to-r from-blue-400 via-yellow-400 to-red-500"
                             style={{
-                              width: `${Math.min(100, ((day.temp_max_c - day.temp_min_c) / 20) * 100)}%`,
+                              width: `${Math.min(100, Math.max(20, ((day.temp_max_c - day.temp_min_c) / 20) * 100))}%`,
                             }}
                           />
                         </div>
-                        <span className="text-red-500 text-xs">
-                          {day.temp_max_c}°
-                        </span>
                       </div>
-                      <div className="flex items-center gap-1 w-20 flex-shrink-0">
-                        <span className="text-sm">🌧️</span>
-                        <div className="flex-grow h-1.5 bg-gray-200 rounded-full overflow-hidden">
-                          <div
-                            className="h-full rounded-full bg-blue-400"
-                            style={{
-                              width: `${getRainBar(day.rainfall_mm)}%`,
-                            }}
-                          />
+
+                      {/* Rainfall with explanation */}
+                      <div className="flex flex-col w-48 flex-shrink-0">
+                        <div className="flex items-center justify-between text-xs font-bold text-gray-800">
+                          <span>🌧️ Rain: {day.rainfall_mm} mm</span>
                         </div>
-                        <span className="text-xs text-gray-500 w-10 text-right">
-                          {day.rainfall_mm}mm
+                        <span className="text-[11px] font-semibold text-emerald-700">
+                          {getRainExplanation(day.rainfall_mm)}
                         </span>
                       </div>
-                      <div className="text-xs text-gray-500 w-12 flex-shrink-0 text-right">
-                        💧 {day.humidity_pct}%
+
+                      {/* Humidity with explanation */}
+                      <div className="flex flex-col w-44 flex-shrink-0 sm:text-right">
+                        <div className="text-xs font-bold text-blue-900">
+                          💧 Air Moisture: {day.humidity_pct}%
+                        </div>
+                        <span className="text-[11px] text-gray-500 font-semibold">
+                          {getHumidityExplanation(day.humidity_pct)}
+                        </span>
                       </div>
                     </div>
                   ))}

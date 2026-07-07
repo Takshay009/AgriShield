@@ -1,6 +1,6 @@
-# CropGuard MVP
+# AgriShield — AI & Web3 Crop Health Monitoring & Insurance
 
-CropGuard is a decentralized, data-driven agricultural insurance platform. This MVP provides a full stack (Next.js + FastAPI + SQLite) to manage farms, fetch mock metrics, compute risk, generate Zero-Knowledge Proofs (ZKPs) for eligibility, and log claims to a blockchain.
+AgriShield is a decentralized, data-driven agricultural insurance and advisory platform. This MVP provides a full stack (Next.js + FastAPI + SQLite) to manage farms, fetch real weather metrics, compute risk, generate Zero-Knowledge Proofs (ZKPs) for eligibility, and log claims to a blockchain.
 
 ## Current State
 
@@ -24,12 +24,13 @@ Currently, the project has implemented Phase 1 through Phase 8 along with Phase 
 ### Backend
 1. `cd backend`
 2. `python -m venv venv`
-3. `.\venv\Scripts\activate` (Windows — use `..\venv\Scripts\activate` if venv is in root folder) or `source venv/bin/activate` (Mac/Linux)
-4. `pip install -r requirements.txt`
-if you get email error{
-pip install 'pydantic[email]'
-}
-5. `python -m uvicorn main:app --reload --port 8000` (or `py -m uvicorn main:app --reload --port 8000` on Windows)
+3. Activate your virtual environment:
+   - If venv is inside backend folder: `.\venv\Scripts\activate` (Windows) or `source venv/bin/activate` (Mac/Linux)
+   - If venv is in root workspace folder: `..\venv\Scripts\activate` (Windows)
+4. Install dependencies:
+   `pip install -r requirements.txt`
+5. Start the server:
+  `python -m uvicorn main:app --reload --port 8000` or `py -m uvicorn main:app --reload --port 8000` 
 
 ### Frontend
 1. `cd frontend`
