@@ -6,6 +6,8 @@ from sqlalchemy.orm import Session
 from datetime import datetime, date, timedelta
 import os
 import sys
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
 
 # Ensure backend dir is on path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -26,6 +28,10 @@ models.Base.metadata.create_all(bind=engine)
 app = FastAPI(title="CropGuard MVP")
 app.include_router(water_risk_router)
 start_scheduler()
+
+limiter = Limiter(key_func=get_remote_address)
+app.state.limiter = limiter
+app.add_exception_handler(429, _rate_limit_exceeded_handler)
 
 app.add_middleware(
     CORSMiddleware,
@@ -93,7 +99,7 @@ def post_sensor_data(data: SensorDataRequest, db: Session = Depends(get_db)):
 from sms_service import send_sms, parse_inbound_sms
 from ivr_service import generate_welcome_twiml, generate_menu_response_twiml
 from language_router import detect_language, get_language_name
-from fastapi.responses import Response
+from fastapi.responses import Response, JSONResponse
 
 @app.post("/webhooks/sms-inbound", tags=["Gateway"])
 async def sms_inbound(request: Request):
@@ -104,6 +110,9 @@ async def sms_inbound(request: Request):
     
     # Detect language from message body
     lang = detect_language(parsed["body"])
+    SUPPORTED_LANGS = {"hi", "te", "mr", "en"}
+    if lang not in SUPPORTED_LANGS:
+        lang = "en"
     
     # Load i18n message
     import json
@@ -268,19 +277,19 @@ async def create_health_report(
 
 
 @app.get("/api/rsk/queue", tags=["RSK"])
-def rsk_queue():
+def rsk_queue(current_user: models.User = Depends(auth.get_current_user)):
     """Get all open RSK escalation tickets (admin/RSK expert view)."""
     return get_open_tickets()
 
 
 @app.get("/api/rsk/all", tags=["RSK"])
-def rsk_all():
+def rsk_all(current_user: models.User = Depends(auth.get_current_user)):
     """Get all RSK tickets including resolved."""
     return get_all_tickets()
 
 
 @app.post("/api/rsk/respond", tags=["RSK"])
-def rsk_respond(ticket_id: str = Form(...), response: str = Form(...), expert_name: str = Form("RSK Expert")):
+def rsk_respond(ticket_id: str = Form(...), response: str = Form(...), expert_name: str = Form("RSK Expert"), current_user: models.User = Depends(auth.get_current_user)):
     """RSK expert responds to an escalation ticket."""
     result = respond_to_ticket(ticket_id, response, expert_name)
     if not result:
@@ -307,7 +316,8 @@ def register(user: schemas.UserCreate, db: Session = Depends(get_db)):
     return db_user
 
 @app.post("/auth/login", response_model=schemas.Token)
-def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+@limiter.limit("20/minute")
+def login(request: Request, form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     user = db.query(models.User).filter(models.User.email == form_data.username).first()
     if not user or not auth.verify_password(form_data.password, user.password_hash):
         raise HTTPException(
@@ -319,7 +329,22 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
     access_token = auth.create_access_token(
         data={"sub": user.email}, expires_delta=access_token_expires
     )
-    return {"access_token": access_token, "token_type": "bearer"}
+    resp = JSONResponse(content={"access_token": access_token, "token_type": "bearer"})
+    resp.set_cookie(
+        key="token",
+        value=access_token,
+        httponly=True,
+        samesite="lax",
+        secure=os.getenv("ENV", "dev") == "prod",
+        max_age=auth.ACCESS_TOKEN_EXPIRE_MINUTES * 60,
+        path="/"
+    )
+    return resp
+
+@app.post("/auth/logout")
+def logout(response: Response):
+    response.delete_cookie("token", path="/")
+    return {"message": "Logged out"}
 
 @app.get("/users/me", response_model=schemas.UserResponse)
 def read_users_me(current_user: models.User = Depends(auth.get_current_user)):
@@ -497,12 +522,11 @@ def log_blockchain(id: int, db: Session = Depends(get_db), current_user: models.
     return db_claim
 
 @app.get("/admin/claims", response_model=list[schemas.ClaimResponse])
-def admin_get_claims(db: Session = Depends(get_db)):
-    # For MVP, skipping explicit admin role check. Any logged-in user can access.
+def admin_get_claims(db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_user)):
     return db.query(models.Claim).order_by(models.Claim.created_at.desc()).all()
 
 @app.post("/admin/claims/{id}/verify")
-def admin_verify_claim(id: int, db: Session = Depends(get_db)):
+def admin_verify_claim(id: int, db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_user)):
     db_claim = db.query(models.Claim).filter(models.Claim.id == id).first()
     if not db_claim or not db_claim.proof_data:
         raise HTTPException(status_code=404, detail="Claim or proof not found")
@@ -511,7 +535,7 @@ def admin_verify_claim(id: int, db: Session = Depends(get_db)):
     return {"is_valid": is_valid}
 
 @app.post("/admin/claims/{id}/approve", response_model=schemas.ClaimResponse)
-def admin_approve_claim(id: int, db: Session = Depends(get_db)):
+def admin_approve_claim(id: int, db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_user)):
     db_claim = db.query(models.Claim).filter(models.Claim.id == id).first()
     if not db_claim:
         raise HTTPException(status_code=404, detail="Claim not found")
@@ -521,7 +545,7 @@ def admin_approve_claim(id: int, db: Session = Depends(get_db)):
     return db_claim
 
 @app.post("/admin/claims/{id}/reject", response_model=schemas.ClaimResponse)
-def admin_reject_claim(id: int, db: Session = Depends(get_db)):
+def admin_reject_claim(id: int, db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_user)):
     db_claim = db.query(models.Claim).filter(models.Claim.id == id).first()
     if not db_claim:
         raise HTTPException(status_code=404, detail="Claim not found")

@@ -122,15 +122,13 @@ export default function RecommendedCropsPage() {
   const [expandedCrop, setExpandedCrop] = useState<string | null>(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/login");
-      return;
-    }
     fetch("http://localhost:8000/farms", {
-      headers: { Authorization: `Bearer ${token}` },
+      credentials: "include",
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error("Unauthorized");
+        return res.json();
+      })
       .then((data) => {
         setFarms(data);
         if (data.length > 0) {
@@ -139,7 +137,7 @@ export default function RecommendedCropsPage() {
           setLng(data[0].lng);
         }
       })
-      .catch(() => {});
+      .catch(() => router.push("/login"));
   }, [router]);
 
   const handleFarmSelect = (farmId: number) => {

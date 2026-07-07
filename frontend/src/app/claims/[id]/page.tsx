@@ -11,31 +11,26 @@ export default function ClaimDetailPage() {
   const [claim, setClaim] = useState<any>(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) return router.push("/login");
-
     fetch(`http://localhost:8000/claims/${params.id}`, {
-      headers: { Authorization: `Bearer ${token}` }
+      credentials: "include"
     })
     .then(res => {
       if (!res.ok) throw new Error("Not found");
       return res.json();
     })
     .then(data => setClaim(data))
-    .catch(() => router.push("/claims"));
+    .catch(() => router.push("/login"));
   }, [params.id, router]);
 
   const [generating, setGenerating] = useState(false);
   const [logging, setLogging] = useState(false);
 
   const handleGenerateProof = async () => {
-    const token = localStorage.getItem("token");
-    if (!token) return;
     setGenerating(true);
     try {
       const res = await fetch(`http://localhost:8000/claims/${params.id}/generate-proof`, {
         method: "POST",
-        headers: { Authorization: `Bearer ${token}` }
+        credentials: "include"
       });
       if (res.ok) {
         const updatedClaim = await res.json();
@@ -51,13 +46,11 @@ export default function ClaimDetailPage() {
   };
 
   const handleLogBlockchain = async () => {
-    const token = localStorage.getItem("token");
-    if (!token) return;
     setLogging(true);
     try {
       const res = await fetch(`http://localhost:8000/claims/${params.id}/log-blockchain`, {
         method: "POST",
-        headers: { Authorization: `Bearer ${token}` }
+        credentials: "include"
       });
       if (res.ok) {
         const updatedClaim = await res.json();

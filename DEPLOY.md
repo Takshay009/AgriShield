@@ -206,6 +206,7 @@ _Without a persistent volume, data is lost on every Railway deploy/restart._
 | `TWILIO_PHONE_NUMBER` | `<your Twilio number>` | For WhatsApp/SMS |
 | `USE_MOCK_STT_TTS` | `true` | No |
 | `USE_MOCK_CLASSIFIER` | `true` | No |
+| `ENV` | `prod` (set to `prod` for Secure cookies in production) | No |
 
 Generate JWT_SECRET:
 ```bash
@@ -258,6 +259,39 @@ No tunnel (localtunnel/ngrok) needed — Railway provides a public HTTPS URL.
 
 ---
 
+## Security Fixes Applied
+
+The following security fixes have been implemented in the codebase:
+
+### 1. JWT Secret Moved to Environment Variable (`backend/auth.py`)
+`SECRET_KEY` now reads from `JWT_SECRET` env var with a dev fallback (`"DEV_SECRET_KEY"`). **Always set `JWT_SECRET` in production**.
+
+### 2. Password Strength Enforced (`backend/schemas.py`)
+Registration requires passwords of at least **8 characters**. Existing passwords are unaffected.
+
+### 3. Admin Endpoints Now Require Authentication (`backend/main.py`)
+All 4 admin endpoints (`GET /admin/claims`, `POST /admin/claims/{id}/verify`, `/approve`, `/reject`) require a valid JWT token. The frontend already sends the token — no UI changes needed.
+
+### 4. Shell Injection Risk Removed (`backend/services/core.py`)
+Removed `shell=True` from both `subprocess.run` calls in `generate_zk_proof` and `verify_zk_proof`. The command is already passed as a list, making `shell=True` redundant and dangerous.
+
+### 5. Language Code Whitelist Added (`backend/main.py`)
+SMS webhook now validates detected language against a whitelist (`hi`, `te`, `mr`, `en`) before using it to construct a file path. Defense-in-depth against potential path traversal.
+
+### 6. JWT Moved to httpOnly Cookies (`backend/auth.py`, `backend/main.py`, ~14 frontend files)
+JWT tokens are now set as `httpOnly` cookies (inaccessible to JavaScript) instead of `localStorage`. The backend `get_current_user` falls back to reading from cookies if no `Authorization` header is present. All frontend fetch calls use `credentials: "include"` to auto-send the cookie.
+
+- Backend: Login sets `httpOnly`, `SameSite=lax` cookie. New `POST /auth/logout` endpoint clears it.
+- Frontend: Removed all 24 `localStorage` references and 23 `Authorization: Bearer` headers across 14 files.
+
+### 7. Rate Limiting on Login (`backend/main.py`, `backend/requirements.txt`)
+Added `slowapi` rate limiter — 5 requests per minute per IP on `/auth/login`. Returns `429 Too Many Requests` after exceeded. This prevents brute-force password attacks.
+
+### 8. RSK Endpoints Now Require Authentication (`backend/main.py`)
+Three RSK endpoints (`GET /api/rsk/queue`, `GET /api/rsk/all`, `POST /api/rsk/respond`) now require a valid JWT token via `auth.get_current_user`. Frontend sends credentials via cookies.
+
+---
+
 ## Gitignore Notes
 
 The existing `.gitignore` correctly excludes:
@@ -274,13 +308,17 @@ No changes needed to `.gitignore`.
 After deployment:
 
 - [ ] Open `https://<frontend>.up.railway.app` — loads without errors
-- [ ] Register a new account
+- [ ] Try registering with a short password (< 8 chars) — rejected with error
+- [ ] Register a new account with a valid password (8+ chars)
 - [ ] Login and create a farm (draw polygon on map)
 - [ ] Click "Refresh Metrics" — risk score appears
 - [ ] Submit a claim — status is "pending"
 - [ ] Click "Generate Proof" — snarkjs runs on backend, proof generated
 - [ ] Click "Log to Blockchain" — mock tx_hash returned
-- [ ] Visit `/admin` — claim visible, can approve/reject
+- [ ] Visit `/admin` while logged in — claim visible, can approve/reject
+- [ ] Try accessing `/admin/claims` without a token — returns 401
+- [ ] Try logging in with wrong password 6+ times — gets rate limited (429)
+- [ ] Access `/admin/rsk-queue` while logged in — tickets visible
 - [ ] (Optional) Test WhatsApp by sending a message to the Twilio sandbox number
 
 ---
@@ -294,6 +332,7 @@ After deployment:
 | Data lost on restart | Persistent volume not attached | Add volume mounts for `.db` and `nfts/` |
 | 502 Bad Gateway | Backend not starting / port mismatch | Ensure `PORT` env var matches `--port` in CMD |
 | Twilio webhook fails | Backend URL wrong / endpoint missing | Check webhook URL ends with `/webhooks/whatsapp-inbound` |
+| Admin returns 401 | JWT_SECRET not set or invalid token | Ensure `JWT_SECRET` env var is set on backend |
 
 ---
 

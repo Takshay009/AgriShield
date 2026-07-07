@@ -25,9 +25,6 @@ export default function NewFarmPage() {
       return;
     }
     
-    const token = localStorage.getItem("token");
-    if (!token) return router.push("/login");
-
     try {
       const payload = {
         name,
@@ -39,11 +36,9 @@ export default function NewFarmPage() {
 
       const res = await fetch("http://localhost:8000/farms", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify(payload)
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+        credentials: "include"
       });
 
       if (!res.ok) throw new Error("Failed to create farm");

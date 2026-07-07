@@ -23,6 +23,10 @@ class Farm(Base):
     lng = Column(String)
     boundary_geojson = Column(String) # Stored as JSON string
     area_hectares = Column(String)
+    crop_type = Column(String, nullable=True)
+    location = Column(String, nullable=True)
+    soil_type = Column(String, nullable=True)
+    irrigation_source = Column(String, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     nft_url = Column(String, nullable=True)
 

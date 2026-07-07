@@ -25,15 +25,15 @@ export default function LoginPage() {
       const res = await fetch("http://localhost:8000/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        credentials: "include",
         body: formData.toString()
       });
 
       if (!res.ok) {
-        throw new Error("Invalid credentials");
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.detail || "Invalid credentials");
       }
 
-      const data = await res.json();
-      localStorage.setItem("token", data.access_token);
       router.push("/dashboard");
     } catch (err: any) {
       setError(err.message);

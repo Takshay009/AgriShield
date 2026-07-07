@@ -10,6 +10,7 @@ passlib[bcrypt]
 python-multipart
 pandas
 requests
+slowapi
 
 # Optional / Production dependencies for real (non-mocked) services:
 # twilio

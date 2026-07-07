@@ -13,11 +13,8 @@ export default function AdminClaimReviewPage() {
   const [verificationResult, setVerificationResult] = useState<boolean | null>(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) return router.push("/login");
-
-    fetch(`http://localhost:8000/claims/${params.id}`, { // Using existing GET /claims/{id} as it skips admin check in our MVP hack
-      headers: { Authorization: `Bearer ${token}` }
+    fetch(`http://localhost:8000/claims/${params.id}`, {
+      credentials: "include"
     })
     .then(res => res.json())
     .then(data => setClaim(data))
@@ -25,12 +22,11 @@ export default function AdminClaimReviewPage() {
   }, [params.id, router]);
 
   const handleVerify = async () => {
-    const token = localStorage.getItem("token");
     setVerifying(true);
     try {
       const res = await fetch(`http://localhost:8000/admin/claims/${params.id}/verify`, {
         method: "POST",
-        headers: { Authorization: `Bearer ${token}` }
+        credentials: "include"
       });
       const data = await res.json();
       setVerificationResult(data.is_valid);
@@ -42,11 +38,10 @@ export default function AdminClaimReviewPage() {
   };
 
   const handleDecision = async (decision: 'approve' | 'reject') => {
-    const token = localStorage.getItem("token");
     try {
       const res = await fetch(`http://localhost:8000/admin/claims/${params.id}/${decision}`, {
         method: "POST",
-        headers: { Authorization: `Bearer ${token}` }
+        credentials: "include"
       });
       if (res.ok) {
         const updatedClaim = await res.json();

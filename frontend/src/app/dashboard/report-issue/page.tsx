@@ -277,20 +277,18 @@ export default function ReportIssuePage() {
 
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/login");
-      return;
-    }
     fetch("http://localhost:8000/farms", {
-      headers: { Authorization: `Bearer ${token}` },
+      credentials: "include",
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error("Unauthorized");
+        return res.json();
+      })
       .then((data) => {
         setFarms(data);
         if (data.length > 0) setSelectedFarmId(data[0].id);
       })
-      .catch(() => { });
+      .catch(() => router.push("/login"));
   }, [router]);
 
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -353,8 +351,6 @@ export default function ReportIssuePage() {
     setError("");
     setResult(null);
 
-    const token = localStorage.getItem("token") || "demo_token";
-
     const formData = new FormData();
     formData.append("farm_id", String(targetFarmId));
     formData.append("description", targetDescription);
@@ -365,7 +361,7 @@ export default function ReportIssuePage() {
     try {
       const res = await fetch("http://localhost:8000/api/health-report", {
         method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
+        credentials: "include",
         body: formData,
       });
 

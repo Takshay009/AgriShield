@@ -121,15 +121,13 @@ export default function AdvisoryPage() {
   const [broadcastSuccess, setBroadcastSuccess] = useState("");
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/login");
-      return;
-    }
     fetch("http://localhost:8000/farms", {
-      headers: { Authorization: `Bearer ${token}` },
+      credentials: "include",
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error("Unauthorized");
+        return res.json();
+      })
       .then((farms) => {
         setFarms(farms);
         if (farms.length > 0) {
@@ -137,13 +135,10 @@ export default function AdvisoryPage() {
           fetchAdvisory(farms[0].id);
         }
       })
-      .catch(() => {});
+      .catch(() => router.push("/login"));
   }, [router]);
 
   const fetchAdvisory = async (farmId: number) => {
-    const token = localStorage.getItem("token");
-    if (!token) return;
-
     setLoading(true);
     setError("");
     setData(null);
@@ -152,9 +147,7 @@ export default function AdvisoryPage() {
     try {
       const res = await fetch(
         `http://localhost:8000/api/advisory/${farmId}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { credentials: "include" }
       );
       if (!res.ok) {
         const err = await res.json();

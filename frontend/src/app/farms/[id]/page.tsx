@@ -16,10 +16,10 @@ export default function FarmDetailPage() {
   const [metrics, setMetrics] = useState<any[]>([]);
   const [refreshing, setRefreshing] = useState(false);
 
-  const fetchMetrics = async (token: string) => {
+  const fetchMetrics = async () => {
     try {
       const res = await fetch(`http://localhost:8000/farms/${params.id}/metrics`, {
-        headers: { Authorization: `Bearer ${token}` }
+        credentials: "include"
       });
       if (res.ok) setMetrics(await res.json());
     } catch (err) {
@@ -35,11 +35,8 @@ export default function FarmDetailPage() {
   const [savingEdit, setSavingEdit] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) return router.push("/login");
-
     fetch(`http://localhost:8000/farms/${params.id}`, {
-      headers: { Authorization: `Bearer ${token}` }
+      credentials: "include"
     })
     .then(res => {
       if (!res.ok) throw new Error("Not found");
@@ -51,9 +48,9 @@ export default function FarmDetailPage() {
       setEditName(data.name);
       setEditArea(data.area_hectares);
       setEditPoints(data.points || []);
-      fetchMetrics(token);
+      fetchMetrics();
     })
-    .catch(() => router.push("/dashboard"));
+    .catch(() => router.push("/login"));
   }, [params.id, router]);
 
   const handleSaveEdit = async () => {
@@ -62,7 +59,6 @@ export default function FarmDetailPage() {
       return;
     }
     setSavingEdit(true);
-    const token = localStorage.getItem("token");
     try {
       const payload = {
         name: editName,
@@ -73,11 +69,9 @@ export default function FarmDetailPage() {
       };
       const res = await fetch(`http://localhost:8000/farms/${params.id}`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify(payload)
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+        credentials: "include"
       });
       if (res.ok) {
         const updated = await res.json();
@@ -97,11 +91,10 @@ export default function FarmDetailPage() {
     if (!window.confirm("⚠️ Are you sure you want to permanently delete this farm and all associated records?")) {
       return;
     }
-    const token = localStorage.getItem("token");
     try {
       const res = await fetch(`http://localhost:8000/farms/${params.id}`, {
         method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` }
+        credentials: "include"
       });
       if (res.ok) {
         router.push("/dashboard");
@@ -114,15 +107,13 @@ export default function FarmDetailPage() {
   };
 
   const handleRefresh = async () => {
-    const token = localStorage.getItem("token");
-    if (!token) return;
     setRefreshing(true);
     try {
       const res = await fetch(`http://localhost:8000/farms/${params.id}/refresh-metrics`, {
         method: "POST",
-        headers: { Authorization: `Bearer ${token}` }
+        credentials: "include"
       });
-      if (res.ok) await fetchMetrics(token);
+      if (res.ok) await fetchMetrics();
     } catch (err) {
       console.error(err);
     }
@@ -130,16 +121,12 @@ export default function FarmDetailPage() {
   };
 
   const handleSubmitClaim = async () => {
-    const token = localStorage.getItem("token");
-    if (!token) return;
     try {
       const res = await fetch(`http://localhost:8000/claims`, {
         method: "POST",
-        headers: { 
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}` 
-        },
-        body: JSON.stringify({ farm_id: params.id })
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ farm_id: params.id }),
+        credentials: "include"
       });
       if (res.ok) {
         const claim = await res.json();
@@ -154,13 +141,11 @@ export default function FarmDetailPage() {
   };
 
   const handleMintNFT = async () => {
-    const token = localStorage.getItem("token");
-    if (!token) return;
     setMintingNFT(true);
     try {
       const res = await fetch(`http://localhost:8000/farms/${params.id}/mint-nft`, {
         method: "POST",
-        headers: { Authorization: `Bearer ${token}` }
+        credentials: "include"
       });
       if (res.ok) {
         const updatedFarm = await res.json();

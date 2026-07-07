@@ -20,13 +20,13 @@ export default function AdminDashboardPage() {
   const [claims, setClaims] = useState<Claim[]>([]);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) return router.push("/login");
-
     fetch("http://localhost:8000/admin/claims", {
-      headers: { Authorization: `Bearer ${token}` }
+      credentials: "include"
     })
-    .then(res => res.json())
+    .then(res => {
+      if (!res.ok) throw new Error("Unauthorized");
+      return res.json();
+    })
     .then(data => setClaims(data))
     .catch(err => console.error(err));
   }, [router]);

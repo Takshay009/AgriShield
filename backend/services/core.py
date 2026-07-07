@@ -75,7 +75,7 @@ def generate_zk_proof(claim_id: int, risk_probability: float) -> str:
         try:
             # Run snarkjs fullprove
             cmd = ["snarkjs", "groth16", "fullprove", input_path, wasm_path, zkey_path, proof_path, public_path]
-            subprocess.run(cmd, check=True, capture_output=True, cwd=circuits_dir, shell=True)
+            subprocess.run(cmd, check=True, capture_output=True, cwd=circuits_dir)
             
             with open(proof_path, "r") as f:
                 proof_json = f.read()
@@ -121,7 +121,7 @@ def verify_zk_proof(claim_id: int, proof_data: str) -> bool:
     try:
         # snarkjs groth16 verify verification_key.json public.json proof.json
         cmd = ["snarkjs", "groth16", "verify", vkey_path, public_path, proof_path]
-        subprocess.run(cmd, check=True, capture_output=True, cwd=circuits_dir, shell=True)
+        subprocess.run(cmd, check=True, capture_output=True, cwd=circuits_dir)
         is_valid = True
     except subprocess.CalledProcessError as e:
         print(f"Verify error: {e.stderr.decode()}")

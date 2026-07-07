@@ -66,7 +66,7 @@ export default function RSKQueuePage() {
       const url = showAll
         ? "http://localhost:8000/api/rsk/all"
         : "http://localhost:8000/api/rsk/queue";
-      const res = await fetch(url);
+      const res = await fetch(url, { credentials: "include" });
       if (res.ok) {
         const data = await res.json();
         setTickets(data);
@@ -94,6 +94,7 @@ export default function RSKQueuePage() {
       const res = await fetch("http://localhost:8000/api/rsk/respond", {
         method: "POST",
         body: formData,
+        credentials: "include",
       });
       if (res.ok) {
         setRespondingTo(null);
