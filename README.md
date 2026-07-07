@@ -41,6 +41,30 @@ Currently, the project has implemented Phase 1 through Phase 8 along with Phase 
 2. `npm install`
 3. `npm run dev`
 
+### WhatsApp AI & Tunnel Setup (Phase 3D)
+To test live WhatsApp AI photo diagnosis and multilingual Q&A on your mobile phone:
+
+1. **Start Public Webhook Tunnel (Generate URL)**:
+   Open a new terminal window and run either of these commands:
+   ```bash
+   # Option A: Localtunnel (No login/account required)
+   npx localtunnel --port 8000
+
+   # Option B: Ngrok (If installed)
+   ngrok http 8000
+   ```
+   *The terminal will output your public URL (e.g., `https://xxxx.loca.lt` or `https://xxxx.ngrok-free.app`).*
+
+2. **Configure Twilio Webhook**:
+   - Copy the generated tunnel URL from step 1.
+   - Go to **Twilio Console → Messaging → Try it out → Send a WhatsApp message → Sandbox settings**.
+   - Paste the URL into **"WHEN A MESSAGE COMES IN"** and append `/webhooks/whatsapp-inbound`:
+     `https://xxxx.loca.lt/webhooks/whatsapp-inbound`
+   - Set method to **POST** and click **Save**.
+
+3. **Connect Your Phone & Test**:
+   - Text your unique join code (e.g., `join atom-orange`) to **`+1 (415) 523-8886`** from your phone once.
+   - Now anyone who sends that join code can chat live with AgriShield AI!
 
 ### ZK Proof Setup (Required once)
 If you haven't run the setup yet, you need `snarkjs` and `circom`:
