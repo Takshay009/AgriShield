@@ -13,6 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
+import { API_BASE } from "@/lib/api";
 
 interface Farm {
   id: number;
@@ -277,7 +278,7 @@ export default function ReportIssuePage() {
 
 
   useEffect(() => {
-    fetch("http://localhost:8000/farms", {
+    fetch(`${API_BASE}/farms`, {
       credentials: "include",
     })
       .then((res) => {
@@ -359,7 +360,7 @@ export default function ReportIssuePage() {
     if (audioBlob) formData.append("audio", audioBlob, "recording.webm");
 
     try {
-      const res = await fetch("http://localhost:8000/api/health-report", {
+      const res = await fetch(`${API_BASE}/api/health-report`, {
         method: "POST",
         credentials: "include",
         body: formData,

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import Link from "next/link";
+import { API_BASE } from "@/lib/api";
 
 interface Farm {
   id: number;
@@ -20,7 +21,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     let cancelled = false;
-    fetch("http://localhost:8000/users/me", {
+    fetch(`${API_BASE}/users/me`, {
       credentials: "include"
     })
     .then(res => {
@@ -42,7 +43,7 @@ export default function DashboardPage() {
     })
     .catch(() => { if (!cancelled) router.push("/login") });
 
-    fetch("http://localhost:8000/farms", {
+    fetch(`${API_BASE}/farms`, {
       credentials: "include"
     })
     .then(res => { if (!res.ok) return []; return res.json() })
@@ -52,7 +53,7 @@ export default function DashboardPage() {
   }, [router]);
 
   const handleLogout = () => {
-    fetch("http://localhost:8000/auth/logout", { method: "POST", credentials: "include" })
+    fetch(`${API_BASE}/auth/logout`, { method: "POST", credentials: "include" })
       .finally(() => router.push("/login"));
   };
 

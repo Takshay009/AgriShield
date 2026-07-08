@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { API_BASE } from "@/lib/api";
 
 export default function ClaimDetailPage() {
   const params = useParams();
@@ -11,7 +12,7 @@ export default function ClaimDetailPage() {
   const [claim, setClaim] = useState<any>(null);
 
   useEffect(() => {
-    fetch(`http://localhost:8000/claims/${params.id}`, {
+    fetch(`${API_BASE}/claims/${params.id}`, {
       credentials: "include"
     })
     .then(res => {
@@ -28,7 +29,7 @@ export default function ClaimDetailPage() {
   const handleGenerateProof = async () => {
     setGenerating(true);
     try {
-      const res = await fetch(`http://localhost:8000/claims/${params.id}/generate-proof`, {
+      const res = await fetch(`${API_BASE}/claims/${params.id}/generate-proof`, {
         method: "POST",
         credentials: "include"
       });
@@ -48,7 +49,7 @@ export default function ClaimDetailPage() {
   const handleLogBlockchain = async () => {
     setLogging(true);
     try {
-      const res = await fetch(`http://localhost:8000/claims/${params.id}/log-blockchain`, {
+      const res = await fetch(`${API_BASE}/claims/${params.id}/log-blockchain`, {
         method: "POST",
         credentials: "include"
       });

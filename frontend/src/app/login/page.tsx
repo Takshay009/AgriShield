@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { API_BASE } from "@/lib/api";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -22,7 +23,7 @@ export default function LoginPage() {
       formData.append("username", email);
       formData.append("password", password);
 
-      const res = await fetch("http://localhost:8000/auth/login", {
+      const res = await fetch(`${API_BASE}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         credentials: "include",
@@ -34,7 +35,7 @@ export default function LoginPage() {
         throw new Error(data.detail || "Invalid credentials");
       }
 
-      const meRes = await fetch("http://localhost:8000/users/me", { credentials: "include" });
+      const meRes = await fetch(`${API_BASE}/users/me`, { credentials: "include" });
       if (meRes.ok) {
         const user = await meRes.json();
         if (user.role === "rsk_expert") {

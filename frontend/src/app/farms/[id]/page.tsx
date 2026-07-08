@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import dynamic from "next/dynamic";
 import MetricsChart from "@/components/MetricsChart";
+import { API_BASE } from "@/lib/api";
 
 const FarmMap = dynamic(() => import("@/components/FarmMap"), { ssr: false });
 
@@ -18,7 +19,7 @@ export default function FarmDetailPage() {
 
   const fetchMetrics = async () => {
     try {
-      const res = await fetch(`http://localhost:8000/farms/${params.id}/metrics`, {
+      const res = await fetch(`${API_BASE}/farms/${params.id}/metrics`, {
         credentials: "include"
       });
       if (res.ok) setMetrics(await res.json());
@@ -35,7 +36,7 @@ export default function FarmDetailPage() {
   const [savingEdit, setSavingEdit] = useState(false);
 
   useEffect(() => {
-    fetch(`http://localhost:8000/farms/${params.id}`, {
+    fetch(`${API_BASE}/farms/${params.id}`, {
       credentials: "include"
     })
     .then(res => {
@@ -67,7 +68,7 @@ export default function FarmDetailPage() {
         lat: editPoints[0][0].toString(),
         lng: editPoints[0][1].toString()
       };
-      const res = await fetch(`http://localhost:8000/farms/${params.id}`, {
+      const res = await fetch(`${API_BASE}/farms/${params.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -92,7 +93,7 @@ export default function FarmDetailPage() {
       return;
     }
     try {
-      const res = await fetch(`http://localhost:8000/farms/${params.id}`, {
+      const res = await fetch(`${API_BASE}/farms/${params.id}`, {
         method: "DELETE",
         credentials: "include"
       });
@@ -109,7 +110,7 @@ export default function FarmDetailPage() {
   const handleRefresh = async () => {
     setRefreshing(true);
     try {
-      const res = await fetch(`http://localhost:8000/farms/${params.id}/refresh-metrics`, {
+      const res = await fetch(`${API_BASE}/farms/${params.id}/refresh-metrics`, {
         method: "POST",
         credentials: "include"
       });
@@ -122,7 +123,7 @@ export default function FarmDetailPage() {
 
   const handleSubmitClaim = async () => {
     try {
-      const res = await fetch(`http://localhost:8000/claims`, {
+      const res = await fetch(`${API_BASE}/claims`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ farm_id: params.id }),
@@ -143,7 +144,7 @@ export default function FarmDetailPage() {
   const handleMintNFT = async () => {
     setMintingNFT(true);
     try {
-      const res = await fetch(`http://localhost:8000/farms/${params.id}/mint-nft`, {
+      const res = await fetch(`${API_BASE}/farms/${params.id}/mint-nft`, {
         method: "POST",
         credentials: "include"
       });
@@ -327,7 +328,7 @@ export default function FarmDetailPage() {
                 <CardTitle>Dynamic NFT Badge</CardTitle>
               </CardHeader>
               <CardContent className="p-8 flex justify-center">
-                <img src={`http://localhost:8000${farm.nft_url}`} alt="Dynamic Farm NFT" className="w-64 h-64 rounded-xl shadow-lg border-4 border-white transform transition duration-500 hover:scale-105" />
+                <img src={`${API_BASE}${farm.nft_url}`} alt="Dynamic Farm NFT" className="w-64 h-64 rounded-xl shadow-lg border-4 border-white transform transition duration-500 hover:scale-105" />
               </CardContent>
             </Card>
           )}

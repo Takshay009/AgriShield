@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import Link from "next/link";
+import { API_BASE } from "@/lib/api";
 
 interface Claim {
   id: number;
@@ -19,7 +20,7 @@ export default function ClaimsPage() {
   const [claims, setClaims] = useState<Claim[]>([]);
 
   useEffect(() => {
-    fetch("http://localhost:8000/claims", {
+    fetch(`${API_BASE}/claims`, {
       credentials: "include"
     })
     .then(res => {

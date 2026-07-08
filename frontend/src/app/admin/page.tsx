@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import Link from "next/link";
+import { API_BASE } from "@/lib/api";
 
 interface Claim {
   id: number;
@@ -21,7 +22,7 @@ export default function AdminDashboardPage() {
   const [claims, setClaims] = useState<Claim[]>([]);
 
   useEffect(() => {
-    fetch("http://localhost:8000/users/me", { credentials: "include" })
+    fetch(`${API_BASE}/users/me`, { credentials: "include" })
       .then(res => {
         if (!res.ok) throw new Error("Unauthorized");
         return res.json();
@@ -32,7 +33,7 @@ export default function AdminDashboardPage() {
           return;
         }
         setUser(userData);
-        return fetch("http://localhost:8000/admin/claims", { credentials: "include" })
+        return fetch(`${API_BASE}/admin/claims`, { credentials: "include" })
           .then(res => { if (!res.ok) throw new Error("Unauthorized"); return res.json(); })
           .then(data => setClaims(data));
       })
@@ -40,7 +41,7 @@ export default function AdminDashboardPage() {
   }, [router]);
 
   const handleLogout = async () => {
-    await fetch("http://localhost:8000/auth/logout", { method: "POST", credentials: "include" });
+    await fetch(`${API_BASE}/auth/logout`, { method: "POST", credentials: "include" });
     router.push("/login");
   };
 

@@ -11,6 +11,7 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import Link from "next/link";
+import { API_BASE } from "@/lib/api";
 
 interface Farm {
   id: number;
@@ -121,7 +122,7 @@ export default function AdvisoryPage() {
   const [broadcastSuccess, setBroadcastSuccess] = useState("");
 
   useEffect(() => {
-    fetch("http://localhost:8000/farms", {
+    fetch(`${API_BASE}/farms`, {
       credentials: "include",
     })
       .then((res) => {
@@ -146,7 +147,7 @@ export default function AdvisoryPage() {
 
     try {
       const res = await fetch(
-        `http://localhost:8000/api/advisory/${farmId}`,
+        `${API_BASE}/api/advisory/${farmId}`,
         { credentials: "include" }
       );
       if (!res.ok) {

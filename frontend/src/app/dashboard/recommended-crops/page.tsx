@@ -13,6 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
+import { API_BASE } from "@/lib/api";
 
 interface Farm {
   id: number;
@@ -122,7 +123,7 @@ export default function RecommendedCropsPage() {
   const [expandedCrop, setExpandedCrop] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("http://localhost:8000/farms", {
+    fetch(`${API_BASE}/farms`, {
       credentials: "include",
     })
       .then((res) => {
@@ -182,7 +183,7 @@ export default function RecommendedCropsPage() {
       if (month.trim()) body.month = parseInt(month);
       if (groundwaterDepth.trim()) body.groundwater_depth_m = parseFloat(groundwaterDepth);
 
-      const res = await fetch("http://localhost:8000/api/recommend-crop", {
+      const res = await fetch(`${API_BASE}/api/recommend-crop`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),

@@ -10,6 +10,7 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import Link from "next/link";
+import { API_BASE } from "@/lib/api";
 
 interface ChatMessage {
   id: string;
@@ -113,7 +114,7 @@ export default function WhatsAppIVRPage() {
     setMessages((prev) => [...prev, userMsg]);
 
     try {
-      const res = await fetch("http://localhost:8000/api/whatsapp/simulate", {
+      const res = await fetch(`${API_BASE}/api/whatsapp/simulate`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -533,7 +534,7 @@ export default function WhatsAppIVRPage() {
                 <div className="space-y-2 bg-slate-950 p-3.5 rounded-2xl border border-slate-800 font-mono">
                   <p className="text-slate-400 text-[11px] uppercase font-bold text-emerald-400">1. Webhook Endpoint URL:</p>
                   <div className="bg-slate-900 p-2 rounded border border-slate-700 text-emerald-300 break-all select-all font-bold">
-                    http://localhost:8000/webhooks/whatsapp-inbound
+                    {API_BASE}/webhooks/whatsapp-inbound
                   </div>
                 </div>
                 <div className="space-y-1.5 leading-relaxed">

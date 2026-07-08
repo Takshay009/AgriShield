@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { API_BASE } from "@/lib/api";
 
 export default function AdminClaimReviewPage() {
   const params = useParams();
@@ -13,7 +14,7 @@ export default function AdminClaimReviewPage() {
   const [verificationResult, setVerificationResult] = useState<boolean | null>(null);
 
   useEffect(() => {
-    fetch("http://localhost:8000/users/me", { credentials: "include" })
+    fetch(`${API_BASE}/users/me`, { credentials: "include" })
       .then(res => {
         if (!res.ok) throw new Error("Unauthorized");
         return res.json();
@@ -23,7 +24,7 @@ export default function AdminClaimReviewPage() {
           router.push("/dashboard");
           return;
         }
-        return fetch(`http://localhost:8000/claims/${params.id}`, { credentials: "include" })
+        return fetch(`${API_BASE}/claims/${params.id}`, { credentials: "include" })
           .then(res => { if (!res.ok) throw new Error("Error"); return res.json(); })
           .then(data => setClaim(data));
       })
@@ -33,7 +34,7 @@ export default function AdminClaimReviewPage() {
   const handleVerify = async () => {
     setVerifying(true);
     try {
-      const res = await fetch(`http://localhost:8000/admin/claims/${params.id}/verify`, {
+      const res = await fetch(`${API_BASE}/admin/claims/${params.id}/verify`, {
         method: "POST",
         credentials: "include"
       });
@@ -48,7 +49,7 @@ export default function AdminClaimReviewPage() {
 
   const handleDecision = async (decision: 'approve' | 'reject') => {
     try {
-      const res = await fetch(`http://localhost:8000/admin/claims/${params.id}/${decision}`, {
+      const res = await fetch(`${API_BASE}/admin/claims/${params.id}/${decision}`, {
         method: "POST",
         credentials: "include"
       });
