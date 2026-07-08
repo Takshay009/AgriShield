@@ -1,4 +1,8 @@
-export const API_BASE = process.env.NEXT_PUBLIC_API_URL || "https://agrishield-production.up.railway.app";
+function getDefaultApiBase(): string {
+  if (typeof window !== "undefined") return window.location.origin;
+  return "http://localhost:8000";
+}
+export const API_BASE = process.env.NEXT_PUBLIC_API_URL || getDefaultApiBase();
 
 // --- Token helpers (localStorage-based, works cross-origin) ---
 const TOKEN_KEY = "agrishield_token";

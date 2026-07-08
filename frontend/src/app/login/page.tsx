@@ -16,6 +16,7 @@ function LoginPageContent() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isFocused, setIsFocused] = useState(false);
@@ -34,6 +35,7 @@ function LoginPageContent() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
     try {
       const formData = new URLSearchParams();
       formData.append("username", email);
@@ -51,25 +53,31 @@ function LoginPageContent() {
       }
 
       const loginData = await res.json();
-      if (loginData.access_token) {
-        setToken(loginData.access_token);
+      if (!loginData.access_token) {
+        throw new Error("No access token received from server");
       }
+      setToken(loginData.access_token);
 
       const meRes = await authFetch(`${API_BASE}/users/me`);
-      if (meRes.ok) {
-        const user = await meRes.json();
-        if (user.role === "rsk_expert") {
-          router.push("/admin/rsk-queue");
-          return;
-        }
-        if (user.role === "insurance_admin") {
-          router.push("/admin/claims");
-          return;
-        }
+      if (!meRes.ok) {
+        throw new Error("Session verification failed after login");
+      }
+
+      const user = await meRes.json();
+      if (user.role === "rsk_expert") {
+        router.push("/admin/rsk-queue");
+        return;
+      }
+      if (user.role === "insurance_admin") {
+        router.push("/admin/claims");
+        return;
       }
       router.push(redirectPath);
     } catch (err: any) {
+      console.error("[Login Error]", err);
       setError(getErrorMessage(err, "Login failed. Please verify your credentials."));
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -171,9 +179,10 @@ function LoginPageContent() {
               {/* Log In Button */}
               <button 
                 type="submit" 
-                className="w-full bg-[#0f4d32] text-white py-4 rounded-lg text-lg font-bold font-heading hover:bg-[#00351f] transition-all duration-300 shadow-lg hover:shadow-[#0f4d32]/20 flex items-center justify-center gap-2 group"
+                disabled={loading}
+                className="w-full bg-[#0f4d32] text-white py-4 rounded-lg text-lg font-bold font-heading hover:bg-[#00351f] transition-all duration-300 shadow-lg hover:shadow-[#0f4d32]/20 flex items-center justify-center gap-2 group disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Log In
+                {loading ? "Logging in..." : "Log In"}
                 <LogIn size={20} className="transition-transform duration-300 group-hover:translate-x-1" />
               </button>
             </form>
