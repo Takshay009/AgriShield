@@ -99,25 +99,6 @@ export default function LandingPage() {
               Open WhatsApp AI Sandbox (1800-AGRI-SHIELD)
             </Link>
           </div>
-
-          <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 pt-12 border-t border-[#bbcabf]/30 w-full">
-            <div className="flex items-center gap-2">
-              <span className="text-[#10b981] font-bold text-lg">✓</span>
-              <span className="text-sm font-medium text-[#3c4a42]">97.0%+ ResNet18 Accuracy</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-[#10b981] font-bold text-lg">✓</span>
-              <span className="text-sm font-medium text-[#3c4a42]">&lt; 60s Instant ZKP Payouts</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-[#10b981] font-bold text-lg">✓</span>
-              <span className="text-sm font-medium text-[#3c4a42]">24/7 Satellite NDVI Monitoring</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-[#10b981] font-bold text-lg">✓</span>
-              <span className="text-sm font-medium text-[#3c4a42]">5 Indic Dialects Supported</span>
-            </div>
-          </div>
         </section>
 
         {/* Section 3: Apple-Style Bento Grid */}
