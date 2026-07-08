@@ -33,11 +33,19 @@ limiter = Limiter(key_func=get_remote_address)
 app.state.limiter = limiter
 app.add_exception_handler(429, _rate_limit_exceeded_handler)
 
+# Build allowed origins list for CORS
+_origins = [
+    "http://localhost:3000",
+    "http://localhost:3001",
+    "https://agrishield-production-e0dc.up.railway.app",
+]
+_frontend_url = os.getenv("FRONTEND_URL", "")
+if _frontend_url and _frontend_url not in _origins:
+    _origins.append(_frontend_url)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        os.getenv("FRONTEND_URL", "http://localhost:3000"),
-    ],
+    allow_origins=_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

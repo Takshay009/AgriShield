@@ -1,4 +1,4 @@
-export const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+export const API_BASE = process.env.NEXT_PUBLIC_API_URL || "https://agrishield-production.up.railway.app";
 
 export function getErrorMessage(err: any, fallback: string = "An unexpected error occurred"): string {
   if (!err) return fallback;
