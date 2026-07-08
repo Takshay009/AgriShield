@@ -11,7 +11,7 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import Link from "next/link";
-import { API_BASE, getErrorMessage } from "@/lib/api";
+import { API_BASE, getErrorMessage , authFetch} from "@/lib/api";
 
 interface Farm {
   id: number;
@@ -122,8 +122,7 @@ export default function AdvisoryPage() {
   const [broadcastSuccess, setBroadcastSuccess] = useState("");
 
   useEffect(() => {
-    fetch(`${API_BASE}/farms`, {
-      credentials: "include",
+    authFetch(`${API_BASE}/farms`, {
     })
       .then((res) => {
         if (!res.ok) throw new Error("Unauthorized");
@@ -146,9 +145,8 @@ export default function AdvisoryPage() {
     setBroadcastSuccess("");
 
     try {
-      const res = await fetch(
-        `${API_BASE}/api/advisory/${farmId}`,
-        { credentials: "include" }
+      const res = await authFetch(`${API_BASE}/api/advisory/${farmId}`,
+        { }
       );
       if (!res.ok) {
         const err = await res.json();
@@ -172,7 +170,7 @@ export default function AdvisoryPage() {
     setBroadcasting(true);
     setBroadcastSuccess("");
     try {
-      const res = await fetch(`${API_BASE}/webhooks/sms-inbound`, {
+      const res = await authFetch(`${API_BASE}/webhooks/sms-inbound`, {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: new URLSearchParams({

@@ -13,7 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
-import { API_BASE, getErrorMessage } from "@/lib/api";
+import { API_BASE, getErrorMessage , authFetch} from "@/lib/api";
 
 interface Farm {
   id: number;
@@ -278,8 +278,7 @@ export default function ReportIssuePage() {
 
 
   useEffect(() => {
-    fetch(`${API_BASE}/farms`, {
-      credentials: "include",
+    authFetch(`${API_BASE}/farms`, {
     })
       .then((res) => {
         if (!res.ok) throw new Error("Unauthorized");
@@ -356,9 +355,8 @@ export default function ReportIssuePage() {
     if (audioBlob) formData.append("audio", audioBlob, "recording.webm");
 
     try {
-      const res = await fetch(`${API_BASE}/api/health-report`, {
+      const res = await authFetch(`${API_BASE}/api/health-report`, {
         method: "POST",
-        credentials: "include",
         body: formData,
       });
 

@@ -4,7 +4,7 @@ import { useState, Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { API_BASE, getErrorMessage } from "@/lib/api";
+import { API_BASE, getErrorMessage, setToken, authFetch } from "@/lib/api";
 import { ArrowLeft, Mail, Lock, LogIn, Leaf } from "lucide-react";
 
 function LoginPageContent() {
@@ -42,7 +42,6 @@ function LoginPageContent() {
       const res = await fetch(`${API_BASE}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        credentials: "include",
         body: formData.toString()
       });
 
@@ -51,7 +50,12 @@ function LoginPageContent() {
         throw new Error(getErrorMessage(data, "Invalid credentials"));
       }
 
-      const meRes = await fetch(`${API_BASE}/users/me`, { credentials: "include" });
+      const loginData = await res.json();
+      if (loginData.access_token) {
+        setToken(loginData.access_token);
+      }
+
+      const meRes = await authFetch(`${API_BASE}/users/me`);
       if (meRes.ok) {
         const user = await meRes.json();
         if (user.role === "rsk_expert") {

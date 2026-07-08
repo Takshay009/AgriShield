@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import dynamic from "next/dynamic";
 import MetricsChart from "@/components/MetricsChart";
-import { API_BASE, getErrorMessage } from "@/lib/api";
+import { API_BASE, getErrorMessage , authFetch} from "@/lib/api";
 
 const FarmMap = dynamic(() => import("@/components/FarmMap"), { ssr: false });
 
@@ -19,9 +19,7 @@ export default function FarmDetailPage() {
 
   const fetchMetrics = async () => {
     try {
-      const res = await fetch(`${API_BASE}/farms/${params.id}/metrics`, {
-        credentials: "include"
-      });
+      const res = await authFetch(`${API_BASE}/farms/${params.id}/metrics`);
       if (res.ok) setMetrics(await res.json());
     } catch (err) {
       console.error(err);
@@ -36,9 +34,7 @@ export default function FarmDetailPage() {
   const [savingEdit, setSavingEdit] = useState(false);
 
   useEffect(() => {
-    fetch(`${API_BASE}/farms/${params.id}`, {
-      credentials: "include"
-    })
+    authFetch(`${API_BASE}/farms/${params.id}`)
     .then(res => {
       if (!res.ok) throw new Error("Not found");
       return res.json();
@@ -68,11 +64,10 @@ export default function FarmDetailPage() {
         lat: editPoints[0][0].toString(),
         lng: editPoints[0][1].toString()
       };
-      const res = await fetch(`${API_BASE}/farms/${params.id}`, {
+      const res = await authFetch(`${API_BASE}/farms/${params.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-        credentials: "include"
+        body: JSON.stringify(payload)
       });
       if (res.ok) {
         const updated = await res.json();
@@ -93,9 +88,8 @@ export default function FarmDetailPage() {
       return;
     }
     try {
-      const res = await fetch(`${API_BASE}/farms/${params.id}`, {
-        method: "DELETE",
-        credentials: "include"
+      const res = await authFetch(`${API_BASE}/farms/${params.id}`, {
+        method: "DELETE"
       });
       if (res.ok) {
         router.push("/dashboard");
@@ -110,9 +104,8 @@ export default function FarmDetailPage() {
   const handleRefresh = async () => {
     setRefreshing(true);
     try {
-      const res = await fetch(`${API_BASE}/farms/${params.id}/refresh-metrics`, {
-        method: "POST",
-        credentials: "include"
+      const res = await authFetch(`${API_BASE}/farms/${params.id}/refresh-metrics`, {
+        method: "POST"
       });
       if (res.ok) await fetchMetrics();
     } catch (err) {
@@ -123,11 +116,10 @@ export default function FarmDetailPage() {
 
   const handleSubmitClaim = async () => {
     try {
-      const res = await fetch(`${API_BASE}/claims`, {
+      const res = await authFetch(`${API_BASE}/claims`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ farm_id: params.id }),
-        credentials: "include"
+        body: JSON.stringify({ farm_id: params.id })
       });
       if (res.ok) {
         const claim = await res.json();
@@ -144,9 +136,8 @@ export default function FarmDetailPage() {
   const handleMintNFT = async () => {
     setMintingNFT(true);
     try {
-      const res = await fetch(`${API_BASE}/farms/${params.id}/mint-nft`, {
-        method: "POST",
-        credentials: "include"
+      const res = await authFetch(`${API_BASE}/farms/${params.id}/mint-nft`, {
+        method: "POST"
       });
       if (res.ok) {
         const updatedFarm = await res.json();

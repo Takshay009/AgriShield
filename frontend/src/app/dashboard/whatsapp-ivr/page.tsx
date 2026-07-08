@@ -11,7 +11,7 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import Link from "next/link";
-import { API_BASE } from "@/lib/api";
+import { API_BASE , authFetch} from "@/lib/api";
 import {
   ArrowLeft,
   MessageSquare,
@@ -116,9 +116,7 @@ export default function WhatsAppIVRPage() {
 
   useEffect(() => {
     let cancelled = false;
-    fetch(`${API_BASE}/users/me`, {
-      credentials: "include"
-    })
+    authFetch(`${API_BASE}/users/me`)
     .then(res => {
       if (!res.ok) throw new Error("Unauthorized");
     })
@@ -168,7 +166,7 @@ export default function WhatsAppIVRPage() {
     setMessages((prev) => [...prev, userMsg]);
 
     try {
-      const res = await fetch(`${API_BASE}/api/whatsapp/simulate`, {
+      const res = await authFetch(`${API_BASE}/api/whatsapp/simulate`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

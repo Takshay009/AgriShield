@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
 import Image from "next/image";
-import { API_BASE } from "@/lib/api";
+import { API_BASE, authFetch, removeToken } from "@/lib/api";
 import {
   LogOut,
   Sprout,
@@ -46,9 +46,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     let cancelled = false;
-    fetch(`${API_BASE}/users/me`, {
-      credentials: "include"
-    })
+    authFetch(`${API_BASE}/users/me`)
     .then(res => {
       if (!res.ok) throw new Error("Unauthorized");
       return res.json();
@@ -68,9 +66,7 @@ export default function DashboardPage() {
     })
     .catch(() => { if (!cancelled) router.push("/login") });
 
-    fetch(`${API_BASE}/farms`, {
-      credentials: "include"
-    })
+    authFetch(`${API_BASE}/farms`)
     .then(res => { if (!res.ok) return []; return res.json() })
     .then(data => { if (!cancelled) setFarms(data) })
     .catch(() => {});
@@ -78,8 +74,8 @@ export default function DashboardPage() {
   }, [router]);
 
   const handleLogout = () => {
-    fetch(`${API_BASE}/auth/logout`, { method: "POST", credentials: "include" })
-      .finally(() => router.push("/login"));
+    authFetch(`${API_BASE}/auth/logout`, { method: "POST" })
+      .finally(() => { removeToken(); router.push("/login"); });
   };
 
   if (!user) return <div className="min-h-screen bg-[#f9f9fc] flex items-center justify-center text-[#1a1c1e] font-sans">Loading workspace...</div>;

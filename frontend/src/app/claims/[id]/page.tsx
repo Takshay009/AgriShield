@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { API_BASE, getErrorMessage } from "@/lib/api";
+import { API_BASE, getErrorMessage , authFetch} from "@/lib/api";
 
 export default function ClaimDetailPage() {
   const params = useParams();
@@ -12,9 +12,7 @@ export default function ClaimDetailPage() {
   const [claim, setClaim] = useState<any>(null);
 
   useEffect(() => {
-    fetch(`${API_BASE}/claims/${params.id}`, {
-      credentials: "include"
-    })
+    authFetch(`${API_BASE}/claims/${params.id}`)
     .then(res => {
       if (!res.ok) throw new Error("Not found");
       return res.json();
@@ -29,9 +27,8 @@ export default function ClaimDetailPage() {
   const handleGenerateProof = async () => {
     setGenerating(true);
     try {
-      const res = await fetch(`${API_BASE}/claims/${params.id}/generate-proof`, {
-        method: "POST",
-        credentials: "include"
+      const res = await authFetch(`${API_BASE}/claims/${params.id}/generate-proof`, {
+        method: "POST"
       });
       if (res.ok) {
         const updatedClaim = await res.json();
@@ -49,9 +46,8 @@ export default function ClaimDetailPage() {
   const handleLogBlockchain = async () => {
     setLogging(true);
     try {
-      const res = await fetch(`${API_BASE}/claims/${params.id}/log-blockchain`, {
-        method: "POST",
-        credentials: "include"
+      const res = await authFetch(`${API_BASE}/claims/${params.id}/log-blockchain`, {
+        method: "POST"
       });
       if (res.ok) {
         const updatedClaim = await res.json();

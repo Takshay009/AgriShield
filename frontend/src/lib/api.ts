@@ -1,5 +1,38 @@
 export const API_BASE = process.env.NEXT_PUBLIC_API_URL || "https://agrishield-production.up.railway.app";
 
+// --- Token helpers (localStorage-based, works cross-origin) ---
+const TOKEN_KEY = "agrishield_token";
+
+export function getToken(): string | null {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem(TOKEN_KEY);
+}
+
+export function setToken(token: string) {
+  if (typeof window !== "undefined") {
+    localStorage.setItem(TOKEN_KEY, token);
+  }
+}
+
+export function removeToken() {
+  if (typeof window !== "undefined") {
+    localStorage.removeItem(TOKEN_KEY);
+  }
+}
+
+/**
+ * Wrapper around fetch that auto-attaches the Bearer token header.
+ * Drop-in replacement for `fetch(url, { credentials: "include", ... })`.
+ */
+export async function authFetch(url: string, opts: RequestInit = {}): Promise<Response> {
+  const token = getToken();
+  const headers = new Headers(opts.headers || {});
+  if (token) {
+    headers.set("Authorization", `Bearer ${token}`);
+  }
+  return fetch(url, { ...opts, headers });
+}
+
 export function getErrorMessage(err: any, fallback: string = "An unexpected error occurred"): string {
   if (!err) return fallback;
 
@@ -58,3 +91,4 @@ export function getErrorMessage(err: any, fallback: string = "An unexpected erro
   // Fallback to message or fallback string
   return fallback;
 }
+

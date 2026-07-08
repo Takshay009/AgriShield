@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { API_BASE } from "@/lib/api";
+import { API_BASE , authFetch} from "@/lib/api";
 
 export default function AdminClaimReviewPage() {
   const params = useParams();
@@ -14,7 +14,7 @@ export default function AdminClaimReviewPage() {
   const [verificationResult, setVerificationResult] = useState<boolean | null>(null);
 
   useEffect(() => {
-    fetch(`${API_BASE}/users/me`, { credentials: "include" })
+    authFetch(`${API_BASE}/users/me`)
       .then(res => {
         if (!res.ok) throw new Error("Unauthorized");
         return res.json();
@@ -24,7 +24,7 @@ export default function AdminClaimReviewPage() {
           router.push("/dashboard");
           return;
         }
-        return fetch(`${API_BASE}/admin/claims/${params.id}`, { credentials: "include" })
+        return authFetch(`${API_BASE}/admin/claims/${params.id}`)
           .then(res => { if (!res.ok) throw new Error("Error"); return res.json(); })
           .then(data => setClaim(data));
       })
@@ -34,9 +34,8 @@ export default function AdminClaimReviewPage() {
   const handleVerify = async () => {
     setVerifying(true);
     try {
-      const res = await fetch(`${API_BASE}/admin/claims/${params.id}/verify`, {
-        method: "POST",
-        credentials: "include"
+      const res = await authFetch(`${API_BASE}/admin/claims/${params.id}/verify`, {
+        method: "POST"
       });
       const data = await res.json();
       setVerificationResult(data.is_valid);
@@ -49,9 +48,8 @@ export default function AdminClaimReviewPage() {
 
   const handleDecision = async (decision: 'approve' | 'reject') => {
     try {
-      const res = await fetch(`${API_BASE}/admin/claims/${params.id}/${decision}`, {
-        method: "POST",
-        credentials: "include"
+      const res = await authFetch(`${API_BASE}/admin/claims/${params.id}/${decision}`, {
+        method: "POST"
       });
       if (res.ok) {
         const updatedClaim = await res.json();

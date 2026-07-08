@@ -11,7 +11,7 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import Link from "next/link";
-import { API_BASE } from "@/lib/api";
+import { API_BASE , authFetch, removeToken} from "@/lib/api";
 
 interface RSKTicket {
   ticket_id: string;
@@ -67,7 +67,7 @@ export default function RSKQueuePage() {
   const fetchTickets = async () => {
     setLoading(true);
     try {
-      const meRes = await fetch(`${API_BASE}/users/me`, { credentials: "include" });
+      const meRes = await authFetch(`${API_BASE}/users/me`);
       if (!meRes.ok) { router.push("/login"); return; }
       const userData = await meRes.json();
       if (userData.role !== "rsk_expert") {
@@ -79,7 +79,7 @@ export default function RSKQueuePage() {
       const url = showAll
         ? `${API_BASE}/api/rsk/all`
         : `${API_BASE}/api/rsk/queue`;
-      const res = await fetch(url, { credentials: "include" });
+      const res = await authFetch(url);
       if (res.ok) {
         const data = await res.json();
         setTickets(data);
@@ -107,10 +107,9 @@ export default function RSKQueuePage() {
     formData.append("expert_name", expertName);
 
     try {
-      const res = await fetch(`${API_BASE}/api/rsk/respond`, {
+      const res = await authFetch(`${API_BASE}/api/rsk/respond`, {
         method: "POST",
-        body: formData,
-        credentials: "include",
+        body: formData
       });
       if (res.ok) {
         setRespondingTo(null);
@@ -123,7 +122,7 @@ export default function RSKQueuePage() {
   };
 
   const handleLogout = async () => {
-    await fetch(`${API_BASE}/auth/logout`, { method: "POST", credentials: "include" });
+    await authFetch(`${API_BASE}/auth/logout`, { method: "POST" });
     router.push("/login");
   };
 

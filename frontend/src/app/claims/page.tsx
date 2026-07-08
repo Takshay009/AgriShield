@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import Link from "next/link";
-import { API_BASE } from "@/lib/api";
+import { API_BASE , authFetch} from "@/lib/api";
 
 interface Claim {
   id: number;
@@ -20,9 +20,7 @@ export default function ClaimsPage() {
   const [claims, setClaims] = useState<Claim[]>([]);
 
   useEffect(() => {
-    fetch(`${API_BASE}/claims`, {
-      credentials: "include"
-    })
+    authFetch(`${API_BASE}/claims`)
     .then(res => {
       if (!res.ok) throw new Error("Unauthorized");
       return res.json();
