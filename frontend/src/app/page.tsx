@@ -56,7 +56,7 @@ export default function LandingPage() {
               href="/dashboard/whatsapp-ivr"
               className="hidden sm:inline-flex text-sm font-semibold bg-transparent border border-[#bbcabf] text-[#3c4a42] px-4 py-2 rounded-lg hover:bg-[#eaedff] transition-colors"
             >
-              Try WhatsApp IVR
+              Try WhatsApp Sandbox
             </Link>
             <Link
               href="/login"
@@ -172,12 +172,17 @@ export default function LandingPage() {
                   Satellite rainfall sensors triggering instant payouts without revealing sensitive farm data.
                 </p>
               </div>
-              <div className="mt-8 flex items-center justify-center">
-                <div className="w-24 h-24 rounded-full border-4 border-[#006c49]/20 border-t-[#006c49] animate-spin flex items-center justify-center">
-                  <span className="text-3xl text-[#006c49] animate-none font-black">
-                    🛡️
-                  </span>
-                </div>
+              <div className="mt-8 flex items-center justify-center relative h-32">
+                {/* Outer tech ring */}
+                <div className="absolute w-28 h-28 rounded-full border border-dashed border-[#10b981]/40 animate-[spin_8s_linear_infinite]" />
+                {/* Middle gradient spinner with glow */}
+                <div className="absolute w-20 h-20 rounded-full border-2 border-transparent border-t-[#006c49] border-r-[#10b981] animate-spin shadow-[0_0_20px_rgba(16,185,129,0.4)]" />
+                {/* Inner pulsing core */}
+                <div className="absolute w-14 h-14 bg-gradient-to-tr from-[#006c49]/20 to-[#10b981]/20 rounded-full animate-pulse backdrop-blur-md" />
+                {/* Static center icon */}
+                <span className="relative z-10 text-3xl drop-shadow-lg scale-110">
+                  🛡️
+                </span>
               </div>
             </div>
 
@@ -205,7 +210,7 @@ export default function LandingPage() {
               </div>
             </div>
 
-            {/* Card 4: WhatsApp & Toll-Free Voice IVR */}
+            {/* Card 4: WhatsApp AI Sandbox */}
             <div
               id="whatsapp"
               className="bento-card md:col-span-7 p-8 flex flex-col md:flex-row justify-between items-center bg-gradient-to-r from-[#eaedff] to-[#f2f3ff]"
@@ -215,7 +220,7 @@ export default function LandingPage() {
                   Accessibility
                 </span>
                 <h3 className="text-2xl font-bold font-heading text-[#131b2e]">
-                  WhatsApp &amp; Toll-Free Voice IVR
+                  WhatsApp AI Sandbox
                 </h3>
                 <p className="text-base text-[#3c4a42] leading-relaxed">
                   Command center in your pocket. Query yields, report damage, and receive advisory in native dialects.
@@ -275,9 +280,6 @@ export default function LandingPage() {
           <div className="flex flex-col items-center md:items-start gap-2">
             <span className="text-lg font-bold font-heading text-[#131b2e]">
               AgriShield
-            </span>
-            <span className="text-xs font-medium text-[#3c4a42]">
-              © 2024 AgriShield. Precision Agriculture Systems.
             </span>
           </div>
           <nav className="flex flex-col md:flex-row gap-6 mt-4 md:mt-0 items-center text-center">
