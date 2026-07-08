@@ -50,35 +50,6 @@ export default function LandingPage() {
               </span>
             </div>
           </Link>
-
-          {/* Navigation Links (Desktop) */}
-          <nav className="hidden md:flex items-center gap-6">
-            <a
-              className="text-sm text-[#006c49] font-bold border-b-2 border-[#006c49] pb-1 transition-transform"
-              href="#features"
-            >
-              Precision Ecosystem
-            </a>
-            <Link
-              className="text-sm text-[#3c4a42] hover:text-[#006c49] transition-colors hover:bg-[#10b981]/10 px-3 py-1.5 rounded-md font-medium"
-              href="/dashboard/whatsapp-ivr"
-            >
-              WhatsApp Simulator
-            </Link>
-            <Link
-              className="text-sm text-[#3c4a42] hover:text-[#006c49] transition-colors hover:bg-[#10b981]/10 px-3 py-1.5 rounded-md font-medium"
-              href="/login"
-            >
-              Farmer Portal
-            </Link>
-            <Link
-              className="text-sm text-[#3c4a42] hover:text-[#006c49] transition-colors hover:bg-[#10b981]/10 px-3 py-1.5 rounded-md font-medium"
-              href="/admin/rsk-queue"
-            >
-              Admin Console
-            </Link>
-          </nav>
-
           {/* Actions */}
           <div className="flex items-center gap-3">
             <Link
@@ -100,12 +71,6 @@ export default function LandingPage() {
       <main className="pt-32 pb-24 px-4 md:px-12 max-w-[1440px] mx-auto space-y-32">
         {/* Section 2: Hero Showcase */}
         <section className="flex flex-col items-center text-center max-w-4xl mx-auto space-y-8 mt-8">
-          <div className="inline-flex items-center gap-2 bg-[#10b981]/10 border border-[#10b981]/30 px-4 py-1.5 rounded-full">
-            <span className="w-2 h-2 rounded-full bg-[#10b981] animate-pulse" />
-            <span className="text-sm text-[#00422b] font-semibold tracking-wide">
-              🚀 Next-Gen Decentralized Agricultural Security
-            </span>
-          </div>
 
           <h1 className="text-4xl sm:text-6xl md:text-[72px] md:leading-[80px] font-bold font-heading text-[#131b2e] tracking-tight">
             The Future of Farming.<br />
@@ -316,31 +281,22 @@ export default function LandingPage() {
             </span>
           </div>
           <nav className="flex flex-col md:flex-row gap-6 mt-4 md:mt-0 items-center text-center">
-            <Link
-              className="text-xs font-medium text-[#3c4a42] hover:text-[#006c49] transition-all duration-300 flex items-center gap-1.5"
-              href="#"
-            >
+            <span className="text-xs font-medium text-[#3c4a42] flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-[#10b981]" />
               System Status: Operational
-            </Link>
-            <Link
-              className="text-xs font-medium text-[#3c4a42] hover:text-[#006c49] transition-all duration-300"
-              href="#"
-            >
+            </span>
+            <span className="text-xs font-medium text-[#3c4a42]">
               Privacy Policy
-            </Link>
-            <Link
-              className="text-xs font-medium text-[#3c4a42] hover:text-[#006c49] transition-all duration-300"
-              href="#"
-            >
+            </span>
+            <span className="text-xs font-medium text-[#3c4a42]">
               Terms of Service
-            </Link>
-            <Link
+            </span>
+            <a
               className="text-xs font-medium text-[#3c4a42] hover:text-[#006c49] transition-all duration-300"
-              href="#"
+              href="mailto:support@agrishield.com"
             >
               Contact Support
-            </Link>
+            </a>
           </nav>
         </div>
       </footer>

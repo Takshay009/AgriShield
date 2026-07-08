@@ -12,7 +12,9 @@ import { API_BASE } from "@/lib/api";
 function LoginPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectPath = searchParams.get("redirect") || "/dashboard";
+  const rawRedirect = searchParams.get("redirect") || "/dashboard";
+  const allowedRedirects = ["/dashboard", "/admin", "/admin/claims", "/admin/rsk-queue", "/farms", "/claims"];
+  const redirectPath = allowedRedirects.includes(rawRedirect) ? rawRedirect : "/dashboard";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");

@@ -87,9 +87,11 @@ def get_advisory(farm_id: int, db: Session = Depends(get_db), current_user: mode
     }
 
 @app.post("/api/sensor-data", tags=["Advisory"])
-def post_sensor_data(data: SensorDataRequest, db: Session = Depends(get_db)):
+def post_sensor_data(data: SensorDataRequest, db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_user)):
     """Ingest sensor readings from IoT devices or manual input."""
-    # For now, just acknowledge receipt. Full storage in Phase 2B model expansion.
+    db_farm = db.query(models.Farm).filter(models.Farm.id == data.farm_id, models.Farm.user_id == current_user.id).first()
+    if not db_farm:
+        raise HTTPException(status_code=404, detail="Farm not found")
     return {
         "status": "received",
         "farm_id": data.farm_id,
@@ -189,19 +191,7 @@ async def create_health_report(
         models.Farm.id == farm_id, models.Farm.user_id == current_user.id
     ).first()
     if not db_farm:
-        db_farm = models.Farm(
-            user_id=current_user.id,
-            name="🌾 Demo Green Farm (Paddy/Wheat)",
-            area_hectares=2.5,
-            crop_type="Paddy",
-            location="Punjab",
-            soil_type="Alluvial",
-            irrigation_source="Canal",
-        )
-        db.add(db_farm)
-        db.commit()
-        db.refresh(db_farm)
-        farm_id = db_farm.id
+        raise HTTPException(status_code=404, detail="Farm not found. Create a farm first before submitting a health report.")
 
     report_id = f"HR-{_uuid.uuid4().hex[:8].upper()}"
     image_path = None
@@ -344,7 +334,7 @@ def login(request: Request, form_data: OAuth2PasswordRequestForm = Depends(), db
     return resp
 
 @app.post("/auth/logout")
-def logout(response: Response):
+def logout(response: Response, current_user: models.User = Depends(auth.get_current_user)):
     response.delete_cookie("token", path="/")
     return {"message": "Logged out"}
 
@@ -530,6 +520,13 @@ def log_blockchain(id: int, db: Session = Depends(get_db), current_user: models.
 def admin_get_claims(db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_admin_user)):
     return db.query(models.Claim).order_by(models.Claim.created_at.desc()).all()
 
+@app.get("/admin/claims/{id}", response_model=schemas.ClaimResponse)
+def admin_get_claim(id: int, db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_admin_user)):
+    db_claim = db.query(models.Claim).filter(models.Claim.id == id).first()
+    if not db_claim:
+        raise HTTPException(status_code=404, detail="Claim not found")
+    return db_claim
+
 @app.post("/admin/claims/{id}/verify")
 def admin_verify_claim(id: int, db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_admin_user)):
     db_claim = db.query(models.Claim).filter(models.Claim.id == id).first()
@@ -622,7 +619,7 @@ def whatsapp_inbound_webhook(
 
 
 @app.post("/api/whatsapp/simulate")
-def simulate_whatsapp_message(req: WhatsAppSimulateRequest):
+def simulate_whatsapp_message(req: WhatsAppSimulateRequest, current_user: models.User = Depends(auth.get_current_user)):
     """Interactive sandbox endpoint for testing photo upload diagnosis & Q&A from web UI."""
     if req.language:
         set_user_language(req.phone, req.language)
@@ -635,14 +632,14 @@ def simulate_whatsapp_message(req: WhatsAppSimulateRequest):
 
 
 @app.get("/api/whatsapp/conversations")
-def get_wa_conversations(current_user: models.User = Depends(auth.get_current_user)):
-    """Get all WhatsApp conversation messages (authenticated)."""
+def get_wa_conversations(current_user: models.User = Depends(auth.get_current_admin_user)):
+    """Get all WhatsApp conversation messages (admin only)."""
     return get_whatsapp_conversations()
 
 
 @app.get("/api/messages/log")
-def get_all_messages(current_user: models.User = Depends(auth.get_current_user)):
-    """Get full message log (SMS + WhatsApp, inbound + outbound)."""
+def get_all_messages(current_user: models.User = Depends(auth.get_current_admin_user)):
+    """Get full message log (SMS + WhatsApp, inbound + outbound, admin only)."""
     sms_logs = get_message_log()
     wa_logs = get_whatsapp_conversations()
     combined = sms_logs + [w for w in wa_logs if w not in sms_logs]

@@ -1,2 +1,5 @@
-import AdminDashboardPage from "../page";
-export default AdminDashboardPage;
+import { redirect } from "next/navigation";
+
+export default function AdminClaimsRedirect() {
+  redirect("/admin");
+}

@@ -24,7 +24,7 @@ export default function AdminClaimReviewPage() {
           router.push("/dashboard");
           return;
         }
-        return fetch(`${API_BASE}/claims/${params.id}`, { credentials: "include" })
+        return fetch(`${API_BASE}/admin/claims/${params.id}`, { credentials: "include" })
           .then(res => { if (!res.ok) throw new Error("Error"); return res.json(); })
           .then(data => setClaim(data));
       })
