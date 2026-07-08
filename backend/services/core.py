@@ -114,12 +114,8 @@ def generate_zk_proof(claim_id: int, risk_probability: float) -> str:
 USE_MOCK_CHAIN = True
 
 def log_to_blockchain(claim_id: int, proof_data: str) -> str:
-    if USE_MOCK_CHAIN:
-        import uuid
-        return f"0xmock{uuid.uuid4().hex}"
-    else:
-        # TODO: Implement real web3.py integration
-        return ""
+    from services.blockchain import log_to_blockchain as real_log_to_blockchain
+    return real_log_to_blockchain(claim_id, proof_data)
 
 def verify_zk_proof(claim_id: int, proof_data: str) -> bool:
     if USE_MOCK_ZKP:

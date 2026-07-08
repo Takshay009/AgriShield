@@ -11,6 +11,7 @@ python-multipart
 pandas
 requests
 slowapi
+web3
 
 # Optional / Production dependencies for real (non-mocked) services:
 twilio

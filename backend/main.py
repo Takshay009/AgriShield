@@ -435,8 +435,9 @@ def refresh_metrics(id: int, db: Session = Depends(get_db), current_user: models
     if not db_farm:
         raise HTTPException(status_code=404, detail="Farm not found")
     
+    from services.sentinel import fetch_real_ndvi
     today_str = date.today().isoformat()
-    ndvi = services.mock_ndvi(str(id), today_str)
+    ndvi = fetch_real_ndvi(str(id), db_farm.boundary_geojson, today_str)
     
     # Try to calculate ndvi_change based on previous metric
     prev_metric = db.query(models.FarmMetric).filter(models.FarmMetric.farm_id == id).order_by(models.FarmMetric.captured_at.desc()).first()
