@@ -38,11 +38,16 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 p-4">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 p-4 gap-4">
+      <div className="w-full max-w-md">
+        <Link href="/" className="text-sm text-[#006c49] font-semibold hover:underline flex items-center gap-1">
+          ← Back to Precision Landing Page
+        </Link>
+      </div>
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle>Register for CropGuard</CardTitle>
-          <CardDescription>Create an account to protect your farms.</CardDescription>
+          <CardTitle>Register for AgriShield</CardTitle>
+          <CardDescription>Create an account to protect your farms & initiate ZKP coverage.</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleRegister} className="space-y-4">

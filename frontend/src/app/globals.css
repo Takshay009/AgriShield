@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700&display=swap');
 @import "tailwindcss";
 
 @custom-variant dark (&:is(.dark *));
@@ -5,9 +6,42 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
+  --font-sans: 'Inter', var(--font-sans);
   --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-sans);
+  --font-heading: 'Outfit', var(--font-sans);
+  
+  /* Precision Agriculture White Theme Colors */
+  --color-primary: #006c49;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #10b981;
+  --color-on-primary-container: #00422b;
+  --color-secondary: #006398;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #5bb8fe;
+  --color-on-secondary-container: #00476e;
+  --color-tertiary: #904d00;
+  --color-tertiary-container: #f08921;
+  --color-surface: #faf8ff;
+  --color-on-surface: #131b2e;
+  --color-surface-variant: #dae2fd;
+  --color-on-surface-variant: #3c4a42;
+  --color-surface-container: #eaedff;
+  --color-surface-container-low: #f2f3ff;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-highest: #dae2fd;
+  --color-outline: #6c7a71;
+  --color-outline-variant: #bbcabf;
+  --color-on-background: #131b2e;
+
+  /* Custom Typography Utility Classes */
+  --font-display-lg: 'Outfit', sans-serif;
+  --font-headline-lg: 'Outfit', sans-serif;
+  --font-headline-md: 'Outfit', sans-serif;
+  --font-body-lg: 'Inter', sans-serif;
+  --font-body-md: 'Inter', sans-serif;
+  --font-label-md: 'Inter', sans-serif;
+  --font-label-sm: 'Inter', sans-serif;
+
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -32,7 +66,6 @@
   --color-secondary-foreground: var(--secondary-foreground);
   --color-secondary: var(--secondary);
   --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
   --color-popover-foreground: var(--popover-foreground);
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
@@ -44,6 +77,20 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+.bento-card {
+  background-color: #ffffff;
+  border: 1px solid #E2E8F0;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px -10px rgba(0,0,0,0.06);
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+.bento-card:hover {
+  box-shadow: 0 20px 40px -10px rgba(0,0,0,0.1);
+  border-color: #bbcabf;
+  transform: translateY(-2px);
 }
 
 :root {

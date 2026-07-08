@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -9,8 +9,10 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { API_BASE } from "@/lib/api";
 
-export default function LoginPage() {
+function LoginPageContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectPath = searchParams.get("redirect") || "/dashboard";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -47,18 +49,23 @@ export default function LoginPage() {
           return;
         }
       }
-      router.push("/dashboard");
+      router.push(redirectPath);
     } catch (err: any) {
       setError(err.message);
     }
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 p-4">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 p-4 gap-4">
+      <div className="w-full max-w-md">
+        <Link href="/" className="text-sm text-[#006c49] font-semibold hover:underline flex items-center gap-1">
+          ← Back to Precision Landing Page
+        </Link>
+      </div>
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle>Login to CropGuard</CardTitle>
-          <CardDescription>Enter your credentials to access your farms.</CardDescription>
+          <CardTitle>Login to AgriShield</CardTitle>
+          <CardDescription>Enter your credentials to access your farms & parametric claims.</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleLogin} className="space-y-4">
@@ -79,5 +86,13 @@ export default function LoginPage() {
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="flex min-h-screen items-center justify-center bg-gray-50">Loading login...</div>}>
+      <LoginPageContent />
+    </Suspense>
   );
 }

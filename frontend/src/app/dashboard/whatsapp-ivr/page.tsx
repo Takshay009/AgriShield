@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -65,6 +66,7 @@ const LANGUAGES = [
 ];
 
 export default function WhatsAppIVRPage() {
+  const router = useRouter();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputText, setInputText] = useState("");
   const [customMediaUrl, setCustomMediaUrl] = useState("");
@@ -76,6 +78,19 @@ export default function WhatsAppIVRPage() {
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    let cancelled = false;
+    fetch(`${API_BASE}/users/me`, {
+      credentials: "include"
+    })
+    .then(res => {
+      if (!res.ok) throw new Error("Unauthorized");
+    })
+    .catch(() => {
+      if (!cancelled) {
+        router.push("/login?redirect=/dashboard/whatsapp-ivr");
+      }
+    });
+
     // Load initial welcome message
     setMessages([
       {
@@ -85,7 +100,9 @@ export default function WhatsAppIVRPage() {
         timestamp: new Date().toISOString(),
       },
     ]);
-  }, []);
+
+    return () => { cancelled = true; };
+  }, [router]);
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });

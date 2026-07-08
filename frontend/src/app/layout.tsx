@@ -5,8 +5,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "CropGuard | Web3 Insurance",
-  description: "Data-driven Web3 Agricultural Insurance",
+  title: "AgriShield | Precision Web3 Agriculture & ZKP Insurance",
+  description: "Data-driven Web3 Agricultural Insurance & ResNet18 AI Vision",
 };
 
 export default function RootLayout({
