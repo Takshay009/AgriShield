@@ -484,7 +484,7 @@ export default function WhatsAppIVRPage() {
                   </p>
                   <div className="space-y-2 pt-1">
                     <a
-                      href="https://wa.me/14155238886?text=join%20"
+                      href="https://wa.me/14155238886?text=join%20watch-ate"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="w-full py-2.5 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-white font-black text-xs rounded-xl shadow-lg shadow-amber-900/40 flex items-center justify-center gap-2 transition-all duration-200 hover:scale-105 block"

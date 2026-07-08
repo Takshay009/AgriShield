@@ -10,7 +10,7 @@ from database import get_db
 import models
 import schemas
 
-SECRET_KEY = os.getenv("JWT_SECRET", "DEV_SECRET_KEY")
+SECRET_KEY = os.getenv("JWT_SECRET")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
