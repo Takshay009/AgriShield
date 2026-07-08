@@ -9,7 +9,7 @@ Deploy AgriShield (Next.js + FastAPI + SQLite + ZK Proofs) to **Railway** with p
 ```
 Railway Project "agrishield"
 ├── Backend Service  →  Python 3.13 + snarkjs (Dockerfile)
-│   └── Persistent Volume → /app/backend/cropguard.db, /app/backend/nfts/
+│   └── Persistent Volume → /app/data
 └── Frontend Service →  Next.js (Nixpacks auto-detect)
 ```
 
@@ -74,11 +74,14 @@ allow_origins=[
 
 ### 3. Backend: Database path via env var
 
-Edit `backend/database.py` line 5:
+Edit `backend/database.py` to use a data directory:
 
 ```py
+import os
+os.makedirs("./data", exist_ok=True)
+
 SQLALCHEMY_DATABASE_URL = os.getenv(
-    "DATABASE_URL", "sqlite:///./cropguard.db"
+    "DATABASE_URL", "sqlite:///./data/cropguard.db"
 )
 ```
 
@@ -114,7 +117,9 @@ Create `backend/Dockerfile`:
 ```dockerfile
 FROM python:3.13-slim
 
-RUN apt-get update && apt-get install -y nodejs npm && \
+RUN apt-get update && apt-get install -y curl && \
+    curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
+    apt-get install -y nodejs && \
     npm install -g snarkjs && \
     apt-get clean
 
@@ -128,7 +133,7 @@ RUN pip install --upgrade pip && \
 
 EXPOSE 8000
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD sh -c "uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}"
 ```
 
 ### 6. Frontend Dockerfile (optional — Nixpacks works too)
@@ -184,8 +189,7 @@ Attach to **Backend service** with mounts:
 
 | Mount Path | Purpose |
 |---|---|
-| `/app/backend/cropguard.db` | SQLite database file |
-| `/app/backend/nfts/` | Generated NFT SVG files |
+| `/app/data` | Directory for SQLite DB and generated NFTs |
 
 _Without a persistent volume, data is lost on every Railway deploy/restart._
 

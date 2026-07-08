@@ -22,7 +22,7 @@ def generate_farm_nft(farm_id: int, risk_level: str, ndvi: str) -> str:
 </svg>"""
 
     base_dir = os.path.dirname(os.path.abspath(__file__))
-    nfts_dir = os.path.join(base_dir, "nfts")
+    nfts_dir = os.path.join(base_dir, "data", "nfts")
     os.makedirs(nfts_dir, exist_ok=True)
     
     filename = f"farm_{farm_id}_{uuid.uuid4().hex[:8]}.svg"

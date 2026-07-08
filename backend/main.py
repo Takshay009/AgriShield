@@ -68,7 +68,7 @@ app.add_middleware(
 
 # Mount static files for NFTs
 base_dir = os.path.dirname(os.path.abspath(__file__))
-nfts_dir = os.path.join(base_dir, "nfts")
+nfts_dir = os.path.join(base_dir, "data", "nfts")
 os.makedirs(nfts_dir, exist_ok=True)
 app.mount("/nfts", StaticFiles(directory=nfts_dir), name="nfts")
 
