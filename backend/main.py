@@ -621,7 +621,7 @@ class WhatsAppSimulateRequest(BaseModel):
 @app.post("/webhooks/whatsapp-inbound")
 def whatsapp_inbound_webhook(
     From: str = Form("whatsapp:+919876543210"),
-    Body: str = Form("help"),
+    Body: str = Form(""),
     NumMedia: int = Form(0),
     MediaUrl0: Optional[str] = Form(None),
     MediaContentType0: Optional[str] = Form(None),
