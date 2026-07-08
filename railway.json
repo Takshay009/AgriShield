@@ -1,0 +1,29 @@
+{
+  "$schema": "https://railway.app/railway.schema.json",
+  "build": null,
+  "services": [
+    {
+      "name": "backend",
+      "buildCommand": null,
+      "runCommand": "uvicorn main:app --host 0.0.0.0 --port $PORT",
+      "build": {
+        "builder": "DOCKERFILE",
+        "dockerfilePath": "backend/Dockerfile"
+      },
+      "volumes": [
+        {
+          "mountPath": "/app/data"
+        }
+      ]
+    },
+    {
+      "name": "frontend",
+      "buildCommand": "npm ci && npm run build",
+      "runCommand": "npm run start",
+      "build": {
+        "builder": "NIXPACKS"
+      },
+      "source": "frontend"
+    }
+  ]
+}
