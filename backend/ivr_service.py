@@ -6,7 +6,7 @@ import uuid
 from datetime import datetime
 from typing import Optional
 
-USE_MOCK_IVR = os.getenv("USE_MOCK_IVR", "true").lower() == "true"
+USE_MOCK_IVR = os.getenv("USE_MOCK_IVR", "false").lower() == "true"
 
 
 def generate_welcome_twiml(language: str = "hi") -> str:

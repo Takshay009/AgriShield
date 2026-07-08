@@ -7,8 +7,7 @@ PRIVATE_KEY = os.getenv("PRIVATE_KEY")
 CONTRACT_ADDRESS = os.getenv("CONTRACT_ADDRESS")
 
 def log_to_blockchain(claim_id: int, proof_data: str) -> str:
-    if not RPC_URL or not PRIVATE_KEY or not CONTRACT_ADDRESS:
-        # Fallback to mock
+    if not RPC_URL or not PRIVATE_KEY or not CONTRACT_ADDRESS or PRIVATE_KEY == "your_wallet_private_key":
         import uuid
         return f"0xmock{uuid.uuid4().hex}"
         

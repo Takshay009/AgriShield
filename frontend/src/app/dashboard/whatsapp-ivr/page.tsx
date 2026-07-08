@@ -30,21 +30,21 @@ interface ChatMessage {
 
 const SAMPLE_DISEASE_PHOTOS = [
   {
-    label: "🥀 Paddy Brown Spot",
+    label: "🥀 Demo Sample Image 1 (Brown Spot-like)",
     url: "https://raw.githubusercontent.com/spMohanty/PlantVillage-Dataset/master/raw/color/Tomato___Early_blight/0012b9d2-2130-4a06-a834-b1f3af34f57e___RS_Erly.B%208389.JPG",
-    query: "धान के पत्तों पर भूरे धब्बे दिखाई दे रहे हैं, कृपया जांच करें",
+    query: "मेरी फसल के पत्तों पर धब्बे दिखाई दे रहे हैं, कृपया जांच करें",
     lang: "hi",
   },
   {
-    label: "🦠 Wheat Yellow Rust",
+    label: "🦠 Demo Sample Image 2 (Leaf Spot-like)",
     url: "https://raw.githubusercontent.com/spMohanty/PlantVillage-Dataset/master/raw/color/Tomato___Septoria_leaf_spot/000146ff-92a4-4db6-90ad-8fce2ae4fded___JR_Sept.L.S%202799.JPG",
-    query: "గోధుమ ఆకులపై పసుపు మచ్చలు ఉన్నాయి",
+    query: "నా పంట ఆకులపై మచ్చలు కనిపిస్తున్నాయి",
     lang: "te",
   },
   {
-    label: "🌿 Healthy Crop",
+    label: "🌿 Demo Sample Image 3 (Healthy-like)",
     url: "https://raw.githubusercontent.com/spMohanty/PlantVillage-Dataset/master/raw/color/Tomato___healthy/000146ff-92a4-4db6-90ad-8fce2ae4fded___GH_HLAF_2799.JPG",
-    query: "माझे पीक निरोगी आहे का ते तपासा",
+    query: "माझे पीक तपासा",
     lang: "mr",
   },
 ];

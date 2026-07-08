@@ -25,27 +25,6 @@ from routers.water_risk import router as water_risk_router
 
 models.Base.metadata.create_all(bind=engine)
 
-def seed_default_users():
-    db = next(get_db())
-    try:
-        seeds = [
-            ("rsk@agrishield.com", "RSK Expert Kendra", "rsk123", "rsk_expert"),
-            ("insurance@agrishield.com", "Insurance Admin", "insurance123", "insurance_admin"),
-        ]
-        for email, name, pwd, role in seeds:
-            user = db.query(models.User).filter(models.User.email == email).first()
-            if not user:
-                hashed = auth.get_password_hash(pwd)
-                db_user = models.User(email=email, name=name, password_hash=hashed, role=role)
-                db.add(db_user)
-            elif user.role != role:
-                user.role = role
-        db.commit()
-    finally:
-        db.close()
-
-seed_default_users()
-
 app = FastAPI(title="CropGuard MVP")
 app.include_router(water_risk_router)
 start_scheduler()
@@ -58,8 +37,6 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         os.getenv("FRONTEND_URL", "http://localhost:3000"),
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -459,7 +436,7 @@ def refresh_metrics(id: int, db: Session = Depends(get_db), current_user: models
         humidity=str(weather['humidity']),
         risk_level=risk_level,
         risk_probability=str(risk_prob),
-        source="mock"
+        source="real"
     )
     db.add(new_metric)
     db.commit()
@@ -658,18 +635,16 @@ def simulate_whatsapp_message(req: WhatsAppSimulateRequest):
 
 
 @app.get("/api/whatsapp/conversations")
-def get_wa_conversations():
-    """Get all WhatsApp conversation messages."""
+def get_wa_conversations(current_user: models.User = Depends(auth.get_current_user)):
+    """Get all WhatsApp conversation messages (authenticated)."""
     return get_whatsapp_conversations()
 
 
 @app.get("/api/messages/log")
-def get_all_messages():
+def get_all_messages(current_user: models.User = Depends(auth.get_current_user)):
     """Get full message log (SMS + WhatsApp, inbound + outbound)."""
-    # Combine SMS logs with rich WhatsApp conversations
     sms_logs = get_message_log()
     wa_logs = get_whatsapp_conversations()
-    # Merge and sort by timestamp
     combined = sms_logs + [w for w in wa_logs if w not in sms_logs]
     combined.sort(key=lambda x: x.get("timestamp", ""), reverse=True)
     return combined

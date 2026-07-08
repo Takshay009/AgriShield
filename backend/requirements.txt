@@ -8,6 +8,7 @@ email-validator
 PyJWT
 passlib[bcrypt]
 python-multipart
+python-dotenv
 pandas
 requests
 slowapi

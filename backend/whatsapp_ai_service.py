@@ -35,7 +35,7 @@ TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID", "")
 TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN", "")
 TWILIO_PHONE_NUMBER = os.getenv("TWILIO_PHONE_NUMBER", "+16592667445")  # For SMS / Voice IVR
 TWILIO_WHATSAPP_NUMBER = os.getenv("TWILIO_WHATSAPP_NUMBER", "+14155238886")  # Universal Twilio WhatsApp Sandbox
-GROQ_API_KEY = os.getenv("GROQ_API", "")
+GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
 
 # In-memory storage for conversations, logs, and user language preferences
 _whatsapp_conversations: list[dict] = []

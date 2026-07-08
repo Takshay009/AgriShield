@@ -20,7 +20,7 @@ import uuid
 from datetime import datetime
 from typing import Optional
 
-USE_MOCK_CLASSIFIER = os.getenv("USE_MOCK_CLASSIFIER", "true").lower() == "true"
+USE_MOCK_CLASSIFIER = os.getenv("USE_MOCK_CLASSIFIER", "false").lower() == "true"
 
 LATEST_FARM_DIAGNOSIS: dict[int, dict] = {}
 

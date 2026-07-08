@@ -5,7 +5,7 @@ import subprocess
 import os
 import shutil
 
-USE_MOCK_ZKP = False
+USE_MOCK_ZKP = os.getenv("USE_MOCK_ZKP", "false").lower() == "true"
 
 def compute_risk(ndvi_avg: float, ndvi_change: float, rainfall_mm: float, temp_c: float, humidity: float, disease_severity: str = "none"):
     score = 0
@@ -46,7 +46,11 @@ def fetch_weather(lat: float, lng: float):
             }
     except Exception as e:
         print(f"Weather API error: {e}")
-        return {"temp_c": 25.0, "humidity": 50.0, "rainfall_mm": 0.0}
+        return {
+            "temp_c": 25.0,
+            "humidity": 50.0,
+            "rainfall_mm": 0.0
+        }
 
 def generate_zk_proof(claim_id: int, risk_probability: float) -> str:
     if USE_MOCK_ZKP:
@@ -77,14 +81,7 @@ def generate_zk_proof(claim_id: int, risk_probability: float) -> str:
             # Run snarkjs fullprove
             snarkjs_exec = shutil.which("snarkjs") or shutil.which("snarkjs.cmd")
             if not snarkjs_exec:
-                return json.dumps({
-                    "pi_a": ["0x123", "0x456"],
-                    "pi_b": [["0x789", "0xabc"], ["0xdef", "0x123"]],
-                    "pi_c": ["0x456", "0x789"],
-                    "protocol": "groth16",
-                    "curve": "bn128",
-                    "note": "mock_fallback_no_snarkjs"
-                })
+                raise RuntimeError("snarkjs not found — ZK proof generation unavailable")
             cmd = [snarkjs_exec, "groth16", "fullprove", input_path, wasm_path, zkey_path, proof_path, public_path]
             subprocess.run(cmd, check=True, capture_output=True, cwd=circuits_dir, shell=(os.name == "nt"))
             
@@ -111,7 +108,7 @@ def generate_zk_proof(claim_id: int, risk_probability: float) -> str:
                 "note": "mock_fallback_on_error"
             })
 
-USE_MOCK_CHAIN = True
+USE_MOCK_CHAIN = os.getenv("USE_MOCK_CHAIN", "false").lower() == "true"
 
 def log_to_blockchain(claim_id: int, proof_data: str) -> str:
     from services.blockchain import log_to_blockchain as real_log_to_blockchain
@@ -139,7 +136,7 @@ def verify_zk_proof(claim_id: int, proof_data: str) -> bool:
         # snarkjs groth16 verify verification_key.json public.json proof.json
         snarkjs_exec = shutil.which("snarkjs") or shutil.which("snarkjs.cmd")
         if not snarkjs_exec:
-            return True
+            raise RuntimeError("snarkjs not found — ZK proof verification unavailable")
         cmd = [snarkjs_exec, "groth16", "verify", vkey_path, public_path, proof_path]
         subprocess.run(cmd, check=True, capture_output=True, cwd=circuits_dir, shell=(os.name == "nt"))
         is_valid = True

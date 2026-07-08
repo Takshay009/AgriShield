@@ -11,7 +11,6 @@ WORKDIR /app
 COPY . .
 
 RUN pip install --upgrade pip && \
-    pip install "pandas<3.0.0" && \
     pip install -r requirements.txt
 
 EXPOSE 8000

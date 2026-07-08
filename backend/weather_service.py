@@ -4,7 +4,6 @@ Extends existing weather fetching to include 7-day forecast for advisory engine.
 """
 import urllib.request
 import json
-import hashlib
 from typing import Optional
 
 
@@ -23,8 +22,11 @@ def fetch_weather_current(lat: float, lng: float) -> dict:
             }
     except Exception as e:
         print(f"Weather API error: {e}")
-        return {"temp_c": 25.0, "humidity": 50.0, "rainfall_mm": 0.0}
-
+        return {
+            "temp_c": 25.0,
+            "humidity": 50.0,
+            "rainfall_mm": 0.0
+        }
 
 def fetch_weather_forecast(lat: float, lng: float, days: int = 7) -> list[dict]:
     """
@@ -60,25 +62,12 @@ def fetch_weather_forecast(lat: float, lng: float, days: int = 7) -> list[dict]:
             return forecasts
     except Exception as e:
         print(f"Forecast API error: {e}")
-        return _mock_forecast(lat, lng, days)
-
-
-def _mock_forecast(lat: float, lng: float, days: int = 7) -> list[dict]:
-    """Deterministic mock forecast for offline/testing."""
-    from datetime import date, timedelta
-    forecasts = []
-    today = date.today()
-    for i in range(days):
-        d = today + timedelta(days=i)
-        seed = int(hashlib.sha256(f"{lat}-{lng}-{d.isoformat()}".encode()).hexdigest(), 16)
-        temp_base = 25 + (seed % 15)
-        rain = (seed % 100) / 10.0  # 0-10mm
-        humid = 40 + (seed % 50)
-        forecasts.append({
-            "date": d.isoformat(),
-            "temp_max_c": round(temp_base + 5, 1),
-            "temp_min_c": round(temp_base - 5, 1),
-            "rainfall_mm": round(rain, 1),
-            "humidity_pct": round(humid, 1),
-        })
-    return forecasts
+        # Return mock 7-day forecast
+        from datetime import datetime, timedelta
+        return [{
+            "date": (datetime.utcnow() + timedelta(days=i)).isoformat()[:10],
+            "temp_max_c": 30.0,
+            "temp_min_c": 20.0,
+            "rainfall_mm": 0.0,
+            "humidity_pct": 50.0
+        } for i in range(days)]

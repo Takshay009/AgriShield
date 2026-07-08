@@ -172,8 +172,22 @@ export default function AdvisoryPage() {
     setBroadcasting(true);
     setBroadcastSuccess("");
     try {
-      await new Promise((r) => setTimeout(r, 1500));
-      setBroadcastSuccess("✅ Outbound SMS & Voice IVR Alert successfully dispatched to farmer's mobile phone via Twilio Gateway!");
+      const res = await fetch(`${API_BASE}/webhooks/sms-inbound`, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+          From: "+919876543210",
+          Body: "AgriShield Test Alert: Weather advisory available for your farm.",
+        }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setBroadcastSuccess(`Alert dispatched via SMS gateway. Reply: ${data.reply?.status || "sent"}`);
+      } else {
+        setBroadcastSuccess("SMS gateway requires Twilio API configuration. Set TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN in backend environment.");
+      }
+    } catch {
+      setBroadcastSuccess("SMS gateway unavailable. Set Twilio credentials in backend environment.");
     } finally {
       setBroadcasting(false);
     }

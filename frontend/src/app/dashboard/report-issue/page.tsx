@@ -336,12 +336,8 @@ export default function ReportIssuePage() {
   const handleSimulateBhashiniSTT = () => {
     setSimulatingSTT(true);
     setConversationTurns([]);
-    setTimeout(() => {
-      const conv = VOICE_CONVERSATIONS[indicLang] || VOICE_CONVERSATIONS.hi;
-      setConversationTurns(conv.turns);
-      setDescription(conv.desc);
-      setSimulatingSTT(false);
-    }, 1200);
+    setSimulatingSTT(false);
+    setError("Voice log simulation disabled in production. Use the Record button to record real audio, or describe your issue in the text field below.");
   };
 
   const handleSubmit = async () => {

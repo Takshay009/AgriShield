@@ -44,6 +44,28 @@ class FarmMetric(Base):
     risk_probability = Column(String) # Float as string
     source = Column(String) # 'mock'|'sentinel_hub'
 
+class EscalationTicket(Base):
+    __tablename__ = "escalation_tickets"
+
+    id = Column(Integer, primary_key=True, index=True)
+    ticket_id = Column(String, unique=True, index=True)
+    farm_id = Column(Integer)
+    health_report_id = Column(String)
+    disease_name = Column(String)
+    ai_confidence = Column(String)
+    severity = Column(String)
+    priority = Column(String)
+    symptoms = Column(String, nullable=True)
+    image_path = Column(String, nullable=True)
+    audio_path = Column(String, nullable=True)
+    farmer_description = Column(String, nullable=True)
+    status = Column(String, default="open")
+    assigned_to = Column(String, nullable=True)
+    response = Column(String, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    resolved_at = Column(DateTime, nullable=True)
+
+
 class Claim(Base):
     __tablename__ = "claims"
 

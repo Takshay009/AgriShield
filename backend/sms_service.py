@@ -7,7 +7,7 @@ import uuid
 from datetime import datetime
 from typing import Optional
 
-USE_MOCK_SMS = os.getenv("USE_MOCK_SMS", "true").lower() == "true"
+USE_MOCK_SMS = os.getenv("USE_MOCK_SMS", "false").lower() == "true"
 
 # In-memory message log for demo
 _message_log: list[dict] = []
