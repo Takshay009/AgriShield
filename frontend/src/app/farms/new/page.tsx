@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import dynamic from "next/dynamic";
-import { getApiBase , authFetch} from "@/lib/api";
+import { getApiBase, authFetch, getErrorMessage } from "@/lib/api";
 
 // Next.js needs dynamic import for react-leaflet
 const FarmMap = dynamic(() => import("@/components/FarmMap"), { ssr: false });
