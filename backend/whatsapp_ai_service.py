@@ -39,7 +39,25 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
 
 # In-memory storage for conversations, logs, and user language preferences
 _whatsapp_conversations: list[dict] = []
-_user_languages: dict[str, str] = {}  # phone_number -> language code ('hi', 'te', 'mr', 'ta', 'en')
+LANGUAGES_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "user_languages.json")
+
+def _load_user_languages() -> dict[str, str]:
+    if os.path.exists(LANGUAGES_FILE):
+        try:
+            with open(LANGUAGES_FILE, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return {}
+
+def _save_user_languages(data: dict[str, str]):
+    try:
+        with open(LANGUAGES_FILE, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+    except Exception as e:
+        print(f"[Error saving languages] {e}")
+
+_user_languages: dict[str, str] = _load_user_languages()  # phone_number -> language code ('hi', 'te', 'mr', 'ta', 'en')
 
 # Language Names & Flags
 LANGUAGE_MAP = {
@@ -67,11 +85,15 @@ def get_whatsapp_conversations() -> list[dict]:
 
 def get_user_language(phone: str) -> str:
     """Get preferred language for a farmer (default: Hindi 'hi')."""
-    return _user_languages.get(phone, "hi")
+    langs = _load_user_languages()
+    return langs.get(phone, "hi")
 
 
 def set_user_language(phone: str, lang_code: str):
     """Set preferred language for a farmer."""
+    langs = _load_user_languages()
+    langs[phone] = lang_code
+    _save_user_languages(langs)
     _user_languages[phone] = lang_code
 
 

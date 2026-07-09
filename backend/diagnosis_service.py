@@ -151,6 +151,62 @@ CROP_DISEASE_DB = {
 }
 
 
+import base64
+import requests
+import json
+from dotenv import load_dotenv
+
+load_dotenv()
+GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
+
+def _analyze_image_with_groq_vision(image_path: str, crop_type: str, language: str) -> Optional[dict]:
+    if not GROQ_API_KEY or "gsk_" not in GROQ_API_KEY:
+        return None
+        
+    if not os.path.exists(image_path):
+        return None
+        
+    try:
+        with open(image_path, "rb") as image_file:
+            base64_image = base64.b64encode(image_file.read()).decode('utf-8')
+            
+        url = "https://api.groq.com/openai/v1/chat/completions"
+        headers = {
+            "Authorization": f"Bearer {GROQ_API_KEY}",
+            "Content-Type": "application/json"
+        }
+        
+        system_prompt = f"You are AgriShield AI, an expert agricultural botanist. Analyze this image. It is supposedly a {crop_type} crop. Identify if it's healthy, diseased (name the disease), flooded, or pest-infested. Provide a JSON response EXACTLY in this format: {{\"disease_name\": \"<name in {language}>\", \"confidence\": <float 0-1>, \"severity\": \"<high|medium|low|none>\", \"treatment\": \"<treatment advice in {language}>\"}}. Output ONLY JSON without markdown."
+        
+        payload = {
+            "model": "llama-3.2-11b-vision-preview",
+            "messages": [
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "text", "text": system_prompt},
+                        {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{base64_image}"}}
+                    ]
+                }
+            ],
+            "temperature": 0.2,
+            "max_tokens": 300
+        }
+        
+        res = requests.post(url, headers=headers, json=payload, timeout=15)
+        if res.status_code == 200:
+            content = res.json()["choices"][0]["message"]["content"].strip()
+            # Remove any markdown formatting if present
+            if content.startswith("```json"):
+                content = content.replace("```json", "", 1).replace("```", "")
+            return json.loads(content)
+        else:
+            print(f"[Groq Vision API Error] {res.status_code}: {res.text}")
+    except Exception as e:
+        print(f"[Groq Vision Exception] {e}")
+    return None
+
+
 def classify_image(
     image_path: str,
     farm_id: Optional[int] = None,
@@ -162,6 +218,24 @@ def classify_image(
     Classify a crop image and description for disease detection.
     Returns dynamic, crop-aware, localized disease name, confidence, severity, and treatment.
     """
+    # 1. Try Groq Vision API First (if key exists)
+    vision_result = _analyze_image_with_groq_vision(image_path, crop_type, language)
+    if vision_result:
+        res = {
+            "disease_name": vision_result.get("disease_name", "Unknown"),
+            "confidence": vision_result.get("confidence", 0.95),
+            "severity": vision_result.get("severity", "medium"),
+            "treatment": vision_result.get("treatment", "Consult expert"),
+            "needs_escalation": vision_result.get("severity", "medium").lower() in ["high", "medium"],
+            "model_used": "groq_vision_llama_3.2_11b",
+            "classified_at": datetime.utcnow().isoformat(),
+            "crop_type": crop_type,
+        }
+        if farm_id is not None:
+            LATEST_FARM_DIAGNOSIS[farm_id] = res
+        return res
+
+    # 2. Fallback to mock classifier (or PyTorch)
     if USE_MOCK_CLASSIFIER:
         return _mock_classify(image_path, farm_id, crop_type, description, language)
 
