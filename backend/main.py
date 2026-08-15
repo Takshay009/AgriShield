@@ -25,6 +25,27 @@ from routers.water_risk import router as water_risk_router
 
 models.Base.metadata.create_all(bind=engine)
 
+def run_migrations():
+    from sqlalchemy import text
+    with engine.begin() as conn:
+        for col, col_type in [
+            ("survey_number", "VARCHAR"),
+            ("ulpin", "VARCHAR"),
+            ("state", "VARCHAR"),
+            ("district", "VARCHAR"),
+            ("taluka", "VARCHAR"),
+            ("village", "VARCHAR"),
+            ("registration_method", "VARCHAR")
+        ]:
+            try:
+                conn.execute(text(f"ALTER TABLE farms ADD COLUMN {col} {col_type}"))
+                print(f"Migration: Added column {col} to farms table")
+            except Exception as e:
+                # Column already exists, ignore
+                pass
+
+run_migrations()
+
 app = FastAPI(title="CropGuard MVP")
 app.include_router(water_risk_router)
 start_scheduler()
@@ -349,6 +370,30 @@ def logout(response: Response, current_user: models.User = Depends(auth.get_curr
 @app.get("/users/me", response_model=schemas.UserResponse)
 def read_users_me(current_user: models.User = Depends(auth.get_current_user)):
     return current_user
+
+@app.get("/api/land-records/lookup")
+def lookup_land_record(
+    state: str,
+    survey_number: Optional[str] = None,
+    ulpin: Optional[str] = None,
+    current_user: models.User = Depends(auth.get_current_user)
+):
+    """
+    Lookup official land records by state and survey number/ULPIN.
+    Uses Adapter Pattern to route to the appropriate state adapter.
+    """
+    from services.land_records import LandRecordService
+    if not state:
+        raise HTTPException(status_code=400, detail="State parameter is required.")
+    if not survey_number and not ulpin:
+        raise HTTPException(status_code=400, detail="Either Survey Number or ULPIN must be provided.")
+    try:
+        record = LandRecordService.lookup(state=state, survey_number=survey_number, ulpin=ulpin)
+        return record
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Internal error checking land records: {str(e)}")
 
 @app.get("/farms", response_model=list[schemas.FarmResponse])
 def get_farms(db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_user)):

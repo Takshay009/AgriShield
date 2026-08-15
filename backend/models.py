@@ -27,6 +27,13 @@ class Farm(Base):
     location = Column(String, nullable=True)
     soil_type = Column(String, nullable=True)
     irrigation_source = Column(String, nullable=True)
+    survey_number = Column(String, nullable=True)
+    ulpin = Column(String, nullable=True)
+    state = Column(String, nullable=True)
+    district = Column(String, nullable=True)
+    taluka = Column(String, nullable=True)
+    village = Column(String, nullable=True)
+    registration_method = Column(String, default="manual")
     created_at = Column(DateTime, default=datetime.utcnow)
     nft_url = Column(String, nullable=True)
 

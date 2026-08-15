@@ -36,6 +36,13 @@ class FarmBase(BaseModel):
     lng: str | None = None
     boundary_geojson: str | None = None
     area_hectares: str | float | None = None
+    survey_number: str | None = None
+    ulpin: str | None = None
+    state: str | None = None
+    district: str | None = None
+    taluka: str | None = None
+    village: str | None = None
+    registration_method: str | None = None
 
 class FarmCreate(FarmBase):
     pass
