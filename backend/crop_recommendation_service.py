@@ -237,7 +237,7 @@ def fetch_hyperlocal_soil(lat: float, lng: float) -> tuple[Optional[str], Option
     try:
         import urllib.request
         url = f"https://rest.isric.org/soilgrids/v2.0/properties/query?lon={lng}&lat={lat}&property=clay&property=sand&property=silt&property=phh2o&depth=0-5cm"
-        req = urllib.request.Request(url, headers={"User-Agent": "AgriShield-AI/1.0"})
+        req = urllib.request.Request(url, headers={"User-Agent": "FarmerPulse-AI/1.0"})
         with urllib.request.urlopen(req, timeout=3.0) as resp:
             data = json.loads(resp.read().decode("utf-8"))
             layers = data.get("properties", {}).get("layers", [])

@@ -176,7 +176,7 @@ def _analyze_image_with_groq_vision(image_path: str, crop_type: str, language: s
             "Content-Type": "application/json"
         }
         
-        system_prompt = f"You are AgriShield AI, an expert agricultural botanist. Analyze this image. It is supposedly a {crop_type} crop. Identify if it's healthy, diseased (name the disease), flooded, or pest-infested. Provide a JSON response EXACTLY in this format: {{\"disease_name\": \"<name in {language}>\", \"confidence\": <float 0-1>, \"severity\": \"<high|medium|low|none>\", \"treatment\": \"<treatment advice in {language}>\"}}. Output ONLY JSON without markdown."
+        system_prompt = f"You are FarmerPulse AI, an expert agricultural botanist. Analyze this image. It is supposedly a {crop_type} crop. Identify if it's healthy, diseased (name the disease), flooded, or pest-infested. Provide a JSON response EXACTLY in this format: {{\"disease_name\": \"<name in {language}>\", \"confidence\": <float 0-1>, \"severity\": \"<high|medium|low|none>\", \"treatment\": \"<treatment advice in {language}>\"}}. Output ONLY JSON without markdown."
         
         payload = {
             "model": "llama-3.2-11b-vision-preview",

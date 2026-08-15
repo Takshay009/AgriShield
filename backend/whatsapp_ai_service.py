@@ -156,14 +156,14 @@ def query_groq_llm(prompt: str, language: str = "hi") -> str:
     target_lang = lang_names.get(language, "Hindi")
 
     system_prompt = (
-        f"You are AgriShield AI, a premier senior agricultural scientist and smart insurance advisor for Indian farmers. "
+        f"You are FarmerPulse AI, a premier senior agricultural scientist and smart insurance advisor for Indian farmers. "
         f"Your role is to give practical, scientific, exact, and highly localized farming advice on crop diseases, weather alerts, "
         f"soil health (N-P-K ratios), fertilizer schedules, seed varieties (Kharif/Rabi), pest management (IPM), and ZKP parametric insurance risk. "
         f"Domain Rules:\n"
         f"1. For crop diseases or pests, specify exact chemical names along with recommended dosage (e.g., Propiconazole @ 1ml/L or Tricyclazole @ 0.6g/L) PLUS organic alternatives (Neem oil 10,000 ppm @ 3ml/L).\n"
         f"2. For soil & fertilizer queries, explain balanced dosing (Urea, DAP, MOP) based on crop stage.\n"
         f"3. For weather alerts, advise on irrigation timing and fertilizer top-dressing.\n"
-        f"4. For insurance or claims, explain how AgriShield's Zero-Knowledge Proof (ZKP) smart contracts track satellite rainfall and trigger instant payouts without paper claims.\n"
+        f"4. For insurance or claims, explain how FarmerPulse's Zero-Knowledge Proof (ZKP) smart contracts track satellite rainfall and trigger instant payouts without paper claims.\n"
         f"IMPORTANT: You MUST reply entirely in {target_lang}. Keep your response structured with emojis, clear bullet points, and extremely high technical accuracy."
     )
 
@@ -238,7 +238,7 @@ def query_groq_for_diagnosis_qa(diag: dict, user_text: str, language: str = "hi"
         )
     else:
         header = (
-            f"🔬 *AgriShield AI Disease Diagnosis Report* 🔬\n\n"
+            f"🔬 *FarmerPulse AI Disease Diagnosis Report* 🔬\n\n"
             f"🌿 *Disease Name*: {disease_name}\n"
             f"🎯 *AI Confidence*: {confidence:.1f}%\n"
             f"⚠️ *Severity*: {severity}\n\n"
@@ -298,7 +298,7 @@ def _fallback_domain_reply(prompt: str, language: str = "hi") -> str:
         elif language == "ta":
             return "🌦️ *அக்ரி ஷீல்ட் வானிலை எச்சரிக்கை*: அடுத்த 3 நாட்களில் மிதமான மழை (8-15 மி.மீ) பெய்ய வாய்ப்புள்ளது. இன்று நீர்ப்பாசனத்தைத் தவிர்க்கவும்."
         elif language == "en":
-            return "🌦️ *AgriShield Weather Alert*: Moderate rainfall (8-15mm) expected over the next 3 days across your district. Avoid heavy irrigation today. Ideal window for fertilizer top-dressing opens after 48 hours."
+            return "🌦️ *FarmerPulse Weather Alert*: Moderate rainfall (8-15mm) expected over the next 3 days across your district. Avoid heavy irrigation today. Ideal window for fertilizer top-dressing opens after 48 hours."
         return "🌦️ *कृषि शील्ड मौसम सलाह*: अगले 3 दिनों में आपके क्षेत्र में हल्की से मध्यम बारिश (8-15 मिमी) की संभावना है। आज सिंचाई करने से बचें। रासायनिक छिड़काव या उर्वरक डालने का काम मौसम साफ होने पर ही करें।"
 
     # 2. Crop Selection & Seeds
@@ -308,7 +308,7 @@ def _fallback_domain_reply(prompt: str, language: str = "hi") -> str:
         elif language == "mr":
             return "🌾 *पीक सल्ला*: काळ्या आणि भारी जमिनीत खरीप हंगामासाठी सर्वोत्तम पिके: १. सोयाबीन (जे.एस. ३३५ - ९२% यश), २. कपाशी (बीट कपाशी - ८७%), ३. तूर (आयसीपीएल ८७११९ - ८४%)."
         elif language == "en":
-            return "🌾 *AgriShield Crop Recommendation*: For Black Cotton / Alluvial soil in Kharif season, top AI-matched crops: 1. Soybean (JS 335/9560 - 92% yield match), 2. Bt Cotton (87% match), 3. Pigeon Pea (ICPL 87119 - 84% match)."
+            return "🌾 *FarmerPulse Crop Recommendation*: For Black Cotton / Alluvial soil in Kharif season, top AI-matched crops: 1. Soybean (JS 335/9560 - 92% yield match), 2. Bt Cotton (87% match), 3. Pigeon Pea (ICPL 87119 - 84% match)."
         return "🌾 *कृषि शील्ड फसल व बीज सलाह*: काली और दोमट मिट्टी में खरीफ मौसम के लिए सर्वोत्तम प्रमाणित फसलें:\n1. सोयाबीन (JS 335 / 9560 - 92% उपयुक्तता)\n2. बीटी कपास (87% उपयुक्तता)\n3. अरहर/तूर (ICPL 87119 - 84% उपयुक्तता)\nबुवाई से पहले बीजोपचार (ट्राइकोडर्मा 10 ग्राम/किग्रा) अवश्य करें।"
 
     # 3. Fertilizer & Soil Nutrition (Urea, DAP, NPK)
@@ -338,19 +338,19 @@ def _fallback_domain_reply(prompt: str, language: str = "hi") -> str:
         elif language == "mr":
             return "🛡️ *अॅग्री शील्ड ZKP विमा*: तुमच्या शेताची उपग्रह आणि हवामान सेन्सॉरद्वारे सतत देखरेख सुरू आहे. दुष्काळ किंवा अतिवृष्टी झाल्यास, ZKP स्मार्ट कॉन्ट्रॅक्टद्वारे कागदपत्रांशिवाय थेट बँक खात्यात नुकसान भरपाई जमा होते!"
         elif language == "en":
-            return "🛡️ *AgriShield Parametric Insurance (ZKP)*: Your farm risk score is monitored 24/7 via satellite telemetry and IoT rainfall indices. If weather anomalies breach parametric thresholds, Zero-Knowledge Proof smart contracts execute automated, zero-paperwork payouts directly to your bank account!"
+            return "🛡️ *FarmerPulse Parametric Insurance (ZKP)*: Your farm risk score is monitored 24/7 via satellite telemetry and IoT rainfall indices. If weather anomalies breach parametric thresholds, Zero-Knowledge Proof smart contracts execute automated, zero-paperwork payouts directly to your bank account!"
         return "🛡️ *कृषि शील्ड ZKP पैरामीट्रिक बीमा*:\nआपके खेत की निगरानी सैटेलाइट व मौसम सेंसर द्वारा 24/7 की जा रही है।\n• बिना कागजी कार्रवाई: यदि बारिश या सूखा निर्धारित सीमा (Threshold) को पार करता है, तो ZKP स्मार्ट कॉन्ट्रैक्ट स्वतः सक्रिय हो जाता है।\n• तुरंत भुगतान: क्लेम राशि बिना किसी पटवारी या सर्वेयर की प्रतीक्षा किए सीधे आपके बैंक खाते में ट्रांसफर कर दी जाती है!"
 
     # 6. Default High-Quality Domain Help / Intro
     if language == "te":
-        return "🌾 నమస్తే! నేను అగ్రి షీల్డ్ AI (AgriShield AI) ని. మీరు పంట ఫోటో పంపి వ్యాధి నిర్ధారణ చేసుకోవచ్చు లేదా వాతావరణం, ఎరువులు, విత్తనాలు, మరియు బీమా గురించి ఏ ప్రశ్న అయినా అడగవచ్చు!"
+        return "🌾 నమస్తే! నేను అగ్రి షీల్డ్ AI (FarmerPulse AI) ని. మీరు పంట ఫోటో పంపి వ్యాధి నిర్ధారణ చేసుకోవచ్చు లేదా వాతావరణం, ఎరువులు, విత్తనాలు, మరియు బీమా గురించి ఏ ప్రశ్న అయినా అడగవచ్చు!"
     elif language == "mr":
-        return "🌾 नमस्कार! मी अॅग्री शील्ड AI (AgriShield AI) आहे. तुम्ही पिकाचा फोटो पाठवून रोगाचे अचूक निदान करू शकता किंवा हवामान, खते, बियाणे आणि विम्याविषयी कोणताही प्रश्न विचारू शकता!"
+        return "🌾 नमस्कार! मी अॅग्री शील्ड AI (FarmerPulse AI) आहे. तुम्ही पिकाचा फोटो पाठवून रोगाचे अचूक निदान करू शकता किंवा हवामान, खते, बियाणे आणि विम्याविषयी कोणताही प्रश्न विचारू शकता!"
     elif language == "ta":
         return "🌾 வணக்கம்! நான் அக்ரி ஷீல்ட் AI. பயிர் புகைப்படத்தை அனுப்பி நோயைக் கண்டறியலாம் அல்லது வானிலை, உரம், விதைகள் மற்றும் காப்பீடு பற்றி எந்தக் கேள்வியும் கேட்கலாம்!"
     elif language == "en":
-        return "🌾 Welcome to AgriShield AI! I am your 24/7 Agricultural Scientist. You can:\n1. 📸 Upload a crop/leaf photo for instant ResNet18 AI diagnosis & treatment.\n2. 💬 Ask any farming question (weather alerts, NPK fertilizers, pest control, or ZKP insurance)."
-    return "🌾 नमस्ते! मैं कृषि शील्ड AI (AgriShield AI) आपका 24/7 कृषि वैज्ञानिक हूँ। आप मुझसे:\n1. 📸 **फोटो निदान**: अपनी फसल या पत्ते की फोटो भेजकर रोग की पहचान व उपचार पा सकते हैं।\n2. 💬 **सटीक सलाह**: मौसम पूर्वानुमान, खाद/उर्वरक (NPK), बीज चयन, कीट नियंत्रण या ZKP बीमा से जुड़ा कोई भी सवाल पूछ सकते हैं!"
+        return "🌾 Welcome to FarmerPulse AI! I am your 24/7 Agricultural Scientist. You can:\n1. 📸 Upload a crop/leaf photo for instant ResNet18 AI diagnosis & treatment.\n2. 💬 Ask any farming question (weather alerts, NPK fertilizers, pest control, or ZKP insurance)."
+    return "🌾 नमस्ते! मैं कृषि शील्ड AI (FarmerPulse AI) आपका 24/7 कृषि वैज्ञानिक हूँ। आप मुझसे:\n1. 📸 **फोटो निदान**: अपनी फसल या पत्ते की फोटो भेजकर रोग की पहचान व उपचार पा सकते हैं।\n2. 💬 **सटीक सलाह**: मौसम पूर्वानुमान, खाद/उर्वरक (NPK), बीज चयन, कीट नियंत्रण या ZKP बीमा से जुड़ा कोई भी सवाल पूछ सकते हैं!"
 
 
 def handle_whatsapp_inbound(
@@ -417,7 +417,7 @@ def handle_whatsapp_inbound(
     # 3. Check for Help Menu Command (ONLY when no image is uploaded)
     if any(k == body_clean for k in ["help", "menu", "मदद", "sahayata", "సహాయం", "मदत", "உதவி", "0", "?"]):
         help_text = (
-            "🌾 *AgriShield AI Command Center & Help Menu* 🌾\n\n"
+            "🌾 *FarmerPulse AI Command Center & Help Menu* 🌾\n\n"
             "📸 *1. Photo Diagnosis*: Send any leaf photo for ResNet18 AI disease detection & cure.\n"
             "💬 *2. Ask Anything*: Ask about weather, seeds, fertilizer, or crop insurance.\n"
             "🌐 *3. Change Language* (भाषा बदलें):\n"

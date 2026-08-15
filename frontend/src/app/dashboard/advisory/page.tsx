@@ -180,7 +180,7 @@ export default function AdvisoryPage() {
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: new URLSearchParams({
           From: "+919876543210",
-          Body: "AgriShield Test Alert: Weather advisory available for your farm.",
+          Body: "FarmerPulse Test Alert: Weather advisory available for your farm.",
         }),
       });
       if (res.ok) {

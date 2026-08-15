@@ -18,7 +18,7 @@ def generate_welcome_twiml(language: str = "hi") -> str:
         "hi": "नमस्ते! कृषि शील्ड में आपका स्वागत है। अपनी फसल की जानकारी के लिए 1 दबाएं। मौसम अलर्ट के लिए 2 दबाएं। बीमा दावे के लिए 3 दबाएं।",
         "te": "నమస్కారం! ఆగ్రి షీల్డ్ కు స్వాగతం. మీ పంట సమాచారం కోసం 1 నొక్కండి. వాతావరణ హెచ్చరికల కోసం 2 నొక్కండి. బీమా క్లెయిమ్ కోసం 3 నొక్కండి.",
         "mr": "नमस्कार! अॅग्री शील्ड मध्ये आपले स्वागत आहे. पीक माहितीसाठी 1 दाबा. हवामान अलर्टसाठी 2 दाबा. विमा दाव्यासाठी 3 दाबा.",
-        "en": "Welcome to AgriShield! Press 1 for crop information. Press 2 for weather alerts. Press 3 for insurance claims.",
+        "en": "Welcome to FarmerPulse! Press 1 for crop information. Press 2 for weather alerts. Press 3 for insurance claims.",
     }
 
     greeting = greetings.get(language, greetings["en"])

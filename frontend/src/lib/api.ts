@@ -13,7 +13,7 @@ export async function getApiBase(): Promise<string> {
 }
 
 // --- Token helpers (localStorage-based, works cross-origin) ---
-const TOKEN_KEY = "agrishield_token";
+const TOKEN_KEY = "farmerpulse_token";
 
 export function getToken(): string | null {
   if (typeof window === "undefined") return null;

@@ -106,8 +106,8 @@ export default function DashboardPage() {
       <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-[rgba(192,201,192,0.3)] w-full">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <Link href="/dashboard" className="flex items-center gap-3 cursor-pointer group transition-all duration-300">
-            <Image src="/logo.png" alt="AgriShield Logo" width={40} height={40} className="object-contain drop-shadow-sm group-hover:scale-105 transition-transform" />
-            <span className="text-2xl font-bold font-heading text-[#00351f]">AgriShield Workspace</span>
+            <Image src="/logo.png" alt="FarmerPulse Logo" width={40} height={40} className="object-contain drop-shadow-sm group-hover:scale-105 transition-transform" />
+            <span className="text-2xl font-bold font-heading text-[#00351f]">FarmerPulse Workspace</span>
           </Link>
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-3 hidden sm:flex">
@@ -272,7 +272,7 @@ export default function DashboardPage() {
             {/* Quick Stats or Info Card */}
             <div className="bg-gradient-to-br from-[#0f4d32] to-[#00351f] rounded-2xl shadow-md p-6 text-white relative overflow-hidden">
               <div className="absolute -top-10 -right-10 w-32 h-32 bg-white opacity-5 rounded-full blur-2xl"></div>
-              <h3 className="text-lg font-bold font-heading mb-2">AgriShield Network</h3>
+              <h3 className="text-lg font-bold font-heading mb-2">FarmerPulse Network</h3>
               <p className="text-sm text-[#82bd9a] leading-relaxed mb-4">
                 Your farm data is secured by zero-knowledge proofs. We only use telemetry to automatically trigger valid parametric claims.
               </p>

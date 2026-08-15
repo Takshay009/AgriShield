@@ -5,7 +5,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "AgriShield | Precision Web3 Agriculture & ZKP Insurance",
+  title: "FarmerPulse | Precision Web3 Agriculture & ZKP Insurance",
   description: "Data-driven Web3 Agricultural Insurance & ResNet18 AI Vision",
 };
 

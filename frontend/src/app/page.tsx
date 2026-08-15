@@ -68,11 +68,11 @@ export default function LandingPage() {
           {/* Logo & Brand */}
           <Link href="/" className="flex items-center gap-3 group">
             <div className="w-20 h-20 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
-              <Image src="/logo.png" alt="AgriShield Logo" width={80} height={80} className="object-contain" priority />
+              <Image src="/logo.png" alt="FarmerPulse Logo" width={80} height={80} className="object-contain" priority />
             </div>
             <div className="hidden sm:flex flex-col">
               <span className="text-2xl font-bold font-heading text-[#006c49] tracking-tight">
-                AgriShield
+                FarmerPulse
               </span>
               <span className="text-xs font-semibold text-[#3c4a42] bg-[#eaedff] py-0.5 px-2.5 rounded-full inline-block mt-0.5 font-mono">
                 Web3 • ZKP • AI Vision
@@ -288,7 +288,7 @@ export default function LandingPage() {
         <div className="flex flex-col md:flex-row justify-between items-center px-4 md:px-12 gap-6 max-w-[1440px] mx-auto">
           <div className="flex flex-col items-center md:items-start gap-2">
             <span className="text-lg font-bold font-heading text-[#131b2e]">
-              AgriShield
+              FarmerPulse
             </span>
           </div>
           <nav className="flex flex-wrap justify-center md:flex-nowrap gap-4 md:gap-6 mt-6 md:mt-0 items-center text-center">
@@ -304,7 +304,7 @@ export default function LandingPage() {
             </span>
             <a
               className="text-xs font-medium text-[#3c4a42] hover:text-[#006c49] transition-all duration-300"
-              href="mailto:support@agrishield.com"
+              href="mailto:support@farmerpulse.com"
             >
               Contact Support
             </a>

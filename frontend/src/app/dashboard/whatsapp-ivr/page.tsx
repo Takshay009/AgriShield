@@ -140,7 +140,7 @@ export default function WhatsAppIVRPage() {
       {
         id: "welcome_1",
         direction: "outbound",
-        body: "नमस्ते! मैं कृषि शील्ड AI (AgriShield AI) हूँ। आप मुझसे खेती से जुड़ा कोई भी सवाल पूछ सकते हैं, मौसम की जानकारी ले सकते हैं, या अपनी फसल की फोटो भेजकर रोग की पहचान (ResNet18 Vision AI) करवा सकते हैं!\n\nभाषा बदलने के लिए नीचे दिए गए भाषा बटन दबाएं।",
+        body: "नमस्ते! मैं कृषि शील्ड AI (FarmerPulse AI) हूँ। आप मुझसे खेती से जुड़ा कोई भी सवाल पूछ सकते हैं, मौसम की जानकारी ले सकते हैं, या अपनी फसल की फोटो भेजकर रोग की पहचान (ResNet18 Vision AI) करवा सकते हैं!\n\nभाषा बदलने के लिए नीचे दिए गए भाषा बटन दबाएं।",
         timestamp: new Date().toISOString(),
       },
     ]);
@@ -304,7 +304,7 @@ export default function WhatsAppIVRPage() {
                   </div>
                   <div>
                     <h3 className="font-bold font-heading text-white text-base flex items-center gap-2">
-                      AgriShield AI Scientist
+                      FarmerPulse AI Scientist
                       <span className="bg-white/20 text-white text-[10px] px-2 py-0.5 rounded font-bold tracking-wider">
                         OFFICIAL BOT
                       </span>
@@ -435,7 +435,7 @@ export default function WhatsAppIVRPage() {
                   <div className="flex justify-start">
                     <div className="bg-white border border-[rgba(192,201,192,0.6)] rounded-2xl px-4 py-3 text-sm text-[#404943] flex items-center gap-2 animate-pulse shadow-sm">
                       <RefreshCw className="w-4 h-4 text-[#0f4d32] animate-spin" />
-                      <span>AgriShield AI is analyzing & reasoning...</span>
+                      <span>FarmerPulse AI is analyzing & reasoning...</span>
                     </div>
                   </div>
                 )}

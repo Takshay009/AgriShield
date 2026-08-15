@@ -32,7 +32,7 @@ def check_all_farms_for_dry_spells():
                     print(f"-> Alert for Farm #{farm.id} ({farm.name}): {alert['title']}")
                     user = db.query(models.User).filter(models.User.id == farm.user_id).first()
                     if user and user.phone:
-                        msg = f"🌾 AgriShield ALERT for {farm.name}: {alert['message']} Action: {alert['recommended_action']}"
+                        msg = f"🌾 FarmerPulse ALERT for {farm.name}: {alert['message']} Action: {alert['recommended_action']}"
                         print(f"[Auto-Push] Broadcasting SMS alert to {user.phone}...")
                         send_sms(user.phone, msg)
     except Exception as e:

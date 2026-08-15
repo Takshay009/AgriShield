@@ -75,8 +75,8 @@ export default function RegisterPage() {
       {/* Top Bar */}
       <header className="w-full px-4 md:px-10 py-8 flex justify-between items-center z-10">
         <Link href="/" className="flex items-center gap-4 cursor-pointer group transition-all duration-300">
-          <Image src="/logo.png" alt="AgriShield Logo" width={80} height={80} className="object-contain drop-shadow-md group-hover:scale-105 transition-transform" />
-          <span className="text-2xl md:text-3xl font-bold font-heading text-[#00351f] group-hover:opacity-80 transition-opacity">AgriShield</span>
+          <Image src="/logo.png" alt="FarmerPulse Logo" width={80} height={80} className="object-contain drop-shadow-md group-hover:scale-105 transition-transform" />
+          <span className="text-2xl md:text-3xl font-bold font-heading text-[#00351f] group-hover:opacity-80 transition-opacity">FarmerPulse</span>
         </Link>
         <Link href="/" className="flex items-center gap-2 text-[#404943] hover:text-[#00351f] transition-colors duration-200 font-medium">
           <ArrowLeft size={20} />
@@ -97,7 +97,7 @@ export default function RegisterPage() {
           >
             <div className="mb-10">
               <h1 className="text-2xl md:text-3xl font-bold font-heading text-[#00351f] mb-3">
-                Join AgriShield
+                Join FarmerPulse
               </h1>
               <p className="text-[#404943] text-base opacity-80 leading-relaxed">
                 Create an account to protect your farms & initiate ZKP coverage.
@@ -194,7 +194,7 @@ export default function RegisterPage() {
       <footer className="w-full py-8 px-4 md:px-10 z-10">
         <div className="max-w-[1280px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4 opacity-60">
           <p className="text-xs font-semibold tracking-wider text-[#404943]">
-            © 2024 AgriShield. Technological Stewardship for the Modern Farmer.
+            © 2024 FarmerPulse. Technological Stewardship for the Modern Farmer.
           </p>
           <nav className="flex gap-6">
             <a className="text-xs font-semibold tracking-wider text-[#404943] hover:text-[#00351f] transition-colors" href="#">Privacy Policy</a>

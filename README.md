@@ -1,6 +1,6 @@
-# 🌱 AgriShield
+# 🌱 FarmerPulse
 
-**AgriShield** is an AI-powered agricultural protection platform designed to empower farmers with early crop disease diagnosis, climate and water risk advisories, smart crop recommendations, multilingual voice/SMS/WhatsApp AI assistance, and privacy-preserving parametric risk verification with Web3 insurance.
+**FarmerPulse** is an AI-powered agricultural protection platform designed to empower farmers with early crop disease diagnosis, climate and water risk advisories, smart crop recommendations, multilingual voice/SMS/WhatsApp AI assistance, and privacy-preserving parametric risk verification with Web3 insurance.
 
 ---
 
@@ -34,7 +34,7 @@
 ## 📁 Repository Structure
 
 ```text
-AgriShield/
+FarmerPulse/
 ├── backend/                  # FastAPI Application
 │   ├── circuits/             # Circom ZK Proof circuits for water risk
 │   ├── data/                 # NFT static metadata & crop dataset references
@@ -69,7 +69,7 @@ AgriShield/
 
 ## 🚀 Getting Started
 
-Follow these steps to set up and run AgriShield locally on your system.
+Follow these steps to set up and run FarmerPulse locally on your system.
 
 ### Prerequisites
 
@@ -83,7 +83,7 @@ Follow these steps to set up and run AgriShield locally on your system.
 
 ```bash
 git clone <repository-url>
-cd AgriShield
+cd FarmerPulse
 ```
 
 ---

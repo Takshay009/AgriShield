@@ -121,7 +121,7 @@ const LOCALIZED_UI_LABELS: Record<string, Record<string, string>> = {
     photoAttached: "📷 फोटो संलग्न",
     audioAttached: "🎙️ वॉयस लॉग संलग्न",
     farmerLabel: "🧑‍🌾 किसान:",
-    aiLabel: "🤖 AgriShield AI:"
+    aiLabel: "🤖 FarmerPulse AI:"
   },
   te: {
     portalTitle: "🔬 పంట సమస్య నివేదిక & ఇండిక్ వాయిస్ లాగ్",
@@ -148,7 +148,7 @@ const LOCALIZED_UI_LABELS: Record<string, Record<string, string>> = {
     photoAttached: "📷 ఫోటో జత చేయబడింది",
     audioAttached: "🎙️ వాయిస్ లాగ్ జత చేయబడింది",
     farmerLabel: "🧑‍🌾 రైతు:",
-    aiLabel: "🤖 AgriShield AI:"
+    aiLabel: "🤖 FarmerPulse AI:"
   },
   ta: {
     portalTitle: "🔬 பயிர் பிரச்சனை அறிக்கை & இந்திய மொழி குரல் பதிவு",
@@ -175,7 +175,7 @@ const LOCALIZED_UI_LABELS: Record<string, Record<string, string>> = {
     photoAttached: "📷 புகைப்படம் இணைக்கப்பட்டது",
     audioAttached: "🎙️ குரல் பதிவு இணைக்கப்பட்டது",
     farmerLabel: "🧑‍🌾 விவசாயி:",
-    aiLabel: "🤖 AgriShield AI:"
+    aiLabel: "🤖 FarmerPulse AI:"
   },
   mr: {
     portalTitle: "🔬 पीक समस्या अहवाल व भारतीय भाषा व्हॉईस लॉग",
@@ -202,7 +202,7 @@ const LOCALIZED_UI_LABELS: Record<string, Record<string, string>> = {
     photoAttached: "📷 फोटो जोडला",
     audioAttached: "🎙️ व्हॉईस लॉग जोडला",
     farmerLabel: "🧑‍🌾 शेतकरी:",
-    aiLabel: "🤖 AgriShield AI:"
+    aiLabel: "🤖 FarmerPulse AI:"
   },
   en: {
     portalTitle: "🔬 Report Crop Issue & Indic Voice Log",
@@ -229,7 +229,7 @@ const LOCALIZED_UI_LABELS: Record<string, Record<string, string>> = {
     photoAttached: "📷 Photo attached",
     audioAttached: "🎙️ Audio attached",
     farmerLabel: "🧑‍🌾 Farmer:",
-    aiLabel: "🤖 AgriShield AI:"
+    aiLabel: "🤖 FarmerPulse AI:"
   }
 };
 

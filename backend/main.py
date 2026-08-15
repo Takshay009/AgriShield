@@ -37,7 +37,7 @@ app.add_exception_handler(429, _rate_limit_exceeded_handler)
 _origins = [
     "http://localhost:3000",
     "http://localhost:3001",
-    "https://agrishield-production-e0dc.up.railway.app",
+    "https://farmerpulse-production-e0dc.up.railway.app",
 ]
 _frontend_url = os.getenv("FRONTEND_URL", "")
 if _frontend_url and _frontend_url not in _origins:
@@ -133,10 +133,10 @@ async def sms_inbound(request: Request):
         with open(i18n_path, "r", encoding="utf-8") as f:
             messages = json.load(f)
     except FileNotFoundError:
-        messages = {"welcome": "Welcome to AgriShield!"}
+        messages = {"welcome": "Welcome to FarmerPulse!"}
     
     # Simple reply with welcome message
-    reply_body = messages.get("welcome", "Welcome to AgriShield!")
+    reply_body = messages.get("welcome", "Welcome to FarmerPulse!")
     reply = send_sms(parsed["from_number"], reply_body)
     
     return {
@@ -606,7 +606,7 @@ def whatsapp_inbound_webhook(
         media_url=MediaUrl0,
         media_content_type=MediaContentType0
     )
-    ai_reply = result.get("ai_reply", "Namaste! AgriShield AI is ready to help.")
+    ai_reply = result.get("ai_reply", "Namaste! FarmerPulse AI is ready to help.")
     escaped_reply = saxutils.escape(ai_reply)
     twiml_xml = f'<?xml version="1.0" encoding="UTF-8"?><Response><Message>{escaped_reply}</Message></Response>'
     return Response(content=twiml_xml, media_type="application/xml")

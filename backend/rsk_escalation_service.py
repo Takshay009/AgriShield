@@ -157,7 +157,7 @@ def respond_to_ticket(ticket_id: str, response: str, expert_name: str = "RSK Exp
             if farm:
                 user = db.query(models.User).filter(models.User.id == farm.user_id).first()
                 if user and user.phone:
-                    msg = f"AgriShield RSK Update: Expert {expert_name} reviewed your crop issue #{ticket_id}. Advice: {response}. Apply recommended treatment immediately."
+                    msg = f"FarmerPulse RSK Update: Expert {expert_name} reviewed your crop issue #{ticket_id}. Advice: {response}. Apply recommended treatment immediately."
                     print(f"[RSK Closed-Loop Push] Sending SMS to {user.phone}: {msg}")
                     send_sms(user.phone, msg)
         except Exception as e:
