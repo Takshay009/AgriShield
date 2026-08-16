@@ -56,30 +56,81 @@ const SAMPLE_DISEASE_PHOTOS = [
     label: "Demo Sample Image 1 (Brown Spot-like)",
     icon: <FileImage className="w-3.5 h-3.5 text-[#0f4d32]" />,
     url: "https://raw.githubusercontent.com/spMohanty/PlantVillage-Dataset/master/raw/color/Tomato___Early_blight/0012b9d2-2130-4a06-a834-b1f3af34f57e___RS_Erly.B%208389.JPG",
-    query: "मेरी फसल के पत्तों पर धब्बे दिखाई दे रहे हैं, कृपया जांच करें",
-    lang: "hi",
+    queries: {
+      en: "My crop leaves have spots, please check",
+      hi: "मेरी फसल के पत्तों पर धब्बे दिखाई दे रहे हैं, कृपया जांच करें",
+      te: "నా పంట ఆకులపై మచ్చలు కనిపిస్తున్నాయి, దయచేసి తనిఖీ చేయండి",
+      mr: "माझ्या पिकाच्या पानांवर डाग दिसत आहेत, कृपया तपासा",
+      ta: "என் பயிர் இலைகளில் புள்ளிகள் உள்ளன, தயவுசெய்து சரிபார்க்கவும்"
+    } as Record<string, string>
   },
   {
     label: "Demo Sample Image 2 (Leaf Spot-like)",
     icon: <FileImage className="w-3.5 h-3.5 text-[#0f4d32]" />,
     url: "https://raw.githubusercontent.com/spMohanty/PlantVillage-Dataset/master/raw/color/Tomato___Septoria_leaf_spot/000146ff-92a4-4db6-90ad-8fce2ae4fded___JR_Sept.L.S%202799.JPG",
-    query: "నా పంట ఆకులపై మచ్చలు కనిపిస్తున్నాయి",
-    lang: "te",
+    queries: {
+      en: "There are spots on my crop",
+      hi: "मेरी फसल पर घाव/धब्बे बने हुए हैं",
+      te: "నా పంట ఆకులపై మచ్చలు ఉన్నాయి",
+      mr: "माझ्या पिकावर डाग पडले आहेत",
+      ta: "என் பயிரில் புண்கள் உள்ளன"
+    } as Record<string, string>
   },
   {
     label: "Demo Sample Image 3 (Healthy-like)",
     icon: <CheckCircle2 className="w-3.5 h-3.5 text-[#0f4d32]" />,
     url: "https://raw.githubusercontent.com/spMohanty/PlantVillage-Dataset/master/raw/color/Tomato___healthy/000146ff-92a4-4db6-90ad-8fce2ae4fded___GH_HLAF_2799.JPG",
-    query: "माझे पीक तपासा",
-    lang: "mr",
+    queries: {
+      en: "Please check my crop health",
+      hi: "कृपया मेरी फसल के स्वास्थ्य की जांच करें",
+      te: "దయచేసి నా పంట ఆరోగ్యాన్ని తనిఖీ చేయండి",
+      mr: "कृपया माझ्या पिकाचे आरोग्य तपासा",
+      ta: "என் பயிர் ஆரோக்கியத்தை சரிபார்க்கவும்"
+    } as Record<string, string>
   },
 ];
 
 const QUICK_QUESTIONS = [
-  { label: "7-Day Weather Alert", query: "अगले 7 दिनों का मौसम पूर्वानुमान क्या है?", lang: "hi" },
-  { label: "Best Kharif Crop", query: "నల్ల రేగడి నేలలో ఏ పంట వేయాలి?", lang: "te" },
-  { label: "ZKP Claim Status", query: "माझा विमा क्लेम स्टेटस काय आहे?", lang: "mr" },
-  { label: "Help Menu", query: "help", lang: "en" },
+  {
+    label: "7-Day Weather Alert",
+    queries: {
+      en: "What is the 7-day weather forecast?",
+      hi: "अगले 7 दिनों का मौसम पूर्वानुमान क्या है?",
+      te: "7 రోజుల వాతావరణ సూచన ఏమిటి?",
+      mr: "पुढील ७ दिवसांचा हवामान अंदाज काय आहे?",
+      ta: "7 நாள் வானிலை முன்னறிவிப்பு என்ன?"
+    } as Record<string, string>
+  },
+  {
+    label: "Best Kharif Crop",
+    queries: {
+      en: "Which is the best crop for black soil?",
+      hi: "काली मिट्टी के लिए सबसे अच्छी फसल कौन सी है?",
+      te: "నల్ల రేగడి నేలలో ఏ పంట వేయాలి?",
+      mr: "काळ्या मातीसाठी सर्वोत्तम पीक कोणते आहे?",
+      ta: "கரிசல் மண்ணுக்கு சிறந்த பயிர் எது?"
+    } as Record<string, string>
+  },
+  {
+    label: "ZKP Claim Status",
+    queries: {
+      en: "What is my ZKP insurance claim status?",
+      hi: "मेरा ZKP बीमा दावा स्थिति क्या है?",
+      te: "నా ZKP భీమా క్లెయిమ్ స్థితి ఏమిటి?",
+      mr: "माझा ZKP विमा दावा स्थिती काय आहे?",
+      ta: "என் ZKP காப்பீட்டு கோரிக்கை நிலை என்ன?"
+    } as Record<string, string>
+  },
+  {
+    label: "Help Menu",
+    queries: {
+      en: "help",
+      hi: "help",
+      te: "help",
+      mr: "help",
+      ta: "help"
+    } as Record<string, string>
+  },
 ];
 
 const LANGUAGES = [
@@ -101,7 +152,7 @@ export default function WhatsAppIVRPage() {
   const [simPhone, setSimPhone] = useState("+919876543210");
   const [isServerOnline, setIsServerOnline] = useState(true);
   const [resolvedBase, setResolvedBase] = useState("");
-  const chatEndRef = useRef<HTMLDivElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
@@ -149,7 +200,12 @@ export default function WhatsAppIVRPage() {
   }, [router]);
 
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (chatContainerRef.current) {
+      const container = chatContainerRef.current;
+      setTimeout(() => {
+        container.scrollTop = container.scrollHeight;
+      }, 50);
+    }
   }, [messages, sending]);
 
   const sendSimulationMessage = async (
@@ -351,7 +407,7 @@ export default function WhatsAppIVRPage() {
               </div>
 
               {/* Chat Message Window */}
-              <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4 bg-[#f9f9fc]/80">
+              <div ref={chatContainerRef} className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4 bg-[#f9f9fc]/80">
                 {messages.map((msg) => (
                   <div
                     key={msg.id}
@@ -439,7 +495,7 @@ export default function WhatsAppIVRPage() {
                     </div>
                   </div>
                 )}
-                <div ref={chatEndRef} />
+                {/* local container scrolling handles this cleanly */}
               </div>
 
               {/* Interactive Controls Footbar */}
@@ -487,7 +543,10 @@ export default function WhatsAppIVRPage() {
                     {SAMPLE_DISEASE_PHOTOS.map((photo, idx) => (
                       <button
                         key={idx}
-                        onClick={() => sendSimulationMessage(photo.query, photo.url, photo.lang)}
+                        onClick={() => {
+                          const queryText = photo.queries[activeLang] || photo.queries["en"];
+                          sendSimulationMessage(queryText, photo.url, activeLang);
+                        }}
                         disabled={sending}
                         className="px-3 py-1.5 bg-[#f3f3f6] hover:bg-[#e8f7f0] text-[#1a1c1e] hover:text-[#0f4d32] border border-[#c0c9c0]/60 hover:border-[#0f4d32] rounded-lg text-xs font-semibold transition-all duration-200 flex items-center gap-1.5 shadow-sm"
                       >
@@ -504,7 +563,10 @@ export default function WhatsAppIVRPage() {
                   {QUICK_QUESTIONS.map((q, idx) => (
                     <button
                       key={idx}
-                      onClick={() => sendSimulationMessage(q.query, "", q.lang)}
+                      onClick={() => {
+                        const queryText = q.queries[activeLang] || q.queries["en"];
+                        sendSimulationMessage(queryText, "", activeLang);
+                      }}
                       disabled={sending}
                       className="px-3 py-1 bg-[#f3f3f6] hover:bg-[#e8f7f0] text-[#404943] hover:text-[#0f4d32] border border-[#c0c9c0]/60 hover:border-[#0f4d32] rounded-lg text-xs font-medium transition-all"
                     >
