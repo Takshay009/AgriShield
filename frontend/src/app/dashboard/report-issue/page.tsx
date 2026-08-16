@@ -257,7 +257,7 @@ export default function ReportIssuePage() {
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [isRecording, setIsRecording] = useState(false);
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
-  const [indicLang, setIndicLang] = useState("hi");
+  const [indicLang, setIndicLang] = useState("en");
   const [simulatingSTT, setSimulatingSTT] = useState(false);
   const [conversationTurns, setConversationTurns] = useState<ConversationTurn[]>([]);
   const [loading, setLoading] = useState(false);
@@ -441,7 +441,6 @@ export default function ReportIssuePage() {
                 <div>
                   <h3 className="font-bold text-orange-950 flex items-center gap-2 text-base">
                     <span>{t.bhashiniTitle}</span>
-                    <span className="bg-orange-200 text-orange-900 text-[10px] font-extrabold px-2 py-0.5 rounded">HACKATHON REQUIREMENT</span>
                   </h3>
                   <p className="text-xs text-gray-600 mt-0.5">
                     {t.bhashiniSub}
