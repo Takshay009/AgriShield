@@ -117,11 +117,12 @@ export default function FarmDetailPage() {
     }
   };
 
-  const handleRefresh = async () => {
+  const handleRefresh = async (simulate = false) => {
     setRefreshing(true);
     const apiBase = await getApiBase();
     try {
-      const res = await authFetch(`${apiBase}/farms/${params.id}/refresh-metrics`, {
+      const url = `${apiBase}/farms/${params.id}/refresh-metrics${simulate ? '?simulate_high_risk=true' : ''}`;
+      const res = await authFetch(url, {
         method: "POST"
       });
       if (res.ok) await fetchMetrics();
@@ -282,8 +283,11 @@ export default function FarmDetailPage() {
             <Button className="rounded-xl bg-red-50 text-red-700 hover:bg-red-100 border border-red-200 font-bold shadow-sm" onClick={handleDeleteFarm}>
               <Trash2 className="w-4 h-4 mr-1.5" /> Delete
             </Button>
-            <Button className="rounded-xl bg-white border border-[#c0c9c0] text-[#0f4d32] hover:border-[#0f4d32] hover:bg-[#f0f9f4] font-bold shadow-sm" onClick={handleRefresh} disabled={refreshing}>
+            <Button className="rounded-xl bg-white border border-[#c0c9c0] text-[#0f4d32] hover:border-[#0f4d32] hover:bg-[#f0f9f4] font-bold shadow-sm" onClick={() => handleRefresh(false)} disabled={refreshing}>
               <RefreshCw className={`w-4 h-4 mr-1.5 ${refreshing ? 'animate-spin' : ''}`} /> {refreshing ? "Refreshing..." : "Refresh"}
+            </Button>
+            <Button className="rounded-xl bg-amber-500 text-white hover:bg-amber-600 font-bold shadow-sm border-0" onClick={() => handleRefresh(true)} disabled={refreshing} title="Simulate climate drought/high-risk metric (78% > 60% threshold)">
+              ⚡ Trigger High Risk (78%)
             </Button>
             <Button className={`rounded-xl font-bold shadow-sm ${isHighRisk ? 'bg-gradient-to-r from-red-500 to-red-600 text-white border-0 hover:from-red-600 hover:to-red-700 shadow-md transform hover:-translate-y-0.5 transition-all' : 'bg-white border border-[#c0c9c0] text-gray-400'}`} onClick={handleSubmitClaim} disabled={!isHighRisk}>
               <ShieldAlert className="w-4 h-4 mr-1.5" /> Submit Claim

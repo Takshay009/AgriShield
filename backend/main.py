@@ -436,26 +436,32 @@ def delete_farm(id: int, db: Session = Depends(get_db), current_user: models.Use
     return {"message": "Farm deleted"}
 
 @app.post("/farms/{id}/refresh-metrics", response_model=schemas.FarmMetricResponse)
-def refresh_metrics(id: int, db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_user)):
+def refresh_metrics(id: int, simulate_high_risk: bool = False, db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_user)):
     db_farm = db.query(models.Farm).filter(models.Farm.id == id, models.Farm.user_id == current_user.id).first()
     if not db_farm:
         raise HTTPException(status_code=404, detail="Farm not found")
     
-    from services.sentinel import fetch_real_ndvi
-    today_str = date.today().isoformat()
-    ndvi = fetch_real_ndvi(str(id), db_farm.boundary_geojson, today_str)
-    
-    # Try to calculate ndvi_change based on previous metric
-    prev_metric = db.query(models.FarmMetric).filter(models.FarmMetric.farm_id == id).order_by(models.FarmMetric.captured_at.desc()).first()
-    ndvi_change = 0.0
-    if prev_metric:
-        ndvi_change = ndvi - float(prev_metric.ndvi_avg)
-    
-    lat = float(db_farm.lat) if db_farm.lat else 20.5937
-    lng = float(db_farm.lng) if db_farm.lng else 78.9629
-    weather = services.fetch_weather(lat, lng)
-    disease_severity = get_latest_farm_severity(id)
-    risk_level, risk_prob = services.compute_risk(ndvi, ndvi_change, weather['rainfall_mm'], weather['temp_c'], weather['humidity'], disease_severity)
+    if simulate_high_risk:
+        ndvi = 0.32
+        weather = {"rainfall_mm": 2.1, "temp_c": 36.5, "humidity": 18.0}
+        risk_level = "high"
+        risk_prob = 0.78
+    else:
+        from services.sentinel import fetch_real_ndvi
+        today_str = date.today().isoformat()
+        ndvi = fetch_real_ndvi(str(id), db_farm.boundary_geojson, today_str)
+        
+        # Try to calculate ndvi_change based on previous metric
+        prev_metric = db.query(models.FarmMetric).filter(models.FarmMetric.farm_id == id).order_by(models.FarmMetric.captured_at.desc()).first()
+        ndvi_change = 0.0
+        if prev_metric:
+            ndvi_change = ndvi - float(prev_metric.ndvi_avg)
+        
+        lat = float(db_farm.lat) if db_farm.lat else 20.5937
+        lng = float(db_farm.lng) if db_farm.lng else 78.9629
+        weather = services.fetch_weather(lat, lng)
+        disease_severity = get_latest_farm_severity(id)
+        risk_level, risk_prob = services.compute_risk(ndvi, ndvi_change, weather['rainfall_mm'], weather['temp_c'], weather['humidity'], disease_severity)
     
     new_metric = models.FarmMetric(
         farm_id=id,
@@ -465,7 +471,7 @@ def refresh_metrics(id: int, db: Session = Depends(get_db), current_user: models
         humidity=str(weather['humidity']),
         risk_level=risk_level,
         risk_probability=str(risk_prob),
-        source="real"
+        source="demo_simulation" if simulate_high_risk else "real"
     )
     db.add(new_metric)
     db.commit()

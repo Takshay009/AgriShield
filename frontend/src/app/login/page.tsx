@@ -83,27 +83,14 @@ function LoginPageContent() {
   };
 
   return (
-    <div className="bg-[#f9f9fc] min-h-screen flex flex-col font-sans text-[#1a1c1e] overflow-x-hidden relative">
-
-      {/* Organic Background Elements */}
-      <div 
-        className="absolute z-0 blur-[60px] opacity-[0.15] pointer-events-none bg-[#006d43] w-[600px] h-[600px] rounded-full -top-48 -left-24 transition-transform duration-75"
-        style={{ transform: `translate(${mousePos.x * 20}px, ${mousePos.y * 20}px)` }}
-      ></div>
-      <div 
-        className="absolute z-0 blur-[60px] opacity-[0.15] pointer-events-none bg-[#00351f] w-[400px] h-[400px] rounded-full bottom-0 -right-12 transition-transform duration-75"
-        style={{ transform: `translate(${mousePos.x * 40}px, ${mousePos.y * 40}px)` }}
-      ></div>
+    <div className="bg-[url('/landingPageBG.png')] bg-cover bg-center min-h-screen flex flex-col font-sans text-[#1a1c1e] overflow-x-hidden relative">
+      <div className="absolute inset-0 bg-black/10 pointer-events-none z-0"></div>
 
       {/* Top Bar */}
       <header className="w-full px-4 md:px-10 py-8 flex justify-between items-center z-10">
         <Link href="/" className="flex items-center gap-4 cursor-pointer group transition-all duration-300">
           <Image src="/logo.png" alt="FarmerPulse Logo" width={80} height={80} className="object-contain drop-shadow-md group-hover:scale-105 transition-transform" />
-          <span className="text-2xl md:text-3xl font-bold font-heading text-[#00351f] group-hover:opacity-80 transition-opacity">FarmerPulse</span>
-        </Link>
-        <Link href="/" className="flex items-center gap-2 text-[#404943] hover:text-[#00351f] transition-colors duration-200 font-medium">
-          <ArrowLeft size={20} />
-          <span className="hidden md:inline text-xs font-semibold tracking-wider uppercase">Back to landing page</span>
+          <span className="text-2xl md:text-3xl font-bold font-heading text-white drop-shadow-md group-hover:opacity-80 transition-opacity">FarmerPulse</span>
         </Link>
       </header>
 
@@ -112,10 +99,9 @@ function LoginPageContent() {
         <div className="w-full max-w-[480px]">
           {/* Login Card */}
           <div 
-            className="bg-white rounded-xl p-8 md:p-12 transition-all duration-500 ease-in-out shadow-[0_40px_80px_-20px_rgba(15,77,50,0.08)] border border-[rgba(192,201,192,0.4)] backdrop-blur-sm"
+            className="bg-white/30 backdrop-blur-xl rounded-3xl p-8 md:p-12 transition-all duration-500 ease-in-out shadow-[0_8px_32px_0_rgba(0,0,0,0.15)] border border-white/40"
             style={{
               transform: isFocused ? 'translateY(-4px)' : 'translateY(0)',
-              borderColor: isFocused ? 'rgba(0,109,67,0.2)' : 'rgba(192,201,192,0.4)'
             }}
           >
             <div className="mb-10">
@@ -134,7 +120,7 @@ function LoginPageContent() {
                 <div className="relative">
                   <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-[#707972]" size={20} />
                   <input 
-                    className="w-full bg-[#f3f3f6] border border-[#c0c9c0] rounded-lg py-3.5 pl-12 pr-4 text-[#1a1c1e] placeholder-[#c0c9c0] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#54de99]" 
+                    className="w-full bg-white/70 border border-white/60 rounded-lg py-3.5 pl-12 pr-4 text-[#1a1c1e] placeholder-[#707972] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#54de99] focus:bg-white" 
                     id="email" 
                     type="email" 
                     value={email}
@@ -155,7 +141,7 @@ function LoginPageContent() {
                 <div className="relative">
                   <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-[#707972]" size={20} />
                   <input 
-                    className="w-full bg-[#f3f3f6] border border-[#c0c9c0] rounded-lg py-3.5 pl-12 pr-4 text-[#1a1c1e] placeholder-[#c0c9c0] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#54de99]" 
+                    className="w-full bg-white/70 border border-white/60 rounded-lg py-3.5 pl-12 pr-4 text-[#1a1c1e] placeholder-[#707972] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#54de99] focus:bg-white" 
                     id="password" 
                     type="password" 
                     value={password}
@@ -203,19 +189,7 @@ function LoginPageContent() {
         </div>
       </main>
 
-      {/* Footer Information */}
-      <footer className="w-full py-8 px-4 md:px-10 z-10">
-        <div className="max-w-[1280px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4 opacity-60">
-          <p className="text-xs font-semibold tracking-wider text-[#404943]">
-            © 2024 FarmerPulse. Technological Stewardship for the Modern Farmer.
-          </p>
-          <nav className="flex gap-6">
-            <a className="text-xs font-semibold tracking-wider text-[#404943] hover:text-[#00351f] transition-colors" href="#">Privacy Policy</a>
-            <a className="text-xs font-semibold tracking-wider text-[#404943] hover:text-[#00351f] transition-colors" href="#">Terms of Service</a>
-            <a className="text-xs font-semibold tracking-wider text-[#404943] hover:text-[#00351f] transition-colors" href="#">Support</a>
-          </nav>
-        </div>
-      </footer>
+
     </div>
   );
 }
