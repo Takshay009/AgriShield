@@ -258,7 +258,7 @@ export default function NewFarmPage() {
                 </div>
 
                 <div className="flex justify-end">
-                  <Button type="submit" disabled={loading} className="w-full md:w-auto bg-green-600 hover:bg-green-700 text-white font-medium">
+                  <Button type="submit" disabled={loading} className="w-full md:w-auto bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-bold px-6 py-2.5 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 border-0">
                     {loading ? (
                       <span className="flex items-center gap-2">
                         <span className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></span>
@@ -346,7 +346,7 @@ export default function NewFarmPage() {
                 </div>
               )}
 
-              <Button type="submit" className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2.5 shadow-md">
+              <Button type="submit" className="w-full bg-gradient-to-r from-green-700 via-emerald-600 to-emerald-500 hover:from-green-800 hover:via-emerald-700 hover:to-emerald-600 text-white font-bold py-3.5 text-base rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 border-0 flex items-center justify-center gap-2">
                 Confirm & Register Farm
               </Button>
             </form>

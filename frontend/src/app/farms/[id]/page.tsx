@@ -3,10 +3,11 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import dynamic from "next/dynamic";
 import MetricsChart from "@/components/MetricsChart";
 import { getApiBase, getErrorMessage , authFetch} from "@/lib/api";
+import { Map, Leaf, Trash2, Edit3, RefreshCw, AlertTriangle, ShieldCheck, ArrowLeft, Medal, Activity, MapPin, Droplets, Thermometer, CloudRain, ShieldAlert } from "lucide-react";
 
 const FarmMap = dynamic(() => import("@/components/FarmMap"), { ssr: false });
 
@@ -176,35 +177,50 @@ export default function FarmDetailPage() {
   const isHighRisk = latestMetric && parseFloat(latestMetric.risk_probability) >= 0.6;
 
   return (
-    <div className="min-h-screen apple-bg p-8">
-      <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-        <div className="flex gap-4 items-center">
+    <div className="bg-gradient-to-br from-[#f0f9f4] to-[#e6f4ea] min-h-screen flex flex-col font-sans text-[#1a1c1e] relative overflow-hidden p-4 md:p-8">
+      {/* Dynamic Background Elements */}
+      <div className="absolute inset-0 z-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20 pointer-events-none"></div>
+      <div className="fixed z-0 blur-[120px] opacity-30 pointer-events-none bg-gradient-to-r from-[#006d43] to-[#0f4d32] w-[400px] h-[400px] rounded-full -top-20 -left-20"></div>
+      <div className="fixed z-0 blur-[120px] opacity-30 pointer-events-none bg-gradient-to-br from-[#54de99] to-[#00351f] w-[300px] h-[300px] rounded-full bottom-10 -right-10"></div>
+
+      <div className="max-w-[1200px] mx-auto w-full z-10 relative space-y-6 animate-in fade-in slide-in-from-bottom-8 duration-700">
+        
+        {/* Top Action Bar */}
+        <div className="flex flex-wrap gap-4 items-center justify-between bg-white/80 backdrop-blur-md border border-white/50 p-4 md:p-5 rounded-3xl shadow-md">
+          <div className="flex items-center gap-3">
+            <Button variant="outline" className="rounded-xl border-[#c0c9c0] text-[#0f4d32] hover:bg-[#f0f9f4] font-bold shadow-sm" onClick={() => router.push("/dashboard")}>
+              <ArrowLeft className="w-4 h-4 mr-1.5" /> Dashboard
+            </Button>
+            <Button variant="outline" className="rounded-xl border-[#c0c9c0] text-[#0f4d32] hover:bg-[#f0f9f4] font-bold shadow-sm" onClick={() => router.push("/claims")}>
+              <ShieldCheck className="w-4 h-4 mr-1.5" /> My Claims
+            </Button>
+          </div>
+          <div>
             {farm.nft_url ? (
-               <span className="text-sm font-semibold text-gray-900 bg-gray-100 px-4 py-2 rounded-full flex items-center gap-2">
-                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path></svg>
-                 Dynamic NFT Minted
+               <span className="text-xs font-extrabold text-[#00351f] bg-[#e8f7f0] px-4 py-2 rounded-xl flex items-center gap-2 border border-[#0f4d32]/20 shadow-sm uppercase tracking-wider">
+                 <Medal className="w-4 h-4 text-[#54de99]" /> Dynamic NFT Minted
                </span>
             ) : metrics.length > 0 && (
-               <Button onClick={handleMintNFT} disabled={mintingNFT} className="rounded-full bg-black text-white hover:bg-gray-800">
-                 {mintingNFT ? "Minting..." : "Mint NFT Badge"}
+               <Button onClick={handleMintNFT} disabled={mintingNFT} className="rounded-xl bg-gradient-to-r from-[#0f4d32] to-[#125c3c] text-white hover:from-[#00351f] hover:to-[#0f4d32] font-bold shadow-md transform transition-all hover:scale-105 border-0">
+                 {mintingNFT ? "Minting..." : <><Medal className="w-4 h-4 mr-2" /> Mint NFT Badge</>}
                </Button>
             )}
-            <Button variant="outline" className="rounded-full" onClick={() => router.push("/dashboard")}>&larr; Dashboard</Button>
-            <Button variant="outline" className="rounded-full" onClick={() => router.push("/claims")}>My Claims</Button>
+          </div>
         </div>
+
         {isEditing && (
-          <div className="fixed inset-0 z-[5000] bg-black/75 backdrop-blur-sm flex items-center justify-center p-4 md:p-8 animate-in fade-in duration-300">
-            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-6xl h-[90vh] flex flex-col overflow-hidden border border-gray-200">
-              <div className="p-6 bg-gray-50 border-b border-gray-200 flex justify-between items-center flex-wrap gap-4">
+          <div className="fixed inset-0 z-[5000] bg-[#00351f]/80 backdrop-blur-sm flex items-center justify-center p-4 md:p-8 animate-in fade-in duration-300">
+            <div className="bg-white rounded-3xl shadow-2xl w-full max-w-6xl h-[90vh] flex flex-col overflow-hidden border border-white/20 ring-1 ring-black/10">
+              <div className="p-5 md:p-6 bg-gradient-to-r from-[#f8fafc] to-white border-b border-[#e5e7eb] flex justify-between items-center flex-wrap gap-4">
                 <div className="flex items-center gap-4 flex-wrap">
-                  <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                    <span>✏️ Fullscreen Map Edit:</span>
+                  <h2 className="text-lg md:text-xl font-extrabold text-[#0f4d32] flex items-center gap-2">
+                    <MapPin className="w-5 h-5" /> Fullscreen Map Edit
                   </h2>
                   <input
                     type="text"
                     value={editName}
                     onChange={(e) => setEditName(e.target.value)}
-                    className="px-3 py-1.5 border rounded-lg bg-white text-gray-900 font-medium text-sm w-60 shadow-sm focus:ring-2 focus:ring-green-500"
+                    className="px-4 py-2 border border-[#cbd5e1] rounded-xl bg-white text-[#1a1c1e] font-bold text-sm w-48 md:w-60 shadow-inner focus:outline-none focus:ring-2 focus:ring-[#54de99]"
                     placeholder="Farm Name"
                   />
                   <div className="flex items-center gap-2">
@@ -213,24 +229,24 @@ export default function FarmDetailPage() {
                       step="0.01"
                       value={editArea}
                       onChange={(e) => setEditArea(e.target.value)}
-                      className="px-3 py-1.5 border rounded-lg bg-white text-gray-900 font-medium text-sm w-28 shadow-sm focus:ring-2 focus:ring-green-500"
+                      className="px-4 py-2 border border-[#cbd5e1] rounded-xl bg-white text-[#1a1c1e] font-bold text-sm w-24 md:w-28 shadow-inner focus:outline-none focus:ring-2 focus:ring-[#54de99]"
                       placeholder="Area"
                     />
-                    <span className="text-sm font-medium text-gray-600">hectares</span>
+                    <span className="text-sm font-bold text-[#64748b]">ha</span>
                   </div>
                 </div>
                 <div className="flex gap-3">
-                  <Button className="rounded-full bg-green-600 hover:bg-green-700 text-white shadow-md px-6" onClick={handleSaveEdit} disabled={savingEdit}>
+                  <Button className="rounded-xl bg-gradient-to-r from-[#0f4d32] to-[#125c3c] hover:from-[#00351f] hover:to-[#0f4d32] text-white shadow-md font-bold px-6 border-0" onClick={handleSaveEdit} disabled={savingEdit}>
                     {savingEdit ? "Saving..." : "Save Changes"}
                   </Button>
-                  <Button className="rounded-full" variant="outline" onClick={() => setIsEditing(false)}>
+                  <Button className="rounded-xl font-bold bg-[#f1f5f9] text-[#475569] hover:bg-[#e2e8f0] border-0" onClick={() => setIsEditing(false)}>
                     Cancel
                   </Button>
                 </div>
               </div>
 
-              <div className="flex-1 p-6 overflow-hidden flex flex-col bg-gray-50/50">
-                <div className="flex-1 w-full h-full">
+              <div className="flex-1 p-4 md:p-6 overflow-hidden flex flex-col bg-[#f0f2f5] inner-shadow">
+                <div className="flex-1 w-full h-full rounded-2xl overflow-hidden border border-[#cbd5e1] shadow-sm">
                   <FarmMap
                     initialPolygon={editPoints}
                     onPolygonChange={setEditPoints}
@@ -243,101 +259,135 @@ export default function FarmDetailPage() {
           </div>
         )}
 
-        <div className="flex justify-between items-center py-4 flex-wrap gap-4">
-          <div>
-            <h1 className="apple-title">{farm.name}</h1>
+        {/* Title and Farm Actions */}
+        <div className="bg-white/80 backdrop-blur-md border border-white/50 p-6 md:p-8 rounded-3xl shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-white/40 to-transparent pointer-events-none"></div>
+          <div className="relative z-10 flex items-center gap-4">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#0f4d32] to-[#00351f] text-white flex items-center justify-center shadow-lg shrink-0 transform rotate-[-3deg] hover:rotate-0 transition-transform">
+              <MapPin className="w-8 h-8" />
+            </div>
+            <div>
+              <h1 className="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#00351f] to-[#0f4d32]">
+                {farm.name}
+              </h1>
+              <p className="text-[#404943] font-medium mt-1 flex items-center gap-2">
+                <Leaf className="w-4 h-4 text-[#54de99]" /> Precision Farm Profile
+              </p>
+            </div>
           </div>
-          <div className="flex gap-3 flex-wrap">
-            <Button className="rounded-full bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200" onClick={() => setIsEditing(true)}>
-              ✏️ Edit Farm
+          <div className="relative z-10 flex flex-wrap gap-3">
+            <Button className="rounded-xl bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 font-bold shadow-sm" onClick={() => setIsEditing(true)}>
+              <Edit3 className="w-4 h-4 mr-1.5" /> Edit Farm
             </Button>
-            <Button className="rounded-full bg-red-50 text-red-700 hover:bg-red-100 border border-red-200" onClick={handleDeleteFarm}>
-              🗑️ Delete Farm
+            <Button className="rounded-xl bg-red-50 text-red-700 hover:bg-red-100 border border-red-200 font-bold shadow-sm" onClick={handleDeleteFarm}>
+              <Trash2 className="w-4 h-4 mr-1.5" /> Delete
             </Button>
-            <Button className="rounded-full bg-gray-200 text-gray-900 hover:bg-gray-300" onClick={handleRefresh} disabled={refreshing}>
-              {refreshing ? "Refreshing..." : "Refresh Metrics"}
+            <Button className="rounded-xl bg-white border border-[#c0c9c0] text-[#0f4d32] hover:border-[#0f4d32] hover:bg-[#f0f9f4] font-bold shadow-sm" onClick={handleRefresh} disabled={refreshing}>
+              <RefreshCw className={`w-4 h-4 mr-1.5 ${refreshing ? 'animate-spin' : ''}`} /> {refreshing ? "Refreshing..." : "Refresh"}
             </Button>
-            <Button className="rounded-full" onClick={handleSubmitClaim} disabled={!isHighRisk} variant={isHighRisk ? "default" : "outline"}>
-              Submit Claim
+            <Button className={`rounded-xl font-bold shadow-sm ${isHighRisk ? 'bg-gradient-to-r from-red-500 to-red-600 text-white border-0 hover:from-red-600 hover:to-red-700 shadow-md transform hover:-translate-y-0.5 transition-all' : 'bg-white border border-[#c0c9c0] text-gray-400'}`} onClick={handleSubmitClaim} disabled={!isHighRisk}>
+              <ShieldAlert className="w-4 h-4 mr-1.5" /> Submit Claim
             </Button>
           </div>
         </div>
         
-        <div className="grid gap-8 md:grid-cols-3">
-          <Card className="md:col-span-1 apple-card">
-            <CardHeader className="p-6">
-              <CardTitle>Farm Details</CardTitle>
+        {/* Cards Grid */}
+        <div className="grid gap-6 md:grid-cols-3">
+          <Card className="md:col-span-1 bg-white/90 backdrop-blur-md border border-white/60 shadow-xl rounded-3xl overflow-hidden flex flex-col ring-1 ring-black/5">
+            <CardHeader className="bg-gradient-to-r from-[#f0f9f4] to-white border-b border-[#e5e7eb] p-5">
+              <CardTitle className="text-lg font-extrabold text-[#1a1c1e] flex items-center gap-2">
+                <Map className="w-5 h-5 text-[#0f4d32]" /> Farm Details
+              </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4 text-sm">
-              <div>
-                <p className="text-gray-500">Area</p>
-                <p className="font-medium">{farm.area_hectares} hectares</p>
+            <CardContent className="p-5 space-y-5">
+              <div className="bg-[#f8fafc] rounded-xl p-4 border border-[#e2e8f0] flex items-center justify-between shadow-sm">
+                <p className="text-xs font-semibold text-[#64748b] uppercase tracking-wider">Total Area</p>
+                <p className="font-extrabold text-lg text-[#0f4d32]">{farm.area_hectares} <span className="text-sm font-medium text-[#404943]">ha</span></p>
               </div>
               <div
-                className="h-[250px] w-full rounded border overflow-hidden relative group cursor-pointer"
+                className="h-[280px] w-full rounded-2xl border-2 border-[#e5e7eb] overflow-hidden relative group cursor-pointer shadow-inner"
                 onClick={() => setIsEditing(true)}
-                title="Click to open Fullscreen Edit Map"
+                title="Click to edit Map"
               >
                 <FarmMap initialPolygon={farm.points} readOnly heightClassName="h-full" />
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition duration-300 z-[1000] flex items-center justify-center">
-                  <span className="opacity-0 group-hover:opacity-100 bg-white text-gray-900 px-4 py-2 rounded-full font-semibold text-xs shadow-lg transition duration-300 flex items-center gap-1">
-                    ✏️ Click for Fullscreen Map Edit
+                <div className="absolute inset-0 bg-[#0f4d32]/0 group-hover:bg-[#0f4d32]/20 transition duration-300 z-[1000] flex items-center justify-center backdrop-blur-[1px] opacity-0 group-hover:opacity-100">
+                  <span className="bg-white text-[#00351f] px-5 py-2.5 rounded-xl font-extrabold text-sm shadow-xl transform scale-95 group-hover:scale-100 transition duration-300 flex items-center gap-2 border border-white">
+                    <Edit3 className="w-4 h-4 text-[#54de99]" /> Edit Boundary
                   </span>
                 </div>
               </div>
             </CardContent>
           </Card>
           
-          <Card className="md:col-span-2 apple-card">
-            <CardHeader className="p-6">
-              <CardTitle>Current Weather & Risk</CardTitle>
+          <Card className="md:col-span-2 bg-white/90 backdrop-blur-md border border-white/60 shadow-xl rounded-3xl overflow-hidden ring-1 ring-black/5">
+            <CardHeader className="bg-gradient-to-r from-[#f0f9f4] to-white border-b border-[#e5e7eb] p-5">
+              <CardTitle className="text-lg font-extrabold text-[#1a1c1e] flex items-center gap-2">
+                <Activity className="w-5 h-5 text-[#0f4d32]" /> Current Weather & Risk
+              </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-6">
               {latestMetric ? (
-                <div className="flex flex-wrap gap-8 mb-6">
-                  <div>
-                    <p className="text-gray-500 text-sm">Risk Level</p>
-                    <span className={`inline-block px-3 py-1 mt-1 rounded-full text-xs font-semibold uppercase ${
-                      latestMetric.risk_level === 'high' ? 'bg-red-100 text-red-700' :
-                      latestMetric.risk_level === 'medium' ? 'bg-yellow-100 text-yellow-700' :
-                      'bg-green-100 text-green-700'
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
+                  <div className="bg-white rounded-2xl p-4 border border-[#e2e8f0] text-center shadow-sm relative overflow-hidden">
+                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#cbd5e1] to-transparent"></div>
+                    <p className="text-[10px] font-bold text-[#64748b] uppercase tracking-widest mb-2 flex items-center justify-center gap-1"><AlertTriangle className="w-3 h-3"/> Risk Level</p>
+                    <span className={`inline-block px-3 py-1 rounded-full text-xs font-extrabold uppercase shadow-sm ${
+                      latestMetric.risk_level === 'high' ? 'bg-red-100 text-red-700 border border-red-200' :
+                      latestMetric.risk_level === 'medium' ? 'bg-orange-100 text-orange-700 border border-orange-200' :
+                      'bg-green-100 text-green-700 border border-green-200'
                     }`}>
                       {latestMetric.risk_level} ({(parseFloat(latestMetric.risk_probability)*100).toFixed(0)}%)
                     </span>
                   </div>
-                  <div>
-                    <p className="text-gray-500 text-sm">NDVI</p>
-                    <p className="font-bold text-lg">{latestMetric.ndvi_avg}</p>
+                  <div className="bg-white rounded-2xl p-4 border border-[#e2e8f0] text-center shadow-sm relative overflow-hidden">
+                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#54de99] to-transparent"></div>
+                    <p className="text-[10px] font-bold text-[#64748b] uppercase tracking-widest mb-1 flex items-center justify-center gap-1"><Leaf className="w-3 h-3 text-[#54de99]"/> NDVI</p>
+                    <p className="font-black text-xl text-[#0f4d32]">{latestMetric.ndvi_avg}</p>
                   </div>
-                  <div>
-                    <p className="text-gray-500 text-sm">Temp</p>
-                    <p className="font-bold text-lg">{latestMetric.temp_c}°C</p>
+                  <div className="bg-white rounded-2xl p-4 border border-[#e2e8f0] text-center shadow-sm relative overflow-hidden">
+                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-orange-400 to-transparent"></div>
+                    <p className="text-[10px] font-bold text-[#64748b] uppercase tracking-widest mb-1 flex items-center justify-center gap-1"><Thermometer className="w-3 h-3 text-orange-400"/> Temp</p>
+                    <p className="font-black text-xl text-[#1a1c1e]">{latestMetric.temp_c}°</p>
                   </div>
-                  <div>
-                    <p className="text-gray-500 text-sm">Humidity</p>
-                    <p className="font-bold text-lg">{latestMetric.humidity}%</p>
+                  <div className="bg-white rounded-2xl p-4 border border-[#e2e8f0] text-center shadow-sm relative overflow-hidden">
+                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-400 to-transparent"></div>
+                    <p className="text-[10px] font-bold text-[#64748b] uppercase tracking-widest mb-1 flex items-center justify-center gap-1"><Droplets className="w-3 h-3 text-blue-400"/> Humidity</p>
+                    <p className="font-black text-xl text-[#1a1c1e]">{latestMetric.humidity}%</p>
                   </div>
-                  <div>
-                    <p className="text-gray-500 text-sm">Rainfall</p>
-                    <p className="font-bold text-lg">{latestMetric.rainfall_mm}mm</p>
+                  <div className="bg-white rounded-2xl p-4 border border-[#e2e8f0] text-center shadow-sm relative overflow-hidden">
+                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyan-500 to-transparent"></div>
+                    <p className="text-[10px] font-bold text-[#64748b] uppercase tracking-widest mb-1 flex items-center justify-center gap-1"><CloudRain className="w-3 h-3 text-cyan-500"/> Rainfall</p>
+                    <p className="font-black text-xl text-[#1a1c1e]">{latestMetric.rainfall_mm}<span className="text-[10px] text-[#64748b]">mm</span></p>
                   </div>
                 </div>
               ) : (
-                <p className="text-gray-500 text-sm mb-6">No metrics available. Click refresh to fetch data.</p>
+                <div className="bg-[#f8fafc] border border-[#e2e8f0] border-dashed rounded-2xl p-8 text-center mb-6 shadow-inner">
+                   <p className="text-[#64748b] font-medium text-sm flex items-center justify-center gap-2">
+                     <AlertTriangle className="w-4 h-4 text-orange-400" />
+                     No metrics available. Click refresh to fetch data.
+                   </p>
+                </div>
               )}
               
-              <div className="h-[300px]">
+              <div className="h-[320px] bg-white rounded-2xl p-4 border border-[#e5e7eb] shadow-inner">
                 <MetricsChart metrics={metrics} />
               </div>
             </CardContent>
           </Card>
+
           {farm.nft_url && (
-            <Card className="md:col-span-3 apple-card mt-2">
-              <CardHeader className="bg-gray-50 border-b border-gray-100 p-6">
-                <CardTitle>Dynamic NFT Badge</CardTitle>
+            <Card className="md:col-span-3 bg-gradient-to-r from-[#00351f] to-[#0f4d32] border border-white/20 shadow-2xl rounded-3xl overflow-hidden relative text-white">
+              <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+              <CardHeader className="bg-black/20 border-b border-white/10 p-5 backdrop-blur-sm relative z-10">
+                <CardTitle className="text-lg font-extrabold flex items-center gap-2">
+                  <Medal className="w-5 h-5 text-[#54de99]" /> Dynamic NFT Badge
+                </CardTitle>
+                <CardDescription className="text-[#a7f3d0] font-medium text-xs">A verifiable record of your farm's health on the blockchain.</CardDescription>
               </CardHeader>
-              <CardContent className="p-8 flex justify-center">
-                <img src={`${resolvedBase}${farm.nft_url}`} alt="Dynamic Farm NFT" className="w-64 h-64 rounded-xl shadow-lg border-4 border-white transform transition duration-500 hover:scale-105" />
+              <CardContent className="p-8 flex justify-center relative z-10">
+                <div className="p-2 bg-white/10 rounded-3xl backdrop-blur-md border border-white/20 shadow-2xl">
+                  <img src={`${resolvedBase}${farm.nft_url}`} alt="Dynamic Farm NFT" className="w-72 h-72 rounded-2xl shadow-inner border-4 border-white/50 transform transition duration-500 hover:scale-105" />
+                </div>
               </CardContent>
             </Card>
           )}

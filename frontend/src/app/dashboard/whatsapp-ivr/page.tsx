@@ -288,447 +288,408 @@ export default function WhatsAppIVRPage() {
   };
 
   return (
-    <div className="bg-[#f9f9fc] min-h-screen flex flex-col font-sans text-[#1a1c1e] overflow-x-hidden relative p-6 md:p-8">
-      {/* Subtle Background Elements */}
+    <div className="bg-gradient-to-br from-[#f0f9f4] to-[#e6f4ea] min-h-screen flex flex-col font-sans text-[#1a1c1e] relative overflow-hidden p-4 md:p-8">
+      {/* Dynamic Background Elements */}
+      <div className="absolute inset-0 z-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20 pointer-events-none"></div>
       <div 
-        className="fixed top-0 left-0 w-full h-full -z-10 opacity-[0.05] bg-contain bg-no-repeat bg-center pointer-events-none" 
-        style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida/AP1WRLtMKBO_gY6vi40zhvrCUDE7LpxNpJI4jAp-S17okoKUgetlWZgVYuF0P9uqdbE5_oGuAMr2TN2MjOnUMUrCoEXk9x5c_RRnNCO06T13jaK9-mb4RTQ2SZ4Lsxvqq7vhy-ofIwWf8yAvslrTZc2o8sdUxn5kRlMV_9XeomjO2Rs2m9M8l9ZrCv-r2uTFr4myZEXpDi636KKTLuUFCWf2fA3zH3JkZ3afAUty9Vo0ng8Im_H5L-pxu9fLmxI')" }}
-      ></div>
-
-      <div 
-        className="fixed z-0 blur-[100px] opacity-[0.08] pointer-events-none bg-[#006d43] w-[600px] h-[600px] rounded-full -top-48 -left-24 transition-transform duration-[10s]"
-        style={{ transform: `translate(${mousePos.x * 10}px, ${mousePos.y * 10}px)` }}
-      ></div>
-      <div 
-        className="fixed z-0 blur-[100px] opacity-[0.08] pointer-events-none bg-[#00351f] w-[400px] h-[400px] rounded-full bottom-0 -right-12 transition-transform duration-[10s]"
+        className="fixed z-0 blur-[120px] opacity-30 pointer-events-none bg-gradient-to-r from-[#006d43] to-[#0f4d32] w-[500px] h-[500px] rounded-full -top-32 -left-32 transition-transform duration-700 ease-out"
         style={{ transform: `translate(${mousePos.x * 20}px, ${mousePos.y * 20}px)` }}
       ></div>
+      <div 
+        className="fixed z-0 blur-[120px] opacity-30 pointer-events-none bg-gradient-to-br from-[#54de99] to-[#00351f] w-[400px] h-[400px] rounded-full bottom-10 -right-20 transition-transform duration-700 ease-out"
+        style={{ transform: `translate(${mousePos.x * -30}px, ${mousePos.y * -30}px)` }}
+      ></div>
 
-      <div className="max-w-7xl mx-auto w-full space-y-6 z-10 relative animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="max-w-[1400px] mx-auto w-full z-10 relative space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700">
         
-        {/* Top Header & Navigation */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white/90 backdrop-blur-sm border border-[rgba(192,201,192,0.4)] p-6 rounded-2xl shadow-sm">
-          <div>
+        {/* Header Section */}
+        <div className="bg-white/80 backdrop-blur-md border border-white/50 p-6 md:p-8 rounded-3xl shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-white/40 to-transparent pointer-events-none"></div>
+          <div className="relative z-10 flex flex-col items-start gap-4">
             <Link
               href="/dashboard"
-              className="text-xs font-bold uppercase tracking-wider text-[#0f4d32] hover:text-[#00351f] transition-colors inline-flex items-center gap-1.5 mb-2"
+              className="text-xs font-extrabold uppercase tracking-widest text-[#0f4d32] hover:text-[#00351f] bg-[#e8f7f0] px-4 py-1.5 rounded-full shadow-sm hover:shadow-md transition-all flex items-center gap-2"
             >
-              <ArrowLeft className="w-4 h-4" /> Back to Dashboard
+              <ArrowLeft className="w-4 h-4" /> Dashboard
             </Link>
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-2xl bg-[#e8f7f0] text-[#0f4d32] flex items-center justify-center shadow-sm shrink-0 border border-[#c0c9c0]/40">
-                <MessageSquare className="w-6 h-6" />
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#0f4d32] to-[#00351f] text-white flex items-center justify-center shadow-lg shrink-0 transform rotate-[-3deg] hover:rotate-0 transition-transform">
+                <MessageSquare className="w-8 h-8" />
               </div>
               <div>
-                <h1 className="text-2xl md:text-3xl font-bold font-heading text-[#00351f]">
-                  WhatsApp AI & Indic Voice IVR Command Center
+                <h1 className="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#00351f] to-[#0f4d32]">
+                  FarmerPulse AI & IVR Hub
                 </h1>
-                <p className="text-[#404943] text-sm mt-1">
-                  24/7 Conversational Agricultural Scientist powered by <span className="text-[#0f4d32] font-bold">Twilio WhatsApp API</span>, <span className="text-[#0f4d32] font-bold">Groq Llama-3.3-70B</span>, & <span className="text-[#0f4d32] font-bold">ResNet18 Vision</span>
+                <p className="text-[#404943] font-medium mt-1 md:text-lg flex flex-wrap gap-2 items-center">
+                  24/7 Smart Advisory via <span className="inline-flex items-center gap-1 bg-[#e8f7f0] text-[#0f4d32] px-2 py-0.5 rounded-md font-bold text-sm"><Smartphone className="w-3.5 h-3.5"/> WhatsApp</span> & <span className="inline-flex items-center gap-1 bg-[#e8f7f0] text-[#0f4d32] px-2 py-0.5 rounded-md font-bold text-sm"><PhoneCall className="w-3.5 h-3.5"/> Voice IVR</span>
                 </p>
               </div>
             </div>
           </div>
 
-          {/* Status Badges */}
-          <div className="flex flex-wrap items-center gap-2">
-            <div className="px-3 py-1.5 rounded-lg bg-[#e8f7f0] border border-[#0f4d32]/30 text-[#0f4d32] text-xs font-bold flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#0f4d32] animate-pulse"></span>
-              Twilio Webhook Online
-            </div>
-            <div className="px-3 py-1.5 rounded-lg bg-[#f3f3f6] border border-[#c0c9c0]/60 text-[#00351f] text-xs font-bold flex items-center gap-1.5">
-              <Zap className="w-3.5 h-3.5 text-[#0f4d32]" /> Groq LLM Active
-            </div>
-            <div className="px-3 py-1.5 rounded-lg bg-[#f3f3f6] border border-[#c0c9c0]/60 text-[#00351f] text-xs font-bold flex items-center gap-1.5">
-              <Activity className="w-3.5 h-3.5 text-[#0f4d32]" /> ResNet18 Vision Ready
+          <div className="relative z-10 flex flex-col gap-3">
+            <div className="flex flex-wrap items-center gap-2">
+              <div className="px-4 py-2 rounded-xl bg-white border border-[#c0c9c0] shadow-sm text-[#0f4d32] text-sm font-bold flex items-center gap-2 hover:border-[#0f4d32] transition-colors">
+                <span className="relative flex h-3 w-3"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#54de99] opacity-75"></span><span className="relative inline-flex rounded-full h-3 w-3 bg-[#0f4d32]"></span></span>
+                Twilio Online
+              </div>
+              <div className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#f0f9f4] to-white border border-[#c0c9c0] shadow-sm text-[#00351f] text-sm font-bold flex items-center gap-2">
+                <Zap className="w-4 h-4 text-[#0f4d32]" /> Groq LLM
+              </div>
+              <div className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#f0f9f4] to-white border border-[#c0c9c0] shadow-sm text-[#00351f] text-sm font-bold flex items-center gap-2">
+                <Camera className="w-4 h-4 text-[#0f4d32]" /> Vision AI
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Main Grid: Left Chat Sandbox (3 cols), Right Config & Redirects (2 cols) */}
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 items-start">
           
-          {/* LEFT: Live Interactive WhatsApp Simulator & Sandbox */}
-          <div className="lg:col-span-3 space-y-4">
-            <Card className="bg-white/90 backdrop-blur-sm border border-[rgba(192,201,192,0.4)] shadow-sm rounded-2xl overflow-hidden flex flex-col h-[750px]">
+          {/* Left Column: Interactive Chat Sandbox */}
+          <div className="flex flex-col gap-6">
+            
+            <Card className="flex-1 bg-white/90 backdrop-blur-md border border-white/60 shadow-xl rounded-3xl overflow-hidden flex flex-col h-[650px] ring-1 ring-black/5">
               
-              {/* WhatsApp Header */}
-              <div className="bg-[#0f4d32] p-4 px-6 flex items-center justify-between shadow-sm">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-white/20 border border-white/30 flex items-center justify-center text-white shadow-inner shrink-0">
-                    <Bot className="w-5 h-5" />
+              {/* WhatsApp Header Modernized */}
+              <div className="bg-gradient-to-r from-[#00351f] via-[#0f4d32] to-[#125c3c] p-5 flex items-center justify-between shadow-md relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-64 h-full bg-white opacity-5 transform skew-x-[-20deg]"></div>
+                <div className="flex items-center gap-4 relative z-10">
+                  <div className="w-12 h-12 rounded-full bg-white p-1 shadow-lg">
+                    <div className="w-full h-full rounded-full bg-gradient-to-br from-[#0f4d32] to-[#54de99] flex items-center justify-center text-white">
+                      <Bot className="w-6 h-6" />
+                    </div>
                   </div>
                   <div>
-                    <h3 className="font-bold font-heading text-white text-base flex items-center gap-2">
-                      FarmerPulse AI Scientist
-                      <span className="bg-white/20 text-white text-[10px] px-2 py-0.5 rounded font-bold tracking-wider">
-                        OFFICIAL BOT
+                    <h3 className="font-extrabold text-white text-lg flex items-center gap-2">
+                      FarmerPulse Scientist
+                      <span className="bg-[#54de99]/20 text-[#54de99] text-[10px] px-2 py-0.5 rounded-full font-extrabold uppercase tracking-wider border border-[#54de99]/30">
+                        BOT
                       </span>
                     </h3>
-                    <p className="text-emerald-100 text-xs flex items-center gap-1.5 font-medium mt-0.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-300"></span>
-                      +1 (659) 266-7445 · Twilio Verified Business
+                    <p className="text-[#a7f3d0] text-sm flex items-center gap-2 font-medium mt-0.5">
+                      <span className="w-2 h-2 rounded-full bg-[#54de99] shadow-[0_0_8px_#54de99]"></span>
+                      Twilio Verified
                     </p>
                   </div>
                 </div>
 
-                {/* Farmer Phone Selector */}
-                <div className="flex items-center gap-2 bg-[#00351f]/60 px-3 py-1.5 rounded-lg border border-white/20 text-xs">
-                  <span className="text-emerald-200 font-bold">Farmer:</span>
+                <div className="relative z-10 flex items-center gap-3 bg-black/20 backdrop-blur-sm px-4 py-2 rounded-xl border border-white/10">
+                  <span className="text-[#a7f3d0] text-sm font-bold flex items-center gap-1"><Smartphone className="w-4 h-4"/> Farmer:</span>
                   <input
                     type="text"
                     value={simPhone}
                     onChange={(e) => setSimPhone(e.target.value)}
-                    className="bg-transparent text-white font-mono w-28 focus:outline-none focus:ring-1 focus:ring-emerald-400 rounded px-1"
+                    className="bg-transparent text-white font-mono text-sm w-32 focus:outline-none border-b border-white/20 focus:border-[#54de99] transition-colors"
                   />
                 </div>
               </div>
 
-              {/* Explicit Language Selector Bar */}
-              <div className="bg-[#f3f3f6] border-b border-[#c0c9c0]/50 px-4 py-2.5 flex items-center justify-between overflow-x-auto gap-2">
-                <span className="text-xs font-bold uppercase tracking-wider text-[#00351f] whitespace-nowrap flex items-center gap-1.5">
-                  <Globe className="w-3.5 h-3.5 text-[#0f4d32]" /> Language (भाषा):
+              {/* Language Selector */}
+              <div className="bg-white px-5 py-3 flex items-center gap-4 overflow-x-auto shadow-sm z-10 border-b border-[#e5e7eb]">
+                <span className="text-sm font-extrabold uppercase tracking-wider text-[#0f4d32] whitespace-nowrap flex items-center gap-2">
+                  <Globe className="w-4 h-4" /> Language:
                 </span>
-                <div className="flex items-center gap-1.5">
+                <div className="flex items-center gap-2">
                   {LANGUAGES.map((lang) => (
                     <button
                       key={lang.code}
                       onClick={() => handleLanguageSwitch(lang)}
-                      className={`px-3 py-1 rounded-lg text-xs font-bold transition-all duration-200 flex items-center gap-1.5 border ${
+                      className={`px-4 py-1.5 rounded-full text-sm font-bold transition-all duration-300 flex items-center gap-2 ${
                         activeLang === lang.code
-                          ? "bg-[#0f4d32] text-white border-[#0f4d32] shadow-sm scale-105"
-                          : "bg-white hover:bg-[#e8f7f0] text-[#404943] hover:text-[#0f4d32] border-[#c0c9c0]/60"
+                          ? "bg-gradient-to-r from-[#0f4d32] to-[#125c3c] text-white shadow-md scale-105"
+                          : "bg-[#f3f4f6] hover:bg-[#e8f7f0] text-[#4b5563] hover:text-[#0f4d32]"
                       }`}
                     >
-                      <span>{lang.name}</span>
+                      {lang.name}
                     </button>
                   ))}
                 </div>
               </div>
 
-              {/* Chat Message Window */}
-              <div ref={chatContainerRef} className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4 bg-[#f9f9fc]/80">
+              {/* Chat Window */}
+              <div ref={chatContainerRef} className="flex-1 overflow-y-auto p-5 md:p-6 space-y-6 bg-[#f0f2f5] inner-shadow">
                 {messages.map((msg) => (
                   <div
                     key={msg.id}
                     className={`flex flex-col ${
                       msg.direction === "inbound" ? "items-end" : "items-start"
-                    }`}
+                    } animate-in fade-in slide-in-from-bottom-2`}
                   >
                     <div
-                      className={`max-w-[85%] md:max-w-[75%] rounded-2xl p-4 text-sm shadow-sm transition-all duration-300 ${
+                      className={`max-w-[85%] md:max-w-[80%] rounded-2xl p-4 text-[15px] shadow-sm transition-all duration-300 relative ${
                         msg.direction === "inbound"
-                          ? "bg-[#0f4d32] text-white rounded-br-xs"
-                          : "bg-white text-[#1a1c1e] rounded-bl-xs border border-[rgba(192,201,192,0.6)]"
+                          ? "bg-gradient-to-br from-[#0f4d32] to-[#125c3c] text-white rounded-br-sm shadow-md"
+                          : "bg-white text-[#1a1c1e] rounded-bl-sm border border-[#e5e7eb]"
                       }`}
                     >
-                      {/* If message has uploaded photo */}
+                      {/* Media Upload */}
                       {msg.media_url && (
-                        <div className="mb-3 rounded-xl overflow-hidden border border-[#c0c9c0]/40 bg-[#f3f3f6]">
-                          <img
-                            src={msg.media_url}
-                            alt="Crop Upload"
-                            className="w-full h-48 object-cover hover:scale-105 transition-transform duration-300"
-                          />
-                          <div className="bg-[#1a1c1e] px-3 py-1.5 text-xs text-white font-mono flex items-center justify-between">
-                            <span className="flex items-center gap-1.5"><Camera className="w-3.5 h-3.5 text-[#54de99]" /> Photo Uploaded</span>
-                            <span className="text-[#54de99] font-bold">ResNet18 Vision Analysis</span>
-                          </div>
-                        </div>
+                         <div className="mb-4 rounded-xl overflow-hidden border border-white/20 bg-black/5">
+                         <img
+                           src={msg.media_url}
+                           alt="Crop"
+                           className="w-full h-48 md:h-56 object-cover hover:scale-110 transition-transform duration-500"
+                         />
+                         <div className="bg-[#1a1c1e] px-4 py-2 text-xs text-white font-mono flex items-center justify-between">
+                           <span className="flex items-center gap-2"><Camera className="w-4 h-4 text-[#54de99]" /> Photo Uploaded</span>
+                           <span className="text-[#54de99] font-bold tracking-wider">Vision Analysis</span>
+                         </div>
+                       </div>
                       )}
 
-                      {/* Message Body */}
-                      <p className="whitespace-pre-wrap leading-relaxed font-medium">
+                      <p className="whitespace-pre-wrap leading-relaxed">
                         {msg.body}
                       </p>
 
-                      {/* If message is an AI Diagnosis Card */}
+                      {/* Diagnosis Card */}
                       {msg.action_type === "photo_diagnosis" && msg.diagnosis && (
-                        <div className="mt-3 pt-3 border-t border-[#c0c9c0]/50 bg-[#f3f3f6] rounded-xl p-3.5 space-y-2 border-l-4 border-l-[#0f4d32]">
-                          <div className="flex items-center justify-between">
-                            <span className="text-xs font-bold text-[#00351f] uppercase tracking-wider flex items-center gap-1">
-                              <Activity className="w-3.5 h-3.5 text-[#0f4d32]" /> Vision Diagnosis Metadata
+                        <div className="mt-4 bg-[#f8fafc] rounded-xl p-4 border border-[#e2e8f0] border-l-4 border-l-[#0f4d32] shadow-sm">
+                          <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+                            <span className="text-sm font-extrabold text-[#00351f] flex items-center gap-2">
+                              <Activity className="w-4 h-4 text-[#0f4d32]" /> Analysis Result
                             </span>
-                            <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
+                            <span className={`px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider shadow-sm ${
                               msg.diagnosis.severity === "high"
-                                ? "bg-[#fdf2f2] text-[#c93b2b] border border-[#c93b2b]/30"
+                                ? "bg-red-100 text-red-700 border border-red-200"
                                 : msg.diagnosis.severity === "medium"
-                                ? "bg-[#fdf7f0] text-[#d9822b] border border-[#d9822b]/30"
-                                : "bg-[#e8f7f0] text-[#0f4d32] border border-[#0f4d32]/30"
+                                ? "bg-orange-100 text-orange-700 border border-orange-200"
+                                : "bg-green-100 text-green-700 border border-green-200"
                             }`}>
                               Severity: {msg.diagnosis.severity}
                             </span>
                           </div>
-                          <div className="text-xs text-[#404943] space-y-1">
-                            <p><span className="text-[#707972] font-semibold">Disease:</span> <span className="font-bold text-[#00351f]">{msg.diagnosis.disease_name}</span></p>
-                            <p><span className="text-[#707972] font-semibold">Model Confidence:</span> <span className="font-mono text-[#0f4d32] font-bold">{((msg.diagnosis.confidence || 0.9) * 100).toFixed(1)}%</span></p>
+                          <div className="space-y-2 text-sm">
+                            <div className="flex justify-between items-center bg-white p-2 rounded-lg border border-[#f1f5f9]">
+                              <span className="text-[#64748b] font-semibold">Detected Issue:</span> 
+                              <span className="font-bold text-[#0f4d32]">{msg.diagnosis.disease_name}</span>
+                            </div>
+                            <div className="flex justify-between items-center bg-white p-2 rounded-lg border border-[#f1f5f9]">
+                              <span className="text-[#64748b] font-semibold">Confidence:</span> 
+                              <span className="font-mono text-[#00351f] font-bold bg-[#e8f7f0] px-2 py-0.5 rounded">
+                                {((msg.diagnosis.confidence || 0.9) * 100).toFixed(1)}%
+                              </span>
+                            </div>
                           </div>
                         </div>
                       )}
 
-                      {/* Timestamp & Status */}
-                      <div
-                        className={`text-[10px] mt-2 flex items-center justify-end gap-1 ${
-                          msg.direction === "inbound" ? "text-emerald-200" : "text-[#707972]"
-                        }`}
-                      >
-                        <span>
-                          {new Date(msg.timestamp).toLocaleTimeString([], {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
-                        </span>
+                      <div className={`text-[11px] mt-2 flex items-center justify-end gap-1.5 ${
+                        msg.direction === "inbound" ? "text-emerald-100" : "text-[#64748b]"
+                      }`}>
+                        <span>{new Date(msg.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</span>
                         {msg.direction === "inbound" ? (
-                          <span className="font-bold flex items-center gap-0.5"><Check className="w-3 h-3 text-emerald-300" /><Check className="w-3 h-3 -ml-2 text-emerald-300" /></span>
+                          <span className="flex items-center -space-x-1"><Check className="w-3.5 h-3.5 text-emerald-300" /><Check className="w-3.5 h-3.5 text-emerald-300" /></span>
                         ) : (
-                          <span className="font-bold text-[#0f4d32] flex items-center gap-1"><Bot className="w-3 h-3" /> AI</span>
+                          <Bot className="w-3.5 h-3.5" />
                         )}
                       </div>
                     </div>
                   </div>
                 ))}
                 {sending && (
-                  <div className="flex justify-start">
-                    <div className="bg-white border border-[rgba(192,201,192,0.6)] rounded-2xl px-4 py-3 text-sm text-[#404943] flex items-center gap-2 animate-pulse shadow-sm">
-                      <RefreshCw className="w-4 h-4 text-[#0f4d32] animate-spin" />
-                      <span>FarmerPulse AI is analyzing & reasoning...</span>
+                  <div className="flex justify-start animate-in fade-in">
+                    <div className="bg-white border border-[#e5e7eb] rounded-2xl px-5 py-3 text-sm text-[#4b5563] flex items-center gap-3 shadow-md font-medium">
+                      <RefreshCw className="w-5 h-5 text-[#0f4d32] animate-spin" />
+                      <span>AI is analyzing your request...</span>
                     </div>
                   </div>
                 )}
-                {/* local container scrolling handles this cleanly */}
               </div>
 
-              {/* Interactive Controls Footbar */}
-              <div className="bg-white border-t border-[rgba(192,201,192,0.4)] p-4 space-y-3">
+              {/* Chat Input Area */}
+              <div className="bg-white border-t border-[#e5e7eb] p-5 flex flex-col gap-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] relative z-20">
                 
-                {/* 1. Sample Photo Upload Testing Buttons */}
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-bold text-[#00351f] uppercase tracking-wider flex items-center gap-1.5">
-                      <Camera className="w-4 h-4 text-[#0f4d32]" /> Test ResNet18 Photo Diagnosis (Click to simulate photo upload):
+                {/* Tools & Quick Actions */}
+                <div className="flex flex-col gap-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-[#64748b] uppercase tracking-widest flex items-center gap-2">
+                      <Sparkles className="w-4 h-4 text-[#0f4d32]" /> Actions & Samples
                     </span>
                     <button
                       onClick={() => setShowMediaInput(!showMediaInput)}
-                      className="text-xs text-[#0f4d32] hover:underline font-bold flex items-center gap-1"
+                      className="text-xs font-bold text-[#0f4d32] hover:text-[#00351f] bg-[#f0f9f4] px-3 py-1.5 rounded-lg border border-[#0f4d32]/20 transition-colors flex items-center gap-1.5"
                     >
-                      {showMediaInput ? (
-                        <><X className="w-3.5 h-3.5" /> Close Custom URL</>
-                      ) : (
-                        <><Plus className="w-3.5 h-3.5" /> Custom Image URL</>
-                      )}
+                      {showMediaInput ? <><X className="w-3.5 h-3.5"/> Close Custom Image</> : <><Plus className="w-3.5 h-3.5"/> Custom Image URL</>}
                     </button>
                   </div>
 
                   {showMediaInput && (
-                    <div className="flex gap-2 mb-2 bg-[#f3f3f6] p-2.5 rounded-xl border border-[#c0c9c0]/60">
+                    <div className="flex gap-2 bg-[#f8fafc] p-3 rounded-xl border border-[#e2e8f0]">
                       <input
                         type="text"
                         value={customMediaUrl}
                         onChange={(e) => setCustomMediaUrl(e.target.value)}
-                        placeholder="Paste any raw Image URL (JPG/PNG) to diagnose..."
-                        className="flex-1 bg-white border border-[#c0c9c0] rounded-lg px-3 py-1.5 text-xs text-[#1a1c1e] focus:outline-none focus:ring-2 focus:ring-[#54de99]"
+                        placeholder="Paste image URL..."
+                        className="flex-1 bg-white border border-[#cbd5e1] rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#54de99] outline-none"
                       />
                       <Button
-                        size="sm"
-                        onClick={() => sendSimulationMessage("Please diagnose this custom leaf photo", customMediaUrl, activeLang)}
+                        onClick={() => sendSimulationMessage("Diagnose this image", customMediaUrl, activeLang)}
                         disabled={!customMediaUrl.trim() || sending}
-                        className="bg-[#0f4d32] hover:bg-[#00351f] text-white text-xs font-bold px-4 rounded-lg shadow-sm"
+                        className="bg-[#0f4d32] hover:bg-[#00351f] text-white text-sm font-bold rounded-lg shadow-md"
                       >
-                        Upload & Diagnose
+                        Upload
                       </Button>
                     </div>
                   )}
 
-                  <div className="flex flex-wrap gap-1.5">
+                  <div className="flex flex-wrap gap-2">
                     {SAMPLE_DISEASE_PHOTOS.map((photo, idx) => (
                       <button
                         key={idx}
-                        onClick={() => {
-                          const queryText = photo.queries[activeLang] || photo.queries["en"];
-                          sendSimulationMessage(queryText, photo.url, activeLang);
-                        }}
+                        onClick={() => sendSimulationMessage(photo.queries[activeLang] || photo.queries["en"], photo.url, activeLang)}
                         disabled={sending}
-                        className="px-3 py-1.5 bg-[#f3f3f6] hover:bg-[#e8f7f0] text-[#1a1c1e] hover:text-[#0f4d32] border border-[#c0c9c0]/60 hover:border-[#0f4d32] rounded-lg text-xs font-semibold transition-all duration-200 flex items-center gap-1.5 shadow-sm"
+                        className="px-3 py-2 bg-white border border-[#e2e8f0] hover:border-[#0f4d32] hover:bg-[#f0f9f4] text-[#334155] rounded-xl text-xs font-semibold transition-all shadow-sm flex items-center gap-2"
                       >
                         {photo.icon}
-                        <span>{photo.label}</span>
+                        <span className="truncate max-w-[150px]">{photo.label}</span>
+                      </button>
+                    ))}
+                    {QUICK_QUESTIONS.map((q, idx) => (
+                      <button
+                        key={`q-${idx}`}
+                        onClick={() => sendSimulationMessage(q.queries[activeLang] || q.queries["en"], "", activeLang)}
+                        disabled={sending}
+                        className="px-3 py-2 bg-[#f1f5f9] hover:bg-[#e2e8f0] text-[#334155] hover:text-[#0f4d32] rounded-xl text-xs font-medium transition-all"
+                      >
+                        {q.label}
                       </button>
                     ))}
                   </div>
                 </div>
 
-                {/* 2. Quick Question Buttons */}
-                <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-[rgba(192,201,192,0.3)]">
-                  <span className="text-xs font-bold text-[#707972] uppercase mr-1">Quick Q&A:</span>
-                  {QUICK_QUESTIONS.map((q, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => {
-                        const queryText = q.queries[activeLang] || q.queries["en"];
-                        sendSimulationMessage(queryText, "", activeLang);
-                      }}
-                      disabled={sending}
-                      className="px-3 py-1 bg-[#f3f3f6] hover:bg-[#e8f7f0] text-[#404943] hover:text-[#0f4d32] border border-[#c0c9c0]/60 hover:border-[#0f4d32] rounded-lg text-xs font-medium transition-all"
-                    >
-                      {q.label}
-                    </button>
-                  ))}
-                </div>
-
-                {/* 3. Text Input Box */}
-                <div className="flex gap-2 pt-1">
+                {/* Text Input */}
+                <div className="flex gap-3">
                   <input
                     type="text"
                     value={inputText}
                     onChange={(e) => setInputText(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && sendSimulationMessage(inputText, "", activeLang)}
-                    placeholder={`Ask any farming question in ${LANGUAGES.find(l => l.code === activeLang)?.name || "Hindi/English"}...`}
-                    className="flex-1 bg-[#f3f3f6] border border-[#c0c9c0] rounded-lg px-4 py-3 text-sm text-[#1a1c1e] focus:outline-none focus:ring-2 focus:ring-[#54de99] font-medium placeholder:text-[#707972]"
+                    placeholder="Type your question..."
+                    className="flex-1 bg-[#f8fafc] border border-[#cbd5e1] rounded-2xl px-5 py-3.5 text-[15px] focus:outline-none focus:ring-2 focus:ring-[#0f4d32]/50 shadow-inner font-medium placeholder:text-[#94a3b8]"
                   />
                   <Button
                     onClick={() => sendSimulationMessage(inputText, "", activeLang)}
                     disabled={sending || (!inputText.trim() && !customMediaUrl.trim())}
-                    className="bg-[#0f4d32] hover:bg-[#00351f] text-white font-bold px-6 rounded-lg shadow-sm transition-all duration-200 flex items-center gap-1.5"
+                    className="bg-gradient-to-r from-[#0f4d32] to-[#125c3c] hover:from-[#00351f] hover:to-[#0f4d32] text-white font-bold rounded-2xl px-8 h-auto shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 flex items-center gap-2"
                   >
+                    <span>Send</span>
                     <Send className="w-4 h-4" />
-                    <span>{sending ? "..." : "Send"}</span>
                   </Button>
                 </div>
-
               </div>
+            </Card>
+
+            {/* Developer Setup */}
+            <Card className="bg-white shadow-sm rounded-3xl border border-[#e5e7eb]">
+              <CardHeader className="pb-2">
+                <div className="flex items-center gap-2.5">
+                  <Settings className="w-4 h-4 text-[#64748b]" />
+                  <CardTitle className="text-xs font-bold text-[#334155] uppercase tracking-wider">Twilio Webhook Setup</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="bg-[#f8fafc] p-3 rounded-xl border border-[#e2e8f0] font-mono text-[10px] md:text-[11px] text-[#4b5563] space-y-1.5">
+                  <p className="font-bold text-[#64748b]">Endpoint URL:</p>
+                  <div className="bg-white p-2 rounded-lg border border-[#cbd5e1] text-[#0f4d32] font-bold break-all">
+                    {resolvedBase}/webhooks/whatsapp-inbound
+                  </div>
+                  <p className="pt-1"><span className="font-bold text-[#64748b]">ngrok cmd:</span> <code className="bg-[#e2e8f0] px-1 rounded text-[#1a1c1e]">ngrok http 8000</code></p>
+                </div>
+              </CardContent>
             </Card>
           </div>
 
-          {/* RIGHT: Twilio Setup Guide, Live Q&A Redirects, & Indic IVR (2 cols) */}
-          <div className="lg:col-span-2 space-y-6">
+          {/* Right Column: Connection & Guides */}
+          <div className="flex flex-col gap-6">
             
-            {/* Live Farmer WhatsApp Redirect & Q&A Card */}
-            <Card className="bg-white/90 backdrop-blur-sm border border-[rgba(192,201,192,0.4)] shadow-sm rounded-2xl overflow-hidden text-[#1a1c1e]">
-              <CardHeader className="pb-3 border-b border-[rgba(192,201,192,0.3)] bg-[#f3f3f6]/50">
-                <div className="flex items-center justify-between">
-                  <div className="w-10 h-10 rounded-xl bg-[#e8f7f0] text-[#0f4d32] flex items-center justify-center shrink-0 border border-[#c0c9c0]/30">
-                    <Smartphone className="w-5 h-5" />
+            {/* Real WhatsApp Connect */}
+            <Card className="bg-white border border-[#e5e7eb] shadow-md rounded-3xl overflow-hidden transition-all relative">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-[#f0f9f4] rounded-full blur-2xl"></div>
+              <CardHeader className="pb-3 relative z-10 border-b border-[#f1f5f9]">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-2xl bg-[#e8f7f0] text-[#25D366] flex items-center justify-center border border-[#25D366]/20 shrink-0">
+                    <Smartphone className="w-6 h-6" />
                   </div>
-                  <span className="bg-[#e8f7f0] text-[#0f4d32] font-bold text-[10px] px-2.5 py-1 rounded-full uppercase tracking-wider border border-[#0f4d32]/30">
-                    Live Redirect
-                  </span>
+                  <div>
+                    <span className="text-[#0f4d32] font-extrabold text-[10px] uppercase tracking-wider mb-0.5 inline-block">
+                      Mobile Experience
+                    </span>
+                    <CardTitle className="text-lg font-extrabold text-[#1a1c1e]">Try on Real WhatsApp</CardTitle>
+                  </div>
                 </div>
-                <CardTitle className="text-xl font-bold font-heading text-[#00351f] mt-2">
-                  Chat Live on Your Phone (Q&A)
-                </CardTitle>
-                <CardDescription className="text-[#404943] text-xs">
-                  Farmers don't use websites! Click below to open real WhatsApp and start conversational Q&A instantly.
-                </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4 pt-4">
-                <div className="bg-[#f3f3f6] border border-[#c0c9c0]/50 rounded-xl p-4 text-center space-y-3">
-                  <div className="font-mono text-xs text-[#0f4d32] font-bold bg-[#e8f7f0] py-2 rounded-lg border border-[#0f4d32]/30">
-                    wa.me/+14155238886
-                  </div>
-                  <p className="text-xs text-[#404943] leading-relaxed">
-                    Test photo disease diagnosis, weather alerts, or seed recommendations directly from your mobile device via Twilio's Universal WhatsApp Sandbox!
+              <CardContent className="space-y-4 pt-4 relative z-10">
+                <div className="bg-[#f8fafc] rounded-2xl p-4 border border-[#e2e8f0] text-center">
+                  <p className="text-xs font-semibold text-[#64748b] mb-1.5 uppercase tracking-wider">Twilio Sandbox Number</p>
+                  <p className="font-mono text-lg font-black text-[#0f4d32] tracking-widest bg-white py-2 rounded-lg border border-[#cbd5e1]">
+                    +1 415 523 8886
                   </p>
-                  <div className="space-y-2 pt-1">
+                  
+                  <div className="mt-5 space-y-3">
                     <a
                       href="https://wa.me/14155238886?text=join%20watch-ate"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-full py-3 bg-[#0f4d32] hover:bg-[#00351f] text-white font-bold text-xs rounded-lg shadow-sm flex items-center justify-center gap-2 transition-all block"
+                      className="w-full py-3.5 bg-[#25D366] hover:bg-[#20bd5a] text-white font-extrabold text-sm rounded-xl shadow-md hover:shadow-lg flex items-center justify-center gap-2 transition-all block text-center"
                     >
-                      <span>Step 1: Connect Phone (Send Join Code)</span>
-                      <ExternalLink className="w-3.5 h-3.5" />
+                      <span className="flex items-center justify-center gap-2">1. Connect via Join Code <ExternalLink className="w-4 h-4" /></span>
                     </a>
                     <a
                       href="https://wa.me/14155238886?text=Namaste!%20I%20want%20to%20ask%20a%20question%20about%20my%20crops"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-full py-3 border border-[#0f4d32] text-[#0f4d32] hover:bg-[#0f4d32] hover:text-white font-bold text-xs rounded-lg shadow-sm flex items-center justify-center gap-2 transition-all block"
+                      className="w-full py-3.5 bg-white border-2 border-[#0f4d32] text-[#0f4d32] hover:bg-[#0f4d32] hover:text-white font-extrabold text-sm rounded-xl shadow-sm hover:shadow-md flex items-center justify-center gap-2 transition-all block text-center"
                     >
-                      <span>Step 2: Start WhatsApp AI Chat & Q&A</span>
-                      <ExternalLink className="w-3.5 h-3.5" />
+                      <span className="flex items-center justify-center gap-2">2. Start Asking Questions <MessageSquare className="w-4 h-4" /></span>
                     </a>
                   </div>
                 </div>
-                <div className="bg-[#fdf7f0] border border-[#d9822b]/30 rounded-xl p-3.5 text-xs text-[#8c5014] space-y-1.5">
-                  <p className="font-bold text-[#d9822b] flex items-center gap-1.5"><AlertTriangle className="w-4 h-4 shrink-0" /> Why +1 (415) 523-8886?</p>
-                  <p>Your Twilio number (<code className="text-[#1a1c1e] font-mono font-bold">+16592667445</code>) is for SMS & Voice IVR. For WhatsApp, Twilio uses their Universal Sandbox (<code className="text-[#1a1c1e] font-mono font-bold">+14155238886</code>).</p>
-                  <p className="text-[#00351f] font-bold pt-1">How to connect your phone for the first time:</p>
-                  <p>1. Open <span className="font-bold text-[#00351f]">Twilio Console → Messaging → Try it out → Send a WhatsApp message</span>.</p>
-                  <p>2. Send your unique join code (e.g., <code className="text-[#1a1c1e] font-mono font-bold">join science-zebra</code>) to <code className="text-[#1a1c1e] font-mono font-bold">+1 415 523 8886</code> once!</p>
-                </div>
-                <div className="text-xs text-[#404943] space-y-1.5 bg-[#f3f3f6] p-3.5 rounded-xl border border-[#c0c9c0]/40">
-                  <p className="font-bold text-[#00351f] flex items-center gap-1.5"><Zap className="w-3.5 h-3.5 text-[#0f4d32]" /> Quick Q&A Commands on Phone:</p>
-                  <p>• Send <span className="font-mono text-[#00351f] font-bold">1</span> for Hindi, <span className="font-mono text-[#00351f] font-bold">2</span> for Telugu</p>
-                  <p>• Send any <span className="text-[#00351f] font-bold">leaf photo</span> for instant AI diagnosis</p>
-                  <p>• Send <span className="text-[#00351f] font-bold">"weather"</span> or <span className="text-[#00351f] font-bold">"crop"</span> for advisory</p>
+                
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="bg-[#f0f9f4] p-4 rounded-2xl border border-[#0f4d32]/10 flex flex-col gap-2">
+                    <Camera className="w-5 h-5 text-[#0f4d32]"/>
+                    <span className="text-xs font-bold text-[#00351f]">Send Leaf Photos</span>
+                    <span className="text-[10px] text-[#4b5563]">Instant AI disease diagnosis & severity check.</span>
+                  </div>
+                  <div className="bg-[#f0f9f4] p-4 rounded-2xl border border-[#0f4d32]/10 flex flex-col gap-2">
+                    <Globe className="w-5 h-5 text-[#0f4d32]"/>
+                    <span className="text-xs font-bold text-[#00351f]">Multi-lingual</span>
+                    <span className="text-[10px] text-[#4b5563]">Reply in Hindi, Telugu, Marathi, Tamil, or English.</span>
+                  </div>
                 </div>
               </CardContent>
             </Card>
 
-            {/* Twilio Webhook Configuration Guide */}
-            <Card className="bg-white/90 backdrop-blur-sm border border-[rgba(192,201,192,0.4)] shadow-sm rounded-2xl">
-              <CardHeader className="pb-3 border-b border-[rgba(192,201,192,0.3)] bg-[#f3f3f6]/50">
+            {/* Voice IVR Hotline */}
+            <Card className="bg-gradient-to-br from-white to-[#f0f9f4] border border-[#e5e7eb] shadow-md rounded-3xl overflow-hidden relative">
+              <CardHeader className="pb-3 border-b border-[#f1f5f9]">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-[#e8f7f0] text-[#0f4d32] flex items-center justify-center shrink-0 border border-[#c0c9c0]/30">
-                    <Settings className="w-5 h-5" />
+                  <div className="w-12 h-12 rounded-2xl bg-[#e8f7f0] flex items-center justify-center border border-[#c0c9c0]/50">
+                    <PhoneCall className="w-5 h-5 text-[#0f4d32]" />
                   </div>
                   <div>
-                    <CardTitle className="text-base font-bold font-heading text-[#00351f]">Twilio Webhook Setup Guide</CardTitle>
-                    <CardDescription className="text-[#707972] text-xs">How to connect live Twilio API to localhost</CardDescription>
+                    <CardTitle className="text-lg font-extrabold text-[#1a1c1e]">Indic Voice IVR</CardTitle>
+                    <CardDescription className="text-[#64748b] text-xs font-medium">Bhashini AI Text-to-Speech</CardDescription>
                   </div>
                 </div>
               </CardHeader>
-              <CardContent className="space-y-3 text-xs text-[#404943] pt-4">
-                <div className="space-y-1.5 bg-[#f3f3f6] p-3.5 rounded-xl border border-[#c0c9c0]/50 font-mono">
-                  <p className="text-[#707972] text-[11px] uppercase font-bold tracking-wider">1. Webhook Endpoint URL:</p>
-                  <div className="bg-white p-2 rounded-lg border border-[#c0c9c0] text-[#0f4d32] break-all select-all font-bold">
-                    {resolvedBase}/webhooks/whatsapp-inbound
-                  </div>
-                </div>
-                <div className="space-y-1.5 leading-relaxed pt-1">
-                  <p className="font-bold text-[#00351f]">How to expose localhost to Twilio:</p>
-                  <p>1. Run ngrok terminal: <code className="text-[#0f4d32] bg-[#e8f7f0] px-1.5 py-0.5 rounded border border-[#0f4d32]/20 font-bold">ngrok http 8000</code></p>
-                  <p>2. Copy your public ngrok HTTPS URL.</p>
-                  <p>3. In Twilio Console → WhatsApp Sandbox Settings → Paste under <span className="text-[#00351f] font-bold">"WHEN A MESSAGE COMES IN"</span>.</p>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Indic Voice IVR Hotline Card */}
-            <Card className="bg-white/90 backdrop-blur-sm border border-[rgba(192,201,192,0.4)] shadow-sm rounded-2xl">
-              <CardHeader className="pb-3 border-b border-[rgba(192,201,192,0.3)] bg-[#f3f3f6]/50">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-[#e8f7f0] text-[#0f4d32] flex items-center justify-center shrink-0 border border-[#c0c9c0]/30">
-                      <PhoneCall className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <CardTitle className="text-base font-bold font-heading text-[#00351f]">Indic Voice IVR Hotline</CardTitle>
-                      <CardDescription className="text-[#707972] text-xs">Toll-Free · Bhashini AI TTS</CardDescription>
-                    </div>
-                  </div>
-                  <span className="bg-[#e8f7f0] text-[#0f4d32] border border-[#0f4d32]/30 text-[10px] px-2.5 py-1 rounded-full font-bold uppercase tracking-wider">
-                    24/7 Voice
-                  </span>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-3 pt-4">
-                <div className="bg-[#e8f7f0]/60 border border-[#0f4d32]/30 rounded-xl p-4 text-center">
-                  <p className="text-xl font-bold font-heading tracking-wider text-[#0f4d32]">
+              <CardContent className="space-y-4 pt-4">
+                <div className="bg-white border border-[#cbd5e1] rounded-2xl p-4 text-center shadow-sm">
+                  <p className="text-xs text-[#64748b] font-bold uppercase tracking-widest mb-1">Toll-Free Hotline</p>
+                  <p className="text-xl md:text-2xl font-black tracking-wider text-[#0f4d32]">
                     1800-AGRI-SHIELD
                   </p>
-                  <p className="text-xs text-[#404943] font-medium mt-1">
-                    +91-1800-274-7443 · Toll-Free Indic Voice Menu
-                  </p>
                 </div>
-                <div className="space-y-2 text-xs text-[#404943] pt-1">
-                  <p className="font-bold text-[#00351f]">IVR Keypress Flow:</p>
-                  <div className="space-y-1.5 pl-1">
-                    <p className="flex items-center gap-2"><span className="w-5 h-5 rounded-md bg-[#f3f3f6] text-[#00351f] font-bold flex items-center justify-center border border-[#c0c9c0] text-[11px]">1</span> <span className="font-semibold text-[#00351f]">Press 1</span> → Crop Recommendations</p>
-                    <p className="flex items-center gap-2"><span className="w-5 h-5 rounded-md bg-[#f3f3f6] text-[#00351f] font-bold flex items-center justify-center border border-[#c0c9c0] text-[11px]">2</span> <span className="font-semibold text-[#00351f]">Press 2</span> → Weather & Dry-Spell Alerts</p>
-                    <p className="flex items-center gap-2"><span className="w-5 h-5 rounded-md bg-[#f3f3f6] text-[#00351f] font-bold flex items-center justify-center border border-[#c0c9c0] text-[11px]">3</span> <span className="font-semibold text-[#00351f]">Press 3</span> → Report Disease & Claim</p>
-                    <p className="flex items-center gap-2"><span className="w-5 h-5 rounded-md bg-[#f3f3f6] text-[#00351f] font-bold flex items-center justify-center border border-[#c0c9c0] text-[11px]">0</span> <span className="font-semibold text-[#00351f]">Press 0</span> → Connect to RSK Officer</p>
-                  </div>
+                
+                <div className="space-y-3 bg-white p-4 rounded-2xl border border-[#cbd5e1] text-sm shadow-sm">
+                  <p className="font-bold text-[#1a1c1e] border-b border-[#f1f5f9] pb-2">Dial-pad Flow:</p>
+                  <ul className="space-y-2">
+                    <li className="flex items-center gap-3"><span className="w-5 h-5 rounded bg-[#f1f5f9] border border-[#e2e8f0] font-bold flex items-center justify-center text-xs text-[#334155]">1</span> <span className="font-medium text-[#475569] text-xs">Crop Recommendations</span></li>
+                    <li className="flex items-center gap-3"><span className="w-5 h-5 rounded bg-[#f1f5f9] border border-[#e2e8f0] font-bold flex items-center justify-center text-xs text-[#334155]">2</span> <span className="font-medium text-[#475569] text-xs">Weather & Dry-Spell Alerts</span></li>
+                    <li className="flex items-center gap-3"><span className="w-5 h-5 rounded bg-[#f1f5f9] border border-[#e2e8f0] font-bold flex items-center justify-center text-xs text-[#334155]">3</span> <span className="font-medium text-[#475569] text-xs">Report Disease & Claim</span></li>
+                    <li className="flex items-center gap-3"><span className="w-5 h-5 rounded bg-[#e8f7f0] border border-[#54de99]/50 text-[#0f4d32] font-bold flex items-center justify-center text-xs">0</span> <span className="font-bold text-[#0f4d32] text-xs">Talk to Expert</span></li>
+                  </ul>
                 </div>
               </CardContent>
             </Card>
@@ -736,7 +697,6 @@ export default function WhatsAppIVRPage() {
           </div>
 
         </div>
-
       </div>
     </div>
   );

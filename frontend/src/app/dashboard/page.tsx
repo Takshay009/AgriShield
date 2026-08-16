@@ -107,7 +107,7 @@ export default function DashboardPage() {
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <Link href="/dashboard" className="flex items-center gap-3 cursor-pointer group transition-all duration-300">
             <Image src="/logo.png" alt="FarmerPulse Logo" width={40} height={40} className="object-contain drop-shadow-sm group-hover:scale-105 transition-transform" />
-            <span className="text-2xl font-bold font-heading text-[#00351f]">FarmerPulse Workspace</span>
+            <span className="text-2xl font-bold font-heading text-[#00351f]">FarmerPulse</span>
           </Link>
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-3 hidden sm:flex">

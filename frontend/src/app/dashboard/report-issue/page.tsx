@@ -379,18 +379,18 @@ export default function ReportIssuePage() {
   };
 
   return (
-    <div className="min-h-screen apple-bg p-6 md:p-8">
-      <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="min-h-screen apple-bg p-8 md:p-12">
+      <div className="max-w-6xl mx-auto space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
             <Link
               href="/dashboard"
-              className="text-sm text-gray-500 hover:text-gray-700 transition-colors mb-2 inline-block"
+              className="text-lg text-gray-500 hover:text-gray-700 transition-colors mb-3 inline-block font-medium"
             >
               ← Back to Dashboard
             </Link>
-            <h1 className="apple-title">{t.portalTitle}</h1>
-            <p className="text-gray-500 mt-1">
+            <h1 className="apple-title text-5xl font-black tracking-tight text-emerald-950">{t.portalTitle}</h1>
+            <p className="text-gray-600 text-xl mt-3 font-medium">
               {t.portalSub}
             </p>
           </div>
@@ -398,7 +398,7 @@ export default function ReportIssuePage() {
             href="https://wa.me/14155238886?text=Namaste!%20I%20want%20to%20send%20a%20photo%20of%20my%20crop%20for%20AI%20diagnosis"
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white shadow-md rounded-full px-5 py-2.5 text-sm font-semibold transition-all duration-300 flex items-center gap-2 self-start md:self-auto hover:scale-105"
+            className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white shadow-lg rounded-full px-8 py-4 text-lg font-bold transition-all duration-300 flex items-center gap-2 self-start md:self-auto hover:scale-105"
           >
             <span>💬 Send Photo on WhatsApp</span>
             <span>↗</span>
@@ -406,26 +406,26 @@ export default function ReportIssuePage() {
         </div>
 
         {/* Input Form */}
-        <Card className="apple-card border-0 shadow-xl bg-white/95">
-          <CardHeader>
-            <CardTitle className="text-xl font-bold">Issue Diagnosis Portal</CardTitle>
-            <CardDescription>
+        <Card className="apple-card border-0 shadow-2xl bg-white/95">
+          <CardHeader className="p-10">
+            <CardTitle className="text-4xl font-black text-emerald-950">Issue Diagnosis Portal</CardTitle>
+            <CardDescription className="text-lg mt-3 text-emerald-800 font-medium">
               Connected directly to Rashtriya Seva Kisan (RSK) Kendras for expert closed-loop follow-up
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6">
+          <CardContent className="space-y-10 px-10 pb-10">
             {/* Farm selector */}
             {farms.length > 0 && (
-              <div className="space-y-2">
-                <Label className="text-sm font-semibold text-gray-700">{t.selectFarm}</Label>
-                <div className="flex flex-wrap gap-2">
+              <div className="space-y-4">
+                <Label className="text-xl font-bold text-emerald-900">{t.selectFarm}</Label>
+                <div className="flex flex-wrap gap-4">
                   {farms.map((farm) => (
                     <button
                       key={farm.id}
                       onClick={() => setSelectedFarmId(farm.id)}
-                      className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${selectedFarmId === farm.id
-                          ? "bg-gray-900 text-white shadow-md scale-105"
-                          : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                      className={`px-6 py-3.5 rounded-full text-lg font-bold transition-all duration-200 ${selectedFarmId === farm.id
+                          ? "bg-emerald-900 text-white shadow-lg scale-105"
+                          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                         }`}
                     >
                       {farm.name}
@@ -436,24 +436,24 @@ export default function ReportIssuePage() {
             )}
 
             {/* Bhashini Indic STT Section */}
-            <div className="bg-gradient-to-br from-orange-50 via-amber-50/50 to-white border border-orange-200 rounded-2xl p-5 shadow-sm space-y-4">
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+            <div className="bg-gradient-to-br from-green-50 via-emerald-50/30 to-white border border-green-200 rounded-2xl p-8 shadow-sm space-y-6">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                  <h3 className="font-bold text-orange-950 flex items-center gap-2 text-base">
+                  <h3 className="font-extrabold text-green-950 flex items-center gap-2 text-2xl">
                     <span>{t.bhashiniTitle}</span>
                   </h3>
-                  <p className="text-xs text-gray-600 mt-0.5">
+                  <p className="text-base text-green-800 mt-1 font-medium">
                     {t.bhashiniSub}
                   </p>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-3">
                   <select
                     value={indicLang}
                     onChange={(e) => {
                       setIndicLang(e.target.value);
                       setConversationTurns([]);
                     }}
-                    className="bg-white border border-orange-300 rounded-xl px-3 py-1.5 text-xs font-bold text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    className="bg-white border border-green-300 rounded-xl px-5 py-2.5 text-base font-bold text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500"
                   >
                     <option value="hi">🇮🇳 Hindi (हिन्दी)</option>
                     <option value="te">🇮🇳 Telugu (తెలుగు)</option>
@@ -465,11 +465,11 @@ export default function ReportIssuePage() {
                     type="button"
                     onClick={handleSimulateBhashiniSTT}
                     disabled={simulatingSTT}
-                    className="bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white rounded-xl px-4 py-2 text-xs font-bold shadow-md transition-all duration-300 flex items-center gap-1.5"
+                    className="bg-gradient-to-r from-green-700 to-emerald-500 hover:from-green-800 hover:to-emerald-600 text-white rounded-xl px-6 py-3 text-base font-bold shadow-md transition-all duration-300 flex items-center gap-2"
                   >
                     {simulatingSTT ? (
                       <>
-                        <svg className="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24" fill="none">
+                        <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
                           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                         </svg>
@@ -485,30 +485,30 @@ export default function ReportIssuePage() {
               </div>
 
               {conversationTurns.length > 0 && (
-                <div className="bg-white/95 border border-orange-200 rounded-2xl p-4 shadow-inner space-y-3 animate-in fade-in duration-300">
-                  <div className="flex items-center justify-between border-b border-orange-100 pb-2">
-                    <span className="font-extrabold text-xs text-orange-900 flex items-center gap-1.5">
-                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <div className="bg-white/95 border border-green-200 rounded-2xl p-6 shadow-inner space-y-5 animate-in fade-in duration-300">
+                  <div className="flex items-center justify-between border-b border-green-100 pb-3">
+                    <span className="font-extrabold text-base text-green-950 flex items-center gap-2">
+                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
                       {t.bhashiniTitle}
                     </span>
-                    <span className="text-[10px] bg-orange-100 text-orange-800 px-2 py-0.5 rounded-full font-bold">
+                    <span className="text-sm bg-green-100 text-green-800 px-4 py-1.5 rounded-full font-bold">
                       Bhashini AI Voice Log
                     </span>
                   </div>
-                  <div className="space-y-2.5 max-h-[280px] overflow-y-auto pr-1">
+                  <div className="space-y-4 max-h-[380px] overflow-y-auto pr-2">
                     {conversationTurns.map((turn, idx) => (
                       <div
                         key={idx}
-                        className={`p-3 rounded-xl text-xs leading-relaxed flex flex-col gap-1 ${turn.speaker === "farmer"
-                            ? "bg-orange-50/80 border border-orange-200/60 text-orange-950 ml-4 rounded-tr-none"
-                            : "bg-emerald-50/80 border border-emerald-200/60 text-emerald-950 mr-4 rounded-tl-none"
+                        className={`p-5 rounded-2xl text-base leading-relaxed flex flex-col gap-2 ${turn.speaker === "farmer"
+                            ? "bg-green-50/80 border border-green-200/60 text-green-950 ml-8 rounded-tr-none"
+                            : "bg-emerald-50/80 border border-emerald-200/60 text-emerald-950 mr-8 rounded-tl-none"
                           }`}
                       >
-                        <div className="flex items-center justify-between font-bold text-[11px] opacity-80">
+                        <div className="flex items-center justify-between font-bold text-sm opacity-80">
                           <span>{turn.speaker === "farmer" ? t.farmerLabel : t.aiLabel}</span>
-                          <span className="text-[9px]">{turn.time}</span>
+                          <span className="text-xs">{turn.time}</span>
                         </div>
-                        <p className="font-medium text-xs">{turn.text}</p>
+                        <p className="font-semibold text-base">{turn.text}</p>
                       </div>
                     ))}
                   </div>
@@ -517,14 +517,14 @@ export default function ReportIssuePage() {
             </div>
 
             {/* Photo upload */}
-            <div className="space-y-2">
-              <Label className="text-sm font-semibold text-gray-700">
+            <div className="space-y-4">
+              <Label className="text-xl font-bold text-emerald-900">
                 {t.photoTitle}
               </Label>
-              <div className="flex items-center gap-4">
-                <label className="cursor-pointer flex items-center gap-2 px-5 py-3.5 rounded-2xl border-2 border-dashed border-gray-300 hover:border-emerald-500 transition-colors bg-gray-50/50 hover:bg-emerald-50/20">
-                  <span className="text-2xl">📸</span>
-                  <span className="text-sm font-medium text-gray-700">
+              <div className="flex items-center gap-6">
+                <label className="cursor-pointer flex items-center gap-4 px-8 py-5 rounded-2xl border-2 border-dashed border-gray-300 hover:border-emerald-500 transition-colors bg-gray-50/50 hover:bg-emerald-50/20">
+                  <span className="text-4xl">📸</span>
+                  <span className="text-lg font-semibold text-gray-700">
                     {photo ? photo.name : t.photoChoose}
                   </span>
                   <input
@@ -539,37 +539,37 @@ export default function ReportIssuePage() {
                   <img
                     src={photoPreview}
                     alt="Preview"
-                    className="w-16 h-16 rounded-xl object-cover border shadow-sm"
+                    className="w-24 h-24 rounded-2xl object-cover border shadow-md"
                   />
                 )}
               </div>
             </div>
 
             {/* Description */}
-            <div className="space-y-2">
-              <Label className="text-sm font-semibold text-gray-700">
+            <div className="space-y-4">
+              <Label className="text-xl font-bold text-emerald-900">
                 {t.symptomTitle}
               </Label>
               <textarea
                 placeholder="e.g., Leaves are turning yellow with brown spots..."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                rows={3}
-                className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all font-medium"
+                rows={5}
+                className="w-full rounded-2xl border border-gray-200 px-6 py-5 text-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all font-semibold"
               />
             </div>
 
             {/* Voice recording */}
-            <div className="space-y-2">
-              <Label className="text-sm font-semibold text-gray-700">
+            <div className="space-y-4">
+              <Label className="text-xl font-bold text-emerald-900">
                 {t.micTitle}
               </Label>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-5">
                 {!isRecording ? (
                   <Button
                     variant="outline"
                     onClick={startRecording}
-                    className="rounded-full border-gray-300 font-semibold"
+                    className="rounded-full border-gray-300 font-bold px-8 py-3 text-lg"
                   >
                     {t.startMic}
                   </Button>
@@ -577,13 +577,13 @@ export default function ReportIssuePage() {
                   <Button
                     variant="destructive"
                     onClick={stopRecording}
-                    className="rounded-full animate-pulse font-semibold"
+                    className="rounded-full animate-pulse font-bold px-8 py-3 text-lg"
                   >
                     {t.stopMic}
                   </Button>
                 )}
                 {audioBlob && (
-                  <span className="text-sm text-emerald-700 font-semibold bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+                  <span className="text-lg text-emerald-700 font-bold bg-emerald-50 px-5 py-2 rounded-full border border-emerald-200">
                     ✅ Attached ({(audioBlob.size / 1024).toFixed(0)} KB)
                   </span>
                 )}
@@ -599,12 +599,12 @@ export default function ReportIssuePage() {
             <Button
               onClick={handleSubmit}
               disabled={loading}
-              className="rounded-full px-8 py-3 bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-700 hover:to-orange-600 text-white shadow-lg hover:shadow-xl transition-all"
+              className="rounded-full px-12 py-7 text-xl font-extrabold bg-gradient-to-r from-green-700 to-emerald-500 hover:from-green-800 hover:to-emerald-600 text-white shadow-xl hover:shadow-2xl transition-all w-full md:w-auto mt-6"
             >
               {loading ? (
                 <span className="flex items-center gap-2">
                   <svg
-                    className="animate-spin h-4 w-4"
+                    className="animate-spin h-5 w-5"
                     viewBox="0 0 24 24"
                     fill="none"
                   >

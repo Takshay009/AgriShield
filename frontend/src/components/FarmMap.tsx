@@ -120,7 +120,7 @@ export default function FarmMap({ onPolygonChange, initialPolygon = [], readOnly
             type="button"
             onClick={handleSearch}
             disabled={searching}
-            className="px-4 py-1.5 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-md shadow-sm transition disabled:opacity-50"
+            className="px-5 py-2 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white text-sm font-bold rounded-lg shadow-md transition-all duration-200 disabled:opacity-50 border-0"
           >
             {searching ? "Searching..." : "Search"}
           </button>

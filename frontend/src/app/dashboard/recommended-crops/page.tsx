@@ -116,24 +116,24 @@ function getCropIcon(cropName: string) {
 }
 
 function getSuitabilityColor(pct: number): string {
-  if (pct >= 80) return "bg-[#0f4d32]";
-  if (pct >= 60) return "bg-[#2d7d54]";
-  if (pct >= 40) return "bg-[#d9822b]";
-  return "bg-[#c93b2b]";
+  if (pct >= 80) return "bg-gradient-to-r from-emerald-600 to-green-500";
+  if (pct >= 60) return "bg-gradient-to-r from-emerald-500 to-teal-500";
+  if (pct >= 40) return "bg-gradient-to-r from-amber-500 to-yellow-500";
+  return "bg-gradient-to-r from-rose-500 to-red-500";
 }
 
 function getSuitabilityBg(pct: number): string {
-  if (pct >= 80) return "bg-[#e8f7f0]/80 border-[#0f4d32]";
-  if (pct >= 60) return "bg-[#f0f9f4]/80 border-[#2d7d54]";
-  if (pct >= 40) return "bg-[#fdf7f0]/80 border-[#d9822b]";
-  return "bg-[#fdf2f2]/80 border-[#c93b2b]";
+  if (pct >= 80) return "bg-gradient-to-br from-emerald-50/90 via-white to-green-50/80 border-emerald-400 shadow-md ring-2 ring-emerald-500/20";
+  if (pct >= 60) return "bg-gradient-to-br from-teal-50/90 via-white to-emerald-50/80 border-teal-400 shadow-md ring-2 ring-teal-500/20";
+  if (pct >= 40) return "bg-gradient-to-br from-amber-50/90 via-white to-orange-50/80 border-amber-400 shadow-md ring-2 ring-amber-500/20";
+  return "bg-gradient-to-br from-rose-50/90 via-white to-red-50/80 border-rose-400 shadow-md ring-2 ring-rose-500/20";
 }
 
 function getSuitabilityText(pct: number): string {
-  if (pct >= 80) return "text-[#0f4d32]";
-  if (pct >= 60) return "text-[#2d7d54]";
-  if (pct >= 40) return "text-[#d9822b]";
-  return "text-[#c93b2b]";
+  if (pct >= 80) return "text-emerald-700 font-black";
+  if (pct >= 60) return "text-teal-700 font-black";
+  if (pct >= 40) return "text-amber-700 font-black";
+  return "text-rose-700 font-black";
 }
 
 export default function RecommendedCropsPage() {
@@ -309,7 +309,7 @@ export default function RecommendedCropsPage() {
                 type="button"
                 onClick={handleSatelliteSync}
                 disabled={syncingSatellite}
-                className="border border-[#0f4d32] text-[#0f4d32] hover:bg-[#0f4d32] hover:text-white rounded-lg px-5 py-2.5 text-sm font-medium transition-all duration-200 flex items-center gap-2 self-start md:self-auto shrink-0 shadow-sm"
+                className="bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white rounded-xl px-5 py-2.5 text-sm font-bold transition-all duration-200 flex items-center gap-2 self-start md:self-auto shrink-0 shadow-md border-0"
               >
                 {syncingSatellite ? (
                   <>
@@ -318,7 +318,7 @@ export default function RecommendedCropsPage() {
                   </>
                 ) : (
                   <>
-                    <Satellite className="w-4 h-4" />
+                    <Satellite className="w-4 h-4 text-white" />
                     <span>Check Live Satellite Data</span>
                   </>
                 )}
@@ -449,7 +449,7 @@ export default function RecommendedCropsPage() {
             <Button
               onClick={handleSubmit}
               disabled={loading}
-              className="w-full md:w-auto rounded-lg px-8 py-4 text-base font-semibold bg-[#0f4d32] hover:bg-[#00351f] text-white shadow-sm transition-all duration-200"
+              className="w-full md:w-auto rounded-xl px-8 py-4 text-base font-bold bg-gradient-to-r from-green-700 to-emerald-500 hover:from-green-800 hover:to-emerald-600 text-white shadow-lg hover:shadow-xl transition-all duration-200 border-0"
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
@@ -520,73 +520,94 @@ export default function RecommendedCropsPage() {
             </Card>
 
             {/* Crop cards */}
-            <div className="grid gap-4">
-              {result.recommendations.map((crop, idx) => (
-                <Card
-                  key={crop.crop_name}
-                  className={`bg-white/90 backdrop-blur-sm rounded-2xl shadow-sm border border-[rgba(192,201,192,0.4)] hover:shadow-md transition-all duration-200 cursor-pointer ${
-                    expandedCrop === crop.crop_name
-                      ? getSuitabilityBg(crop.suitability_pct)
-                      : ""
-                  }`}
-                  onClick={() =>
-                    setExpandedCrop(
-                      expandedCrop === crop.crop_name ? null : crop.crop_name
-                    )
-                  }
-                >
-                  <CardContent className="p-6">
-                    <div className="flex items-center gap-4">
-                      {/* Rank */}
-                      <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-[#0f4d32] text-white flex items-center justify-center text-base font-bold shadow-sm">
-                        #{idx + 1}
-                      </div>
+            <div className="grid gap-5">
+              {result.recommendations.map((crop, idx) => {
+                const isSelected = expandedCrop === crop.crop_name;
+                const isTopRank = idx === 0;
 
-                      {/* Icon + Name */}
-                      <div className="flex-shrink-0 w-12 h-12 p-2.5 bg-[#e8f7f0] text-[#0f4d32] rounded-xl border border-[#c0c9c0]/40 flex items-center justify-center">
-                        {getCropIcon(crop.crop_name)}
-                      </div>
-                      <div className="flex-grow">
-                        <div className="flex items-center gap-2.5 flex-wrap">
-                          <h3 className="text-lg font-bold font-heading text-[#00351f]">
-                            {crop.crop_name}
-                          </h3>
-                          {crop.breakdown.groundwater_penalty && crop.breakdown.groundwater_penalty < 0 ? (
-                            <span className="inline-flex items-center gap-1 bg-[#fdf2f2] text-[#c93b2b] text-xs font-bold px-2.5 py-0.5 rounded-md border border-[#c93b2b]/30">
-                              <AlertTriangle className="w-3.5 h-3.5" /> Thirsty Crop Warning
-                            </span>
-                          ) : null}
-                        </div>
-                        <p className="text-sm text-[#404943] font-medium mt-0.5">
-                          Sow: {crop.sowing_window} · Harvest:{" "}
-                          {crop.harvest_months.join(", ")}
-                        </p>
-                      </div>
-
-                      {/* Score badge */}
-                      <div className="flex-shrink-0 text-right">
+                return (
+                  <Card
+                    key={crop.crop_name}
+                    className={`rounded-2xl transition-all duration-300 cursor-pointer overflow-hidden border ${
+                      isSelected
+                        ? getSuitabilityBg(crop.suitability_pct)
+                        : isTopRank
+                        ? "bg-gradient-to-r from-emerald-50/90 via-white to-green-50/70 border-emerald-300 shadow-md hover:shadow-xl hover:border-emerald-400"
+                        : "bg-white/95 backdrop-blur-sm border-gray-200/80 shadow-sm hover:shadow-lg hover:border-emerald-200 hover:bg-emerald-50/30"
+                    }`}
+                    onClick={() =>
+                      setExpandedCrop(
+                        expandedCrop === crop.crop_name ? null : crop.crop_name
+                      )
+                    }
+                  >
+                    <CardContent className="p-5 md:p-6">
+                      <div className="flex items-center gap-4 md:gap-6">
+                        {/* Rank */}
                         <div
-                          className={`text-2xl font-bold font-heading ${getSuitabilityText(
-                            crop.suitability_pct
-                          )}`}
+                          className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center text-lg font-black shadow-md ${
+                            isTopRank
+                              ? "bg-gradient-to-br from-amber-400 via-amber-500 to-emerald-700 text-white ring-2 ring-amber-300/60"
+                              : idx === 1
+                              ? "bg-gradient-to-br from-emerald-700 to-green-800 text-white"
+                              : "bg-gradient-to-br from-slate-700 to-emerald-900 text-white"
+                          }`}
                         >
-                          {crop.suitability_pct}%
+                          #{idx + 1}
                         </div>
-                        <div className="text-xs text-[#707972] font-bold uppercase tracking-wider">Match Score</div>
-                      </div>
 
-                      {/* Progress bar */}
-                      <div className="flex-shrink-0 w-28 hidden md:block">
-                        <div className="h-2.5 bg-[#f3f3f6] rounded-full overflow-hidden p-0.5 border border-[#c0c9c0]/30">
+                        {/* Icon + Name */}
+                        <div className="flex-shrink-0 w-12 h-12 md:w-14 md:h-14 p-3 bg-gradient-to-br from-emerald-100/80 to-green-50 text-emerald-800 rounded-2xl border border-emerald-200/60 flex items-center justify-center shadow-inner">
+                          {getCropIcon(crop.crop_name)}
+                        </div>
+                        <div className="flex-grow min-w-0">
+                          <div className="flex items-center gap-2.5 flex-wrap">
+                            <h3 className="text-lg md:text-xl font-extrabold font-heading text-gray-900 tracking-tight">
+                              {crop.crop_name}
+                            </h3>
+                            {isTopRank && (
+                              <span className="inline-flex items-center gap-1 bg-gradient-to-r from-amber-500 to-emerald-600 text-white text-xs font-extrabold px-2.5 py-1 rounded-full shadow-sm">
+                                ★ Top AI Choice
+                              </span>
+                            )}
+                            {crop.breakdown.groundwater_penalty && crop.breakdown.groundwater_penalty < 0 ? (
+                              <span className="inline-flex items-center gap-1 bg-rose-50 text-rose-700 text-xs font-bold px-2.5 py-1 rounded-lg border border-rose-200 shadow-sm animate-pulse">
+                                <AlertTriangle className="w-3.5 h-3.5" /> Thirsty Crop Warning
+                              </span>
+                            ) : null}
+                          </div>
+                          <p className="text-xs md:text-sm text-gray-600 font-medium mt-1">
+                            <span className="font-semibold text-emerald-900">Sow:</span> {crop.sowing_window} &bull; <span className="font-semibold text-emerald-900">Harvest:</span>{" "}
+                            {crop.harvest_months.join(", ")}
+                          </p>
+                        </div>
+
+                        {/* Score badge */}
+                        <div className="flex-shrink-0 text-right">
                           <div
-                            className={`h-full rounded-full ${getSuitabilityColor(
+                            className={`text-2xl md:text-3xl font-black font-heading ${getSuitabilityText(
                               crop.suitability_pct
-                            )} transition-all duration-700`}
-                            style={{ width: `${crop.suitability_pct}%` }}
-                          />
+                            )}`}
+                          >
+                            {crop.suitability_pct}%
+                          </div>
+                          <div className="text-[10px] md:text-xs text-emerald-800 font-bold uppercase tracking-wider bg-emerald-100/70 px-2 py-0.5 rounded-full inline-block mt-0.5 border border-emerald-200/50">
+                            Match Score
+                          </div>
+                        </div>
+
+                        {/* Progress bar */}
+                        <div className="flex-shrink-0 w-28 md:w-36 hidden md:block">
+                          <div className="h-3 bg-gray-100 rounded-full overflow-hidden p-0.5 border border-gray-200 shadow-inner">
+                            <div
+                              className={`h-full rounded-full ${getSuitabilityColor(
+                                crop.suitability_pct
+                              )} transition-all duration-700 shadow-sm`}
+                              style={{ width: `${crop.suitability_pct}%` }}
+                            />
+                          </div>
                         </div>
                       </div>
-                    </div>
 
                     {/* Expanded details */}
                     {expandedCrop === crop.crop_name && (
@@ -674,12 +695,13 @@ export default function RecommendedCropsPage() {
                     )}
                   </CardContent>
                 </Card>
-              ))}
-            </div>
+              );
+            })}
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
-  );
+  </div>
+);
 }
 

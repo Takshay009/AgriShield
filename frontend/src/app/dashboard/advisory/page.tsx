@@ -201,84 +201,81 @@ export default function AdvisoryPage() {
 
   return (
     <div className="min-h-screen apple-bg p-6 md:p-8">
-      <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <Link
-              href="/dashboard"
-              className="text-sm text-gray-500 hover:text-gray-700 transition-colors mb-2 inline-block"
-            >
-              ← Back to Dashboard
-            </Link>
-            <h1 className="apple-title">🌾 Simple Weather Warnings & Fertilizer Guide</h1>
-            <p className="text-gray-500 mt-1">
-              Easy-to-understand weather alerts and simple fertilizer advice (in bags, buckets, and spoons) for your farm
-            </p>
-          </div>
-          <div className="flex flex-wrap items-center gap-2 self-start md:self-auto">
-            <a
-              href="https://wa.me/14155238886?text=Namaste!%20I%20have%20a%20question%20about%20my%20weather%20and%20fertilizer%20advisory"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white shadow-md rounded-full px-5 py-2.5 text-sm font-semibold transition-all duration-300 flex items-center gap-2 hover:scale-105"
-            >
-              <span>💬 Ask AI on WhatsApp</span>
-              <span>↗</span>
-            </a>
-            {data && (
-              <Button
-                onClick={handleTestBroadcast}
-                disabled={broadcasting}
-                className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white shadow-md rounded-full px-5 py-2.5 text-sm font-semibold transition-all duration-300 flex items-center gap-2"
+      <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        {/* Header & Farm Selector */}
+        <div className="bg-white/90 backdrop-blur-md rounded-3xl p-6 md:p-8 shadow-sm border border-gray-100 space-y-6">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 border-b border-gray-100 pb-6">
+            <div className="space-y-2">
+              <Link
+                href="/dashboard"
+                className="text-xs font-bold text-emerald-700 hover:text-emerald-800 transition-colors inline-flex items-center gap-1.5 bg-emerald-50 px-3 py-1 rounded-full mb-1"
               >
-                {broadcasting ? (
-                  <>
-                    <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                    </svg>
-                    <span>Broadcasting Twilio Push...</span>
-                  </>
-                ) : (
-                  <>
-                    <span>📢 Broadcast Test SMS/Voice Alert</span>
-                  </>
-                )}
-              </Button>
-            )}
+                <span>←</span> Back to Dashboard
+              </Link>
+              <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900 tracking-tight flex items-center gap-2">
+                <span>🌾</span> Simple Weather Warnings & Fertilizer Guide
+              </h1>
+              <p className="text-sm text-gray-500 max-w-2xl font-medium leading-relaxed">
+                Easy-to-understand weather alerts and simple fertilizer advice (in bags, buckets, and spoons) for your farm
+              </p>
+            </div>
+            <div className="flex flex-wrap sm:flex-nowrap items-center gap-3 shrink-0 self-start lg:self-center">
+              <a
+                href="https://wa.me/14155238886?text=Namaste!%20I%20have%20a%20question%20about%20my%20weather%20and%20fertilizer%20advisory"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white shadow-sm hover:shadow rounded-2xl px-4 py-2.5 text-xs font-bold transition-all duration-200 flex items-center gap-2 hover:scale-[1.02]"
+              >
+                <span>💬 Ask AI on WhatsApp</span>
+                <span className="text-[10px]">↗</span>
+              </a>
+              {data && (
+                <Button
+                  onClick={handleTestBroadcast}
+                  disabled={broadcasting}
+                  className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white shadow-sm hover:shadow rounded-2xl px-4 py-2.5 text-xs font-bold transition-all duration-200 flex items-center gap-2"
+                >
+                  {broadcasting ? (
+                    <>
+                      <svg className="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24" fill="none">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                      </svg>
+                      <span>Broadcasting...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>📢 Test SMS/Voice Alert</span>
+                    </>
+                  )}
+                </Button>
+              )}
+            </div>
           </div>
-        </div>
 
-        {broadcastSuccess && (
-          <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 p-4 rounded-2xl shadow-sm animate-in fade-in slide-in-from-top-2 duration-300 flex items-center gap-3">
-            <span className="text-xl">📲</span>
-            <span className="font-medium text-sm">{broadcastSuccess}</span>
-          </div>
-        )}
-
-        {/* Farm Selector */}
-        {farms.length > 0 && (
-          <Card className="apple-card">
-            <CardContent className="p-6">
+          {/* Farm Selector */}
+          {farms.length > 0 && (
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+              <span className="text-xs font-bold text-gray-400 uppercase tracking-wider shrink-0">Select Farm:</span>
               <div className="flex flex-wrap gap-2">
                 {farms.map((farm) => (
                   <button
                     key={farm.id}
                     onClick={() => handleFarmSelect(farm.id)}
-                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+                    className={`px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 flex items-center gap-1.5 ${
                       selectedFarmId === farm.id
-                        ? "bg-gray-900 text-white shadow-md scale-105"
-                        : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                        ? "bg-gray-900 text-white shadow-md scale-[1.02]"
+                        : "bg-gray-100/80 text-gray-600 hover:bg-gray-200/80"
                     }`}
                   >
+                    <span>🏡</span>
                     {farm.name}
                   </button>
                 ))}
               </div>
-            </CardContent>
-          </Card>
-        )}
+            </div>
+          )}
+        </div>
 
         {farms.length === 0 && (
           <Card className="apple-card">
@@ -339,152 +336,24 @@ export default function AdvisoryPage() {
 
         {data && (
           <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-            {/* Weather & Dry-Spell Alerts Section */}
-            <div className="space-y-3">
-              <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                <span>🌦️ Important Weather Warnings</span>
-                <span className="text-xs bg-gray-100 text-gray-700 px-2.5 py-0.5 rounded-full font-semibold">{weatherAlerts.length}</span>
-              </h2>
-              {weatherAlerts.length > 0 ? (
-                weatherAlerts.map((alert, idx) => {
-                  const styles = getSeverityStyles(alert.severity);
-                  return (
-                    <Card
-                      key={idx}
-                      className={`apple-card border shadow-sm ${styles.bg} transition-all duration-300`}
-                    >
-                      <CardContent className="p-5">
-                        <div className="flex items-start gap-3">
-                          <span className="text-2xl flex-shrink-0 mt-0.5">
-                            {styles.icon}
-                          </span>
-                          <div className="flex-grow space-y-2">
-                            <div className="flex items-center gap-2 flex-wrap">
-                              <h3 className="font-bold text-gray-900">
-                                {alert.title}
-                              </h3>
-                              <span
-                                className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${styles.badge}`}
-                              >
-                                {alert.severity.toUpperCase()}
-                              </span>
-                              {alert.duration_days && (
-                                <span className="text-xs font-medium text-gray-500">
-                                  {alert.duration_days} day
-                                  {alert.duration_days > 1 ? "s" : ""}
-                                </span>
-                              )}
-                            </div>
-                            <p className="text-sm text-gray-700 font-medium">
-                              {alert.message}
-                            </p>
-                            {alert.recommended_action && (
-                              <div className="bg-white/80 backdrop-blur-sm rounded-xl p-3.5 text-sm border border-gray-100 shadow-2xl">
-                                <span className="font-bold text-gray-900">
-                                  💡 What to do today:{" "}
-                                </span>
-                                <span className="text-gray-700">
-                                  {alert.recommended_action}
-                                </span>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  );
-                })
-              ) : (
-                <Card className="apple-card border border-emerald-200 bg-emerald-50/50">
-                  <CardContent className="p-5 text-center flex items-center justify-center gap-3">
-                    <span className="text-2xl">✅</span>
-                    <span className="text-emerald-800 font-semibold text-sm">
-                      No critical dry spells or extreme weather hazards detected!
-                    </span>
-                  </CardContent>
-                </Card>
-              )}
-            </div>
-
-            {/* Fertilization Guidance Section */}
-            <div className="space-y-3">
-              <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                <span>🌱 Simple Fertilizer Guide (When & How Much to Put)</span>
-                <span className="text-xs bg-indigo-100 text-indigo-800 px-2.5 py-0.5 rounded-full font-semibold">{fertAlerts.length}</span>
-              </h2>
-              {fertAlerts.length > 0 ? (
-                fertAlerts.map((alert, idx) => {
-                  const styles = getSeverityStyles(alert.severity);
-                  return (
-                    <Card
-                      key={idx}
-                      className="apple-card border border-indigo-100 bg-gradient-to-br from-indigo-50/40 via-purple-50/20 to-white shadow-md transition-all duration-300"
-                    >
-                      <CardContent className="p-5">
-                        <div className="flex items-start gap-3">
-                          <span className="text-2xl flex-shrink-0 mt-0.5">
-                            🧪
-                          </span>
-                          <div className="flex-grow space-y-2">
-                            <div className="flex items-center gap-2 flex-wrap">
-                              <h3 className="font-bold text-indigo-950">
-                                {alert.title}
-                              </h3>
-                              <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-100 text-indigo-800">
-                                BEST TIME TO DO THIS
-                              </span>
-                              {alert.start_date && (
-                                <span className="text-xs font-medium text-gray-500">
-                                  Starts: {formatDate(alert.start_date)}
-                                </span>
-                              )}
-                            </div>
-                            <p className="text-sm text-gray-700 font-medium">
-                              {alert.message}
-                            </p>
-                            {alert.recommended_action && (
-                              <div className="bg-white rounded-xl p-3.5 text-sm border border-indigo-100 shadow-sm">
-                                <span className="font-bold text-indigo-900">
-                                  🌱 How Much & How to Apply:{" "}
-                                </span>
-                                <span className="text-gray-700">
-                                  {alert.recommended_action}
-                                </span>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  );
-                })
-              ) : (
-                <Card className="apple-card border border-gray-200 bg-gray-50/50">
-                  <CardContent className="p-5 text-center text-gray-500 font-medium text-sm">
-                    No fertilizer needed right now! Soil and weather are good. Check back after rain.
-                  </CardContent>
-                </Card>
-              )}
-            </div>
-
             {/* 7-Day Forecast */}
-            <Card className="apple-card">
-              <CardHeader>
-                <CardTitle className="text-xl">
+            <Card className="apple-card border-0 shadow-lg bg-gradient-to-b from-blue-50/50 to-white">
+              <CardHeader className="border-b border-blue-100/50 pb-4">
+                <CardTitle className="text-xl font-bold text-blue-950">
                   📅 7-Day Weather Forecast — {data.farm_name}
                 </CardTitle>
-                <CardDescription>
+                <CardDescription className="text-blue-700/70 font-medium">
                   Expected temperature and rain for your farm field
                 </CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pt-6">
                 <div className="grid gap-3">
                   {data.forecast.map((day, idx) => (
                     <div
                       key={day.date}
                       className={`flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 p-3.5 rounded-xl transition-all duration-200 border border-gray-100 ${
                         idx === 0
-                          ? "bg-blue-50/50 font-medium border-blue-100 shadow-sm"
+                          ? "bg-blue-100/40 font-medium border-blue-200 shadow-sm"
                           : "hover:bg-gray-50 bg-white"
                       }`}
                     >
@@ -536,6 +405,139 @@ export default function AdvisoryPage() {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Side-by-Side Stack for Warnings and Fertilizer */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+              {/* Weather & Dry-Spell Alerts Section */}
+              <div className="space-y-4">
+                <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2 px-1">
+                  <span>🌦️ Important Weather Warnings</span>
+                  <span className="text-xs bg-red-100 text-red-700 px-2.5 py-0.5 rounded-full font-bold shadow-sm">{weatherAlerts.length}</span>
+                </h2>
+                {weatherAlerts.length > 0 ? (
+                  weatherAlerts.map((alert, idx) => {
+                    const styles = getSeverityStyles(alert.severity);
+                    return (
+                      <Card
+                        key={idx}
+                        className={`apple-card border shadow-md hover:shadow-lg ${styles.bg} transition-all duration-300 transform hover:-translate-y-1`}
+                      >
+                        <CardContent className="p-5">
+                          <div className="flex items-start gap-3">
+                            <span className="text-2xl flex-shrink-0 mt-0.5">
+                              {styles.icon}
+                            </span>
+                            <div className="flex-grow space-y-3">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <h3 className="font-bold text-gray-900">
+                                  {alert.title}
+                                </h3>
+                                <span
+                                  className={`px-2.5 py-0.5 rounded-full text-xs font-bold shadow-sm ${styles.badge}`}
+                                >
+                                  {alert.severity.toUpperCase()}
+                                </span>
+                                {alert.duration_days && (
+                                  <span className="text-xs font-medium text-gray-500">
+                                    {alert.duration_days} day
+                                    {alert.duration_days > 1 ? "s" : ""}
+                                  </span>
+                                )}
+                              </div>
+                              <p className="text-sm text-gray-700 font-medium leading-relaxed">
+                                {alert.message}
+                              </p>
+                              {alert.recommended_action && (
+                                <div className="bg-white/90 backdrop-blur-sm rounded-xl p-4 text-sm border border-gray-100 shadow-sm">
+                                  <span className="font-bold text-gray-900 block mb-1">
+                                    💡 What to do today:{" "}
+                                  </span>
+                                  <span className="text-gray-700 font-medium">
+                                    {alert.recommended_action}
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    );
+                  })
+                ) : (
+                  <Card className="apple-card border-0 shadow-sm bg-gradient-to-br from-emerald-50 to-green-50/50">
+                    <CardContent className="p-8 text-center flex flex-col items-center justify-center gap-3">
+                      <span className="text-4xl drop-shadow-sm">✅</span>
+                      <span className="text-emerald-800 font-semibold text-sm">
+                        No critical dry spells or extreme weather hazards detected!
+                      </span>
+                    </CardContent>
+                  </Card>
+                )}
+              </div>
+
+              {/* Fertilization Guidance Section */}
+              <div className="space-y-4">
+                <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2 px-1">
+                  <span>🌱 Simple Fertilizer Guide</span>
+                  <span className="text-xs bg-indigo-100 text-indigo-700 px-2.5 py-0.5 rounded-full font-bold shadow-sm">{fertAlerts.length}</span>
+                </h2>
+                {fertAlerts.length > 0 ? (
+                  fertAlerts.map((alert, idx) => {
+                    return (
+                      <Card
+                        key={idx}
+                        className="apple-card border-0 bg-gradient-to-br from-indigo-50/80 via-purple-50/30 to-white shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
+                      >
+                        <CardContent className="p-5">
+                          <div className="flex items-start gap-3">
+                            <span className="text-2xl flex-shrink-0 mt-0.5">
+                              🧪
+                            </span>
+                            <div className="flex-grow space-y-3">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <h3 className="font-bold text-indigo-950">
+                                  {alert.title}
+                                </h3>
+                                <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-100 text-indigo-800 shadow-sm">
+                                  BEST TIME TO DO THIS
+                                </span>
+                                {alert.start_date && (
+                                  <span className="text-xs font-medium text-indigo-400/80">
+                                    Starts: {formatDate(alert.start_date)}
+                                  </span>
+                                )}
+                              </div>
+                              <p className="text-sm text-gray-700 font-medium leading-relaxed">
+                                {alert.message}
+                              </p>
+                              {alert.recommended_action && (
+                                <div className="bg-white/90 backdrop-blur-sm rounded-xl p-4 text-sm border border-indigo-50 shadow-sm">
+                                  <span className="font-bold text-indigo-900 block mb-1">
+                                    🌱 How Much & How to Apply:{" "}
+                                  </span>
+                                  <span className="text-gray-700 font-medium">
+                                    {alert.recommended_action}
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    );
+                  })
+                ) : (
+                  <Card className="apple-card border-0 shadow-sm bg-gradient-to-br from-gray-50 to-slate-50">
+                    <CardContent className="p-8 text-center flex flex-col items-center justify-center gap-3">
+                      <span className="text-4xl drop-shadow-sm">😌</span>
+                      <span className="text-gray-600 font-semibold text-sm">
+                        No fertilizer needed right now! Soil and weather are good. Check back after rain.
+                      </span>
+                    </CardContent>
+                  </Card>
+                )}
+              </div>
+            </div>
           </div>
         )}
       </div>
