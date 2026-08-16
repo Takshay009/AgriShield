@@ -35,6 +35,12 @@ const STATES_LIST = [
   "West Bengal"
 ];
 
+const CROP_TYPES = [
+  "Rice", "Wheat", "Maize", "Cotton", "Soybean", 
+  "Sugarcane", "Groundnut", "Chickpea", "Pigeon Pea", 
+  "Millet", "Sorghum", "Mustard", "Tomato", "Onion", "Potato"
+];
+
 export default function NewFarmPage() {
   const router = useRouter();
 
@@ -44,6 +50,7 @@ export default function NewFarmPage() {
   // Shared Form State
   const [name, setName] = useState("");
   const [area, setArea] = useState("");
+  const [cropType, setCropType] = useState("");
   const [points, setPoints] = useState<[number, number][]>([]);
   const [error, setError] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
@@ -101,6 +108,7 @@ export default function NewFarmPage() {
       setDistrict(data.district || "");
       setTaluka(data.taluka || "");
       setVillage(data.village || "");
+      if (data.cropType) setCropType(data.cropType);
       
       if (data.polygon && data.polygon.length > 0) {
         setPoints(data.polygon);
@@ -136,6 +144,10 @@ export default function NewFarmPage() {
       setError("Please enter the Farm Area.");
       return;
     }
+    if (!cropType) {
+      setError("Please select a primary Crop Type so we can calculate proper drought thresholds.");
+      return;
+    }
 
     try {
       const payload = {
@@ -150,7 +162,8 @@ export default function NewFarmPage() {
         district: district || null,
         taluka: taluka || null,
         village: village || null,
-        registration_method: activeTab
+        registration_method: activeTab,
+        crop_type: cropType
       };
 
       const apiBase = await getApiBase();
@@ -305,6 +318,21 @@ export default function NewFarmPage() {
                     required
                     placeholder="e.g. 1.80"
                   />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="cropType" className="text-gray-700 font-medium">Primary Crop Type</Label>
+                  <select
+                    id="cropType"
+                    value={cropType}
+                    onChange={(e) => setCropType(e.target.value)}
+                    required
+                    className="w-full h-10 px-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm"
+                  >
+                    <option value="">Select Crop</option>
+                    {CROP_TYPES.map((c) => (
+                      <option key={c} value={c}>{c}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
 

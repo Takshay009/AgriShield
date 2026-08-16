@@ -157,10 +157,10 @@ import json
 from dotenv import load_dotenv
 
 load_dotenv()
-GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 
-def _analyze_image_with_groq_vision(image_path: str, crop_type: str, language: str) -> Optional[dict]:
-    if not GROQ_API_KEY or "gsk_" not in GROQ_API_KEY:
+def _analyze_image_with_gemini_vision(image_path: str, crop_type: str, language: str) -> Optional[dict]:
+    if not GEMINI_API_KEY:
         return None
         
     if not os.path.exists(image_path):
@@ -170,32 +170,43 @@ def _analyze_image_with_groq_vision(image_path: str, crop_type: str, language: s
         with open(image_path, "rb") as image_file:
             base64_image = base64.b64encode(image_file.read()).decode('utf-8')
             
-        url = "https://api.groq.com/openai/v1/chat/completions"
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={GEMINI_API_KEY}"
         headers = {
-            "Authorization": f"Bearer {GROQ_API_KEY}",
             "Content-Type": "application/json"
         }
         
-        system_prompt = f"You are FarmerPulse AI, an expert agricultural botanist. Analyze this image. It is supposedly a {crop_type} crop. Identify if it's healthy, diseased (name the disease), flooded, or pest-infested. Provide a JSON response EXACTLY in this format: {{\"disease_name\": \"<name in {language}>\", \"confidence\": <float 0-1>, \"severity\": \"<high|medium|low|none>\", \"treatment\": \"<treatment advice in {language}>\"}}. Output ONLY JSON without markdown."
+        system_prompt = (
+            f"You are FarmerPulse AI, an expert agricultural botanist. Analyze this image. "
+            f"If the image is completely black, blurry, random noise, or clearly NOT a plant/crop, "
+            f"you MUST respond with disease_name: 'Invalid Image', severity: 'none', and treatment: 'Please upload a clear picture of a plant or leaf.'. "
+            f"Otherwise, it is supposedly a {crop_type} crop. Identify if it's healthy, diseased (name the disease), flooded, or pest-infested. "
+            f"Provide a JSON response EXACTLY in this format: {{\"disease_name\": \"<name in {language}>\", \"confidence\": <float 0-1>, \"severity\": \"<high|medium|low|none>\", \"treatment\": \"<treatment advice in {language}>\"}}. Output ONLY JSON without markdown."
+        )
         
         payload = {
-            "model": "llama-3.2-11b-vision-preview",
-            "messages": [
+            "contents": [
                 {
-                    "role": "user",
-                    "content": [
-                        {"type": "text", "text": system_prompt},
-                        {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{base64_image}"}}
+                    "parts": [
+                        {"text": system_prompt},
+                        {
+                            "inline_data": {
+                                "mime_type": "image/jpeg",
+                                "data": base64_image
+                            }
+                        }
                     ]
                 }
             ],
-            "temperature": 0.2,
-            "max_tokens": 300
+            "generationConfig": {
+                "temperature": 0.2,
+                "maxOutputTokens": 300,
+                "responseMimeType": "application/json"
+            }
         }
         
         res = requests.post(url, headers=headers, json=payload, timeout=20)
         if res.status_code == 200:
-            content = res.json()["choices"][0]["message"]["content"].strip()
+            content = res.json()["candidates"][0]["content"]["parts"][0]["text"].strip()
             
             # Robust JSON extraction
             import re
@@ -205,9 +216,9 @@ def _analyze_image_with_groq_vision(image_path: str, crop_type: str, language: s
                 
             return json.loads(content)
         else:
-            print(f"[Groq Vision API Error] {res.status_code}: {res.text}")
+            print(f"[Gemini Vision API Error] {res.status_code}: {res.text}")
     except Exception as e:
-        print(f"[Groq Vision Exception] {e}")
+        print(f"[Gemini Vision Exception] {e}")
     return None
 
 
@@ -222,8 +233,8 @@ def classify_image(
     Classify a crop image and description for disease detection.
     Returns dynamic, crop-aware, localized disease name, confidence, severity, and treatment.
     """
-    # 1. Try Groq Vision API First (if key exists)
-    vision_result = _analyze_image_with_groq_vision(image_path, crop_type, language)
+    # 1. Try Gemini Vision API First (if key exists)
+    vision_result = _analyze_image_with_gemini_vision(image_path, crop_type, language)
     if vision_result:
         res = {
             "disease_name": vision_result.get("disease_name", "Unknown"),
@@ -231,7 +242,7 @@ def classify_image(
             "severity": vision_result.get("severity", "medium"),
             "treatment": vision_result.get("treatment", "Consult expert"),
             "needs_escalation": vision_result.get("severity", "medium").lower() in ["high", "medium"],
-            "model_used": "groq_vision_llama_3.2_11b",
+            "model_used": "gemini-1.5-flash-vision",
             "classified_at": datetime.utcnow().isoformat(),
             "crop_type": crop_type,
         }
@@ -245,7 +256,12 @@ def classify_image(
 
     # Real PyTorch model inference fallback
     model_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "models_ml", "plant_disease_model.pth")
+    class_map_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "models_ml", "class_labels.json")
     if not os.path.exists(model_path):
+        return _mock_classify(image_path, farm_id, crop_type, description, language)
+
+    # Verify image file exists and is a real image
+    if not image_path or not os.path.exists(image_path):
         return _mock_classify(image_path, farm_id, crop_type, description, language)
 
     try:
@@ -253,11 +269,35 @@ def classify_image(
         import torchvision.transforms as transforms  # type: ignore
         from torchvision import models  # type: ignore
         from PIL import Image  # type: ignore
+        import json as _json
 
-        model = models.resnet18(pretrained=False)
-        model.fc = torch.nn.Linear(model.fc.in_features, len(DISEASE_CATEGORIES))
-        model.load_state_dict(torch.load(model_path, map_location="cpu"))
+        # Load checkpoint (new format: dict with model_state_dict + metadata)
+        checkpoint = torch.load(model_path, map_location="cpu", weights_only=False)
+
+        if isinstance(checkpoint, dict) and "model_state_dict" in checkpoint:
+            num_classes = checkpoint.get("num_classes", len(DISEASE_CATEGORIES))
+            class_names = checkpoint.get("class_names", None)
+            state_dict = checkpoint["model_state_dict"]
+        else:
+            # Legacy format: raw state_dict
+            num_classes = len(DISEASE_CATEGORIES)
+            class_names = None
+            state_dict = checkpoint
+
+        model = models.resnet18(weights=None)
+        # Match training architecture: Dropout + Linear
+        model.fc = torch.nn.Sequential(
+            torch.nn.Dropout(0.3),
+            torch.nn.Linear(model.fc.in_features, num_classes)
+        )
+        model.load_state_dict(state_dict)
         model.eval()
+
+        # Load class label mapping if available
+        if class_names is None and os.path.exists(class_map_path):
+            with open(class_map_path, "r") as f:
+                class_map = _json.load(f)
+            class_names = [class_map[str(i)] for i in range(len(class_map))]
 
         transform = transforms.Compose([
             transforms.Resize((224, 224)),
@@ -274,14 +314,43 @@ def classify_image(
             confidence, predicted = torch.max(probabilities, 1)
 
         idx = predicted.item()
-        disease = DISEASE_CATEGORIES[idx]
+        conf_val = round(confidence.item(), 3)
+
+        # Map prediction to disease info
+        if class_names and idx < len(class_names):
+            predicted_class = class_names[idx]
+        elif idx < len(DISEASE_CATEGORIES):
+            predicted_class = DISEASE_CATEGORIES[idx]["name"]
+        else:
+            predicted_class = f"Unknown_Class_{idx}"
+
+        # Find matching disease info from DISEASE_CATEGORIES
+        disease_info = None
+        for cat in DISEASE_CATEGORIES:
+            if cat["name"].lower().replace(" ", "_") == predicted_class.lower().replace(" ", "_"):
+                disease_info = cat
+                break
+            # Partial match
+            if predicted_class.lower().replace("_", " ") in cat["name"].lower():
+                disease_info = cat
+                break
+
+        if disease_info is None:
+            # Fallback: use severity based on confidence
+            severity = "low" if conf_val > 0.8 else "medium"
+            disease_info = {
+                "name": predicted_class.replace("_", " "),
+                "severity": severity,
+                "treatment": "Consult a local agricultural expert for specific treatment.",
+            }
+
         res = {
-            "disease_name": disease["name"],
-            "confidence": round(confidence.item(), 3),
-            "severity": disease["severity"],
-            "treatment": disease["treatment"],
-            "needs_escalation": confidence.item() < 0.7 or disease["severity"] in ["high", "medium"],
-            "model_used": "resnet18",
+            "disease_name": disease_info["name"],
+            "confidence": conf_val,
+            "severity": disease_info["severity"],
+            "treatment": disease_info["treatment"],
+            "needs_escalation": conf_val < 0.7 or disease_info["severity"] in ["high", "medium"],
+            "model_used": "resnet18_plantvillage",
             "classified_at": datetime.utcnow().isoformat(),
             "crop_type": crop_type,
         }

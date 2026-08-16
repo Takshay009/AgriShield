@@ -43,6 +43,7 @@ class FarmBase(BaseModel):
     taluka: str | None = None
     village: str | None = None
     registration_method: str | None = None
+    crop_type: str | None = None
 
 class FarmCreate(FarmBase):
     pass
